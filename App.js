@@ -6,6 +6,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import LoginScreen from './src/view/Login';
 import RegisterScreen from './src/view/Register';
 import HomeScreen from './src/view/Home';
+import SettingsScreen from './src/view/Settings';
 
 import {ToastProvider} from 'react-native-toast-notifications';
 
@@ -17,6 +18,7 @@ function App() {
       <NavigationContainer>
         <Stack.Navigator screenOptions={{headerShown: false}}>
           <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="Settings" component={SettingsScreen} />
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Register" component={RegisterScreen} />
         </Stack.Navigator>

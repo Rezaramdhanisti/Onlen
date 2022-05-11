@@ -17,7 +17,7 @@ import {
 
 import styles from './style';
 
-function LoginScreen({navigation}) {
+function HomeScreen({navigation}) {
   const [email, setUsernameText] = useState('');
   const [password, setPasswordText] = useState('');
 
@@ -221,7 +221,8 @@ function LoginScreen({navigation}) {
             <Text style={styles.textMenu}>Promosi</Text>
           </View>
           <View style={{alignItems: 'center', marginLeft: wp(7.2)}}>
-            <View
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Settings')}
               style={{
                 width: 50,
                 height: 50,
@@ -239,7 +240,7 @@ function LoginScreen({navigation}) {
                 }}
                 source={require('../../../assets/settings.png')}
               />
-            </View>
+            </TouchableOpacity>
             <Text style={styles.textMenu}>Pengaturan</Text>
           </View>
         </View>
@@ -288,4 +289,4 @@ function LoginScreen({navigation}) {
   );
 }
 
-export default LoginScreen;
+export default HomeScreen;
