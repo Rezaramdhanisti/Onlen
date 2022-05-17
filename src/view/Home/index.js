@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   TouchableOpacity,
@@ -21,26 +21,13 @@ function HomeScreen({navigation}) {
   const [email, setUsernameText] = useState('');
   const [password, setPasswordText] = useState('');
 
-  const onSubmitLogin = () => {
-    const data = {
-      email,
-      password,
-    };
-
-    // Encrypt;
-    const encryptText = CryptoJS.AES.encrypt(
-      JSON.stringify(data),
-      ENCRYPT_KEY,
-    ).toString();
-    axios
-      .post(`${API_URL}/login`, {data: encryptText})
-      .then(async res => {
-        console.log('sukses', res, email);
-      })
-      .catch(e => {
-        console.log('error', e?.response?.data.message);
-      });
-  };
+  useEffect(
+    () =>
+      navigation.addListener('beforeRemove', e => {
+        return;
+      }),
+    [navigation],
+  );
 
   return (
     <View style={styles.shell}>
@@ -146,7 +133,8 @@ function HomeScreen({navigation}) {
           </View>
 
           <View style={{alignItems: 'center'}}>
-            <View
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Menu')}
               style={{
                 width: 50,
                 height: 50,
@@ -164,7 +152,7 @@ function HomeScreen({navigation}) {
                 }}
                 source={require('../../../assets/open-book.png')}
               />
-            </View>
+            </TouchableOpacity>
             <Text style={styles.textMenu}>Menu</Text>
           </View>
 

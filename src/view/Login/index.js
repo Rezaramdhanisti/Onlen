@@ -23,18 +23,19 @@ function LoginScreen({navigation}) {
     };
 
     // Encrypt;
-    const encryptText = CryptoJS.AES.encrypt(
-      JSON.stringify(data),
-      ENCRYPT_KEY,
-    ).toString();
-    axios
-      .post(`${API_URL}/login`, {data: encryptText})
-      .then(async res => {
-        console.log('sukses', res, email);
-      })
-      .catch(e => {
-        toast.show(e?.response?.data.message, {type: 'danger'});
-      });
+    // const encryptText = CryptoJS.AES.encrypt(
+    //   JSON.stringify(data),
+    //   ENCRYPT_KEY,
+    // ).toString();
+    // axios
+    //   .post(`${API_URL}/login`, {data: encryptText})
+    //   .then(async res => {
+    // console.log('sukses', res, email);
+    // })
+    // .catch(e => {
+    //   toast.show(e?.response?.data.message, {type: 'danger'});
+    // });
+    navigation.navigate('Home');
   };
 
   return (
