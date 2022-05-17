@@ -1,8 +1,16 @@
 import React, {useState} from 'react';
-import {View, TouchableOpacity, Text, Image, TextInput} from 'react-native';
+import {
+  View,
+  TouchableOpacity,
+  Text,
+  Image,
+  TextInput,
+  ActivityIndicator,
+} from 'react-native';
 import axios from 'axios';
 import CryptoJS from 'react-native-crypto-js';
 import {API_URL, ENCRYPT_KEY} from '@env';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useToast} from 'react-native-toast-notifications';
 import {
   widthPercentageToDP as wp,
@@ -14,30 +22,41 @@ import styles from './style';
 function LoginScreen({navigation}) {
   const [email, setUsernameText] = useState('');
   const [password, setPasswordText] = useState('');
+  const [isLoading, setLoading] = useState(false);
   const toast = useToast();
 
-  const onSubmitLogin = () => {
+  const onSubmitLogin = async () => {
+    setLoading(true);
     const data = {
       email,
       password,
     };
 
     // Encrypt;
-    // const encryptText = CryptoJS.AES.encrypt(
-    //   JSON.stringify(data),
-    //   ENCRYPT_KEY,
-    // ).toString();
-    // axios
-    //   .post(`${API_URL}/login`, {data: encryptText})
-    //   .then(async res => {
-    // console.log('sukses', res, email);
-    // })
-    // .catch(e => {
-    //   toast.show(e?.response?.data.message, {type: 'danger'});
-    // });
-    navigation.navigate('Home');
+    const encryptText = CryptoJS.AES.encrypt(
+      JSON.stringify(data),
+      ENCRYPT_KEY,
+    ).toString();
+    axios
+      .post(`${API_URL}/login`, {data: encryptText})
+      .then(async res => {
+        console.log('sukses', res.data.data.token);
+        storeData(res.data.data.token);
+        navigation.navigate('Home');
+        setLoading(true);
+      })
+      .catch(e => {
+        toast.show(e?.response?.data.message, {type: 'danger'});
+      });
   };
 
+  const storeData = async value => {
+    try {
+      await AsyncStorage.setItem('@token', value);
+    } catch (e) {
+      // saving error
+    }
+  };
   return (
     <View style={styles.shell}>
       <View style={styles.containerWithEmail}>
@@ -108,17 +127,23 @@ function LoginScreen({navigation}) {
               backgroundColor: '#ff3e6c',
               borderRadius: 8,
             }}>
-            <Text
-              style={{
-                color: '#f9f9f9',
-                fontSize: 16,
-                alignSelf: 'center',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontWeight: 'bold',
-              }}>
-              Masuk
-            </Text>
+            {isLoading ? (
+              <ActivityIndicator size="small" color="white" />
+            ) : (
+              <View>
+                <Text
+                  style={{
+                    color: '#f9f9f9',
+                    fontSize: 16,
+                    alignSelf: 'center',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontWeight: 'bold',
+                  }}>
+                  Masuk
+                </Text>
+              </View>
+            )}
           </TouchableOpacity>
           <View
             style={{
