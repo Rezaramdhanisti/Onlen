@@ -46,6 +46,7 @@ function LoginScreen({navigation}) {
         setLoading(false);
       })
       .catch(e => {
+        setLoading(false);
         toast.show(e?.response?.data.message, {type: 'danger'});
       });
   };

@@ -4,6 +4,8 @@ import axios from 'axios';
 import CryptoJS from 'react-native-crypto-js';
 import {API_URL, ENCRYPT_KEY} from '@env';
 import {useToast} from 'react-native-toast-notifications';
+import {CommonActions} from '@react-navigation/native';
+
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -12,6 +14,14 @@ import {
 import styles from './style';
 
 function SettingScreen({navigation}) {
+  const pressLogOut = () => {
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{name: 'Login'}],
+      }),
+    );
+  };
   return (
     <View style={styles.shell}>
       <View
@@ -94,6 +104,7 @@ function SettingScreen({navigation}) {
 
         <View style={{height: hp(4)}}></View>
         <TouchableOpacity
+          onPress={pressLogOut}
           style={{
             flexDirection: 'row',
             alignItems: 'center',

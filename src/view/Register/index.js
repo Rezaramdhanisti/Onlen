@@ -6,6 +6,8 @@ import {
   Image,
   TextInput,
   ScrollView,
+  Alert,
+  ActivityIndicator,
 } from 'react-native';
 import axios from 'axios';
 import CryptoJS from 'react-native-crypto-js';
@@ -19,9 +21,11 @@ function RegisterScreen({navigation}) {
   const [email, setEmail] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setLoading] = useState(false);
   const toast = useToast();
 
   const onSubmitRegis = () => {
+    setLoading(true);
     const data = {
       businessName,
       email,
@@ -38,9 +42,13 @@ function RegisterScreen({navigation}) {
     axios
       .post(`${API_URL}/register`, {data: encryptText})
       .then(res => {
-        console.log('sukses', res);
+        Alert.alert('Sukses', 'Akun berhasil dibuat!', [
+          {text: 'OK', onPress: () => navigation.goBack()},
+        ]);
+        setLoading(false);
       })
       .catch(e => {
+        setLoading(false);
         toast.show(e?.response?.data.message, {type: 'danger'});
       });
   };
@@ -189,16 +197,22 @@ function RegisterScreen({navigation}) {
               backgroundColor: '#ff3e6c',
               borderRadius: 8,
             }}>
-            <Text
-              style={{
-                color: '#f9f9f9',
-                fontSize: 16,
-                alignSelf: 'center',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              Daftar
-            </Text>
+            {isLoading ? (
+              <ActivityIndicator size="small" color="white" />
+            ) : (
+              <View>
+                <Text
+                  style={{
+                    color: '#f9f9f9',
+                    fontSize: 16,
+                    alignSelf: 'center',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  Daftar
+                </Text>
+              </View>
+            )}
           </TouchableOpacity>
 
           <View
