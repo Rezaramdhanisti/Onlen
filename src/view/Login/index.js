@@ -43,7 +43,7 @@ function LoginScreen({navigation}) {
         console.log('sukses', res.data.data.token);
         storeData(res.data.data.token);
         navigation.navigate('Home');
-        setLoading(true);
+        setLoading(false);
       })
       .catch(e => {
         toast.show(e?.response?.data.message, {type: 'danger'});

@@ -6,10 +6,14 @@ import {
   Image,
   ImageBackground,
   ScrollView,
+  Button,
+  Alert,
 } from 'react-native';
 import axios from 'axios';
 import CryptoJS from 'react-native-crypto-js';
 import {API_URL, ENCRYPT_KEY} from '@env';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useToast} from 'react-native-toast-notifications';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -18,8 +22,8 @@ import {
 import styles from './style';
 
 function HomeScreen({navigation}) {
-  const [email, setUsernameText] = useState('');
-  const [password, setPasswordText] = useState('');
+  const toast = useToast();
+  const [dataProfile, setDataProfile] = useState({});
 
   useEffect(
     () =>
@@ -29,21 +33,84 @@ function HomeScreen({navigation}) {
     [navigation],
   );
 
+  useEffect(() => {
+    getDetailProfile();
+  }, []);
+
+  const getDetailProfile = async () => {
+    const token = await AsyncStorage.getItem('@token');
+    console.log('token', token);
+    axios
+      .get(`${API_URL}/dashboard/profiles`, {
+        headers: {
+          Authorization: 'Bearer ' + token,
+        },
+      })
+      .then(res => {
+        console.log('sukses', res.data.data);
+        setDataProfile(res.data.data);
+      })
+      .catch(e => {
+        toast.show(e?.response?.data.message, {type: 'danger'});
+      });
+  };
+
+  const alertPremium = () =>
+    Alert.alert('Perhatian', 'Hanya admin yang dapat mengakses fitur ini', [
+      {text: 'OK', onPress: () => console.log('OK Pressed')},
+    ]);
+
+  const alertPremium2 = () =>
+    Alert.alert('Perhatian', 'Aktifkan premium untuk mengakses fitur ini', [
+      {text: 'OK', onPress: () => console.log('OK Pressed')},
+    ]);
+
+  const goToPeople = () => {
+    if (dataProfile?.roleName !== 'administrator') {
+      return alertPremium();
+    }
+    navigation.navigate('Settings');
+  };
+  const goToSetting = () => {
+    if (dataProfile?.roleName !== 'administrator') {
+      return alertPremium();
+    }
+    navigation.navigate('Settings');
+  };
+  const goToPromotion = () => {
+    if (dataProfile?.roleName !== 'administrator') {
+      return alertPremium();
+    }
+    navigation.navigate('Settings');
+  };
+  const goToOrder = () => {
+    if (!dataProfile?.isPremium) {
+      return alertPremium2();
+    }
+    navigation.navigate('Settings');
+  };
+  const goToReport = () => {
+    if (!dataProfile?.isPremium) {
+      return alertPremium2();
+    }
+    navigation.navigate('Settings');
+  };
+
   return (
     <View style={styles.shell}>
       <View style={styles.containerWithEmail}>
         <Text style={styles.textTitleWithEmail}>
-          Selamat Datang, Rumah Depok
+          Selamat Datang, {dataProfile?.name}
         </Text>
-        <Text style={styles.textSales}>Jumlah Pesanan Hari Ini</Text>
-        <View style={styles.containerSales}>
+        <Text style={styles.textSales}> {dataProfile?.roleName}</Text>
+        {/* <View style={styles.containerSales}>
           <Image
             style={{width: 14, height: 14, marginLeft: 6, marginRight: 4}}
             source={require('../../../assets/wallet.png')}
           />
           <Text style={styles.textCurrency}>Rp</Text>
           <Text style={styles.textSalesValue}>10,000.00</Text>
-        </View>
+        </View> */}
 
         <ImageBackground
           style={{
@@ -87,7 +154,8 @@ function HomeScreen({navigation}) {
             paddingHorizontal: wp(2),
           }}>
           <View style={{alignItems: 'center'}}>
-            <View
+            <TouchableOpacity
+              onPress={() => goToOrder()}
               style={{
                 width: 50,
                 height: 50,
@@ -105,12 +173,13 @@ function HomeScreen({navigation}) {
                 }}
                 source={require('../../../assets/shopping-bag.png')}
               />
-            </View>
+            </TouchableOpacity>
             <Text style={styles.textMenu}>Pesanan</Text>
           </View>
 
           <View style={{alignItems: 'center'}}>
-            <View
+            <TouchableOpacity
+              onPress={() => goToReport()}
               style={{
                 width: 50,
                 height: 50,
@@ -128,7 +197,7 @@ function HomeScreen({navigation}) {
                 }}
                 source={require('../../../assets/report.png')}
               />
-            </View>
+            </TouchableOpacity>
             <Text style={styles.textMenu}>Laporan</Text>
           </View>
 
@@ -210,7 +279,7 @@ function HomeScreen({navigation}) {
           </View>
           <View style={{alignItems: 'center', marginLeft: wp(7.2)}}>
             <TouchableOpacity
-              onPress={() => navigation.navigate('Settings')}
+              onPress={() => goToSetting()}
               style={{
                 width: 50,
                 height: 50,
@@ -272,6 +341,7 @@ function HomeScreen({navigation}) {
             }}
             source={require('../../../assets/background-gradient.png')}></Image>
         </ScrollView>
+        <Button title={'Alert-Premium'} onPress={alertPremium} />
       </View>
     </View>
   );
