@@ -341,7 +341,6 @@ function HomeScreen({navigation}) {
             }}
             source={require('../../../assets/background-gradient.png')}></Image>
         </ScrollView>
-        <Button title={'Alert-Premium'} onPress={alertPremium} />
       </View>
     </View>
   );
