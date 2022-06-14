@@ -1,8 +1,16 @@
-import React, {useState} from 'react';
-import {View, TouchableOpacity, Text, Image, Linking} from 'react-native';
+import React, {useState, useEffect, useCallback} from 'react';
+import {
+  View,
+  TouchableOpacity,
+  Text,
+  Image,
+  FlatList,
+  ActivityIndicator,
+} from 'react-native';
+import {useFocusEffect} from '@react-navigation/native';
 import axios from 'axios';
-import CryptoJS from 'react-native-crypto-js';
-import {API_URL, ENCRYPT_KEY} from '@env';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {API_URL} from '@env';
 import {useToast} from 'react-native-toast-notifications';
 import {
   widthPercentageToDP as wp,
@@ -12,6 +20,66 @@ import {
 import styles from './style';
 
 function MenuScreen({navigation}) {
+  const [dataCategory, setDataCategory] = useState([]);
+  const toast = useToast();
+  const [isLoading, setLoading] = useState(false);
+
+  useFocusEffect(
+    useCallback(() => {
+      getListCategory();
+    }, []),
+  );
+
+  const getListCategory = async () => {
+    setLoading(true);
+    const token = await AsyncStorage.getItem('@token');
+    axios
+      .get(`${API_URL}/dashboard/categories`, {
+        headers: {
+          Authorization: 'Bearer ' + token,
+        },
+      })
+      .then(res => {
+        console.log('sukses', res.data.data);
+        setDataCategory(res.data.data);
+      })
+      .catch(e => {
+        toast.show(e?.response?.data.message, {type: 'danger'});
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  const renderItem = ({item}) => (
+    <View>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginTop: hp(1),
+        }}>
+        <Text style={styles.textSales}>{item.name}</Text>
+        <Image
+          style={{
+            width: 16,
+            height: 16,
+          }}
+          source={require('../../../assets/ic_right_arrow.png')}
+        />
+      </View>
+      <View
+        style={{
+          height: 1,
+          backgroundColor: '#E8EBEB',
+          marginTop: 14,
+          marginBottom: 4,
+        }}
+      />
+    </View>
+  );
+
   return (
     <View style={styles.shell}>
       <View
@@ -46,128 +114,24 @@ function MenuScreen({navigation}) {
             marginBottom: 4,
           }}
         />
+
+        {isLoading ? (
+          <View
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: hp(20),
+            }}>
+            <ActivityIndicator size="large" color="#ff3366" />
+          </View>
+        ) : (
+          <FlatList
+            data={dataCategory}
+            renderItem={renderItem}
+            keyExtractor={item => item.id}
+          />
+        )}
         <TouchableOpacity
-          onPress={() => navigation.navigate('ListMenu')}
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginTop: hp(1),
-          }}>
-          <Text style={styles.textSales}>Serba Ayam</Text>
-          <Image
-            style={{
-              width: 16,
-              height: 16,
-            }}
-            source={require('../../../assets/ic_right_arrow.png')}
-          />
-        </TouchableOpacity>
-        <View
-          style={{
-            height: 1,
-            backgroundColor: '#E8EBEB',
-            marginTop: 14,
-            marginBottom: 4,
-          }}
-        />
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginTop: hp(1),
-          }}>
-          <Text style={styles.textSales}>Serba Ayam</Text>
-          <Image
-            style={{
-              width: 16,
-              height: 16,
-            }}
-            source={require('../../../assets/ic_right_arrow.png')}
-          />
-        </View>
-        <View
-          style={{
-            height: 1,
-            backgroundColor: '#E8EBEB',
-            marginTop: 14,
-            marginBottom: 4,
-          }}
-        />
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginTop: hp(1),
-          }}>
-          <Text style={styles.textSales}>Serba Ayam</Text>
-          <Image
-            style={{
-              width: 16,
-              height: 16,
-            }}
-            source={require('../../../assets/ic_right_arrow.png')}
-          />
-        </View>
-        <View
-          style={{
-            height: 1,
-            backgroundColor: '#E8EBEB',
-            marginTop: 14,
-            marginBottom: 4,
-          }}
-        />
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginTop: hp(1),
-          }}>
-          <Text style={styles.textSales}>Serba Ayam</Text>
-          <Image
-            style={{
-              width: 16,
-              height: 16,
-            }}
-            source={require('../../../assets/ic_right_arrow.png')}
-          />
-        </View>
-        <View
-          style={{
-            height: 1,
-            backgroundColor: '#E8EBEB',
-            marginTop: 14,
-            marginBottom: 4,
-          }}
-        />
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginTop: hp(1),
-          }}>
-          <Text style={styles.textSales}>Serba Ayam</Text>
-          <Image
-            style={{
-              width: 16,
-              height: 16,
-            }}
-            source={require('../../../assets/ic_right_arrow.png')}
-          />
-        </View>
-        <View
-          style={{
-            height: 1,
-            backgroundColor: '#E8EBEB',
-            marginTop: 14,
-            marginBottom: 4,
-          }}
-        />
-        <View
           style={{
             height: hp(5),
             backgroundColor: '#ff3366',
@@ -177,9 +141,10 @@ function MenuScreen({navigation}) {
             bottom: hp(4),
             left: wp(24),
             right: wp(24),
-          }}>
-          <Text style={styles.textAddMenu}>Tambah</Text>
-        </View>
+          }}
+          onPress={() => navigation.navigate('AddCategory')}>
+          <Text style={styles.textAddMenu}>Tambah Kategori</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );

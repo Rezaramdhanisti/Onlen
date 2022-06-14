@@ -6,12 +6,10 @@ import {
   Image,
   ImageBackground,
   ScrollView,
-  Button,
   Alert,
 } from 'react-native';
 import axios from 'axios';
-import CryptoJS from 'react-native-crypto-js';
-import {API_URL, ENCRYPT_KEY} from '@env';
+import {API_URL} from '@env';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useToast} from 'react-native-toast-notifications';
 import {
@@ -39,7 +37,6 @@ function HomeScreen({navigation}) {
 
   const getDetailProfile = async () => {
     const token = await AsyncStorage.getItem('@token');
-    console.log('token', token);
     axios
       .get(`${API_URL}/dashboard/profiles`, {
         headers: {
@@ -47,7 +44,6 @@ function HomeScreen({navigation}) {
         },
       })
       .then(res => {
-        console.log('sukses', res.data.data);
         setDataProfile(res.data.data);
       })
       .catch(e => {

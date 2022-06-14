@@ -1,8 +1,14 @@
-import React, {useState} from 'react';
-import {View, TouchableOpacity, Text, Image, Linking} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {
+  View,
+  TouchableOpacity,
+  Text,
+  Image,
+  ActivityIndicator,
+} from 'react-native';
 import axios from 'axios';
-import CryptoJS from 'react-native-crypto-js';
-import {API_URL, ENCRYPT_KEY} from '@env';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {API_URL} from '@env';
 import {useToast} from 'react-native-toast-notifications';
 import {
   widthPercentageToDP as wp,

@@ -9,6 +9,7 @@ import SettingsScreen from './src/view/Settings';
 import MenuScreen from './src/view/Menu';
 import ListMenuScreen from './src/view/Menu/ListMenu';
 import DetailMenuScreen from './src/view/Menu/DetailMenu';
+import AddCategoryScreen from './src/view/Menu/AddCategory';
 import SplashScreen from './src/view/Splash';
 
 import {ToastProvider} from 'react-native-toast-notifications';
@@ -32,6 +33,7 @@ function App() {
           <Stack.Screen name="Menu" component={MenuScreen} />
           <Stack.Screen name="ListMenu" component={ListMenuScreen} />
           <Stack.Screen name="DetailMenu" component={DetailMenuScreen} />
+          <Stack.Screen name="AddCategory" component={AddCategoryScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </ToastProvider>
