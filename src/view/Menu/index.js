@@ -35,12 +35,12 @@ function MenuScreen({navigation}) {
     const token = await AsyncStorage.getItem('@token');
     axios
       .get(`${API_URL}/dashboard/categories`, {
+        params: {limit: 100},
         headers: {
           Authorization: 'Bearer ' + token,
         },
       })
       .then(res => {
-        console.log('sukses', res.data.data);
         setDataCategory(res.data.data);
       })
       .catch(e => {
@@ -60,14 +60,42 @@ function MenuScreen({navigation}) {
           alignItems: 'center',
           marginTop: hp(1),
         }}>
-        <Text style={styles.textSales}>{item.name}</Text>
-        <Image
+        <View>
+          <Text style={styles.textSales}>{item?.name}</Text>
+          <Text
+            style={styles.textEditCategory}
+            onPress={() =>
+              navigation.navigate('AddCategory', {
+                categoryName: item?.name,
+                categoryId: item?.id,
+              })
+            }>
+            Edit Kategori
+          </Text>
+        </View>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate('ListMenu', {
+              categoryName: item?.name,
+              categoryId: item?.id,
+              allDataCategory: dataCategory,
+            })
+          }
           style={{
-            width: 16,
-            height: 16,
-          }}
-          source={require('../../../assets/ic_right_arrow.png')}
-        />
+            width: 120,
+            height: 50,
+            justifyContent: 'flex-end',
+            alignItems: 'flex-end',
+            paddingBottom: hp(2),
+          }}>
+          <Image
+            style={{
+              width: 16,
+              height: 16,
+            }}
+            source={require('../../../assets/ic_right_arrow.png')}
+          />
+        </TouchableOpacity>
       </View>
       <View
         style={{
@@ -129,8 +157,10 @@ function MenuScreen({navigation}) {
             data={dataCategory}
             renderItem={renderItem}
             keyExtractor={item => item.id}
+            showsVerticalScrollIndicator={false}
           />
         )}
+        {/* <View style={{height: hp(5)}}></View> */}
         <TouchableOpacity
           style={{
             height: hp(5),

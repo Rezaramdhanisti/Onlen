@@ -20,8 +20,10 @@ import {API_URL} from '@env';
 
 import styles from './style';
 
-function AddCategoryScreen({navigation}) {
-  const [text, setText] = useState('');
+function AddCategoryScreen({navigation, route}) {
+  const [text, setText] = useState(
+    route.params ? route?.params?.categoryName : '',
+  );
   const toast = useToast();
   const [isLoading, setLoading] = useState(false);
 
@@ -54,6 +56,35 @@ function AddCategoryScreen({navigation}) {
       });
   };
 
+  const updateCategory = async () => {
+    if (text.length < 1) {
+      return toast.show('Isi dulu kategorinya yaa', {type: 'danger'});
+    }
+    setLoading(true);
+    const token = await AsyncStorage.getItem('@token');
+    axios
+      .put(
+        `${API_URL}/dashboard/categories/${route?.params?.categoryId}`,
+        {name: text},
+        {
+          headers: {
+            Authorization: 'Bearer ' + token,
+          },
+        },
+      )
+      .then(() => {
+        Alert.alert('Sukses', 'Kategori berhasil diubah!', [
+          {text: 'OK', onPress: () => navigation.goBack()},
+        ]);
+      })
+      .catch(e => {
+        toast.show(e?.response?.data.message, {type: 'danger'});
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
   return (
     <View style={styles.shell}>
       <View
@@ -75,7 +106,9 @@ function AddCategoryScreen({navigation}) {
         </TouchableOpacity>
 
         <View>
-          <Text style={styles.textHeader}>Tambah Kategori</Text>
+          <Text style={styles.textHeader}>
+            {route.params ? 'Ubah Kategori' : 'Tambah Kategori'}
+          </Text>
         </View>
       </View>
       <View
@@ -96,6 +129,7 @@ function AddCategoryScreen({navigation}) {
           onChangeText={newText => setText(newText)}
           placeholder="Contoh: Makanan berat, minuman, cemilan"
           placeholderTextColor="#9FA2B4"
+          value={text}
         />
         <View
           style={{
@@ -117,7 +151,7 @@ function AddCategoryScreen({navigation}) {
           left: wp(24),
           right: wp(24),
         }}
-        onPress={() => createCategory()}>
+        onPress={() => (route.params ? updateCategory() : createCategory())}>
         {isLoading ? (
           <ActivityIndicator size="small" color="white" />
         ) : (

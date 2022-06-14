@@ -34,7 +34,7 @@ function SettingScreen({navigation}) {
   return (
     <View style={styles.shell}>
       <Image
-        style={{width: wp(64), height: hp(11)}}
+        style={{width: wp(62), height: hp(14)}}
         source={require('../../../assets/logo-onlen.png')}
       />
     </View>

@@ -6,9 +6,15 @@ import {
   Image,
   TextInput,
   Switch,
+  ActivityIndicator,
   ScrollView,
+  Alert,
 } from 'react-native';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import DropDownPicker from 'react-native-dropdown-picker';
+import {useToast} from 'react-native-toast-notifications';
+import {API_URL} from '@env';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -16,17 +22,65 @@ import {
 
 import styles from './style';
 
-function DetailMenuScreen({navigation}) {
+function DetailMenuScreen({navigation, route}) {
   const [isEnabled, setIsEnabled] = useState(false);
   const [isDelete, setIsDelete] = useState(false);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
   const toggleSwitchDelete = () => setIsDelete(previousState => !previousState);
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
-  const [items, setItems] = useState([
-    {label: 'Apple', value: 'apple'},
-    {label: 'Banana', value: 'banana'},
-  ]);
+  const [items, setItems] = useState(route.params.allDataCategory);
+  const toast = useToast();
+  const [isLoading, setLoading] = useState(false);
+  const [textName, setTextName] = useState('');
+  const [textDescription, setTextDescription] = useState('');
+  const [textPrice, setTextPrice] = useState('');
+
+  const createMenu = async () => {
+    const dataPayload = {
+      categoryId: value,
+      name: textName,
+      imageUrl:
+        'https://kanmakan-images.s3.ap-southeast-1.amazonaws.com/nasi-sate-gila.jpg',
+      description: textDescription,
+      isPromoEnabled: false,
+      actualPrice: parseInt(textPrice),
+      price: parseInt(textPrice),
+      isSold: false,
+    };
+    if (textName.length < 1) {
+      return toast.show('Isi dulu namanya yaa', {type: 'danger'});
+    }
+    if (textDescription.length < 1) {
+      return toast.show('Isi dulu deskripsinya yaa', {type: 'danger'});
+    }
+    if (textPrice.length < 1) {
+      return toast.show('Isi dulu harganya yaa', {type: 'danger'});
+    }
+    if (value === null) {
+      return toast.show('Isi dulu kategorinya yaa', {type: 'danger'});
+    }
+    console.log('xxx', dataPayload);
+    setLoading(true);
+    const token = await AsyncStorage.getItem('@token');
+    axios
+      .post(`${API_URL}/dashboard/menus`, dataPayload, {
+        headers: {
+          Authorization: 'Bearer ' + token,
+        },
+      })
+      .then(() => {
+        Alert.alert('Sukses', 'Menu berhasil dibuat!', [
+          {text: 'OK', onPress: () => navigation.goBack()},
+        ]);
+      })
+      .catch(e => {
+        toast.show(e?.response?.data.message, {type: 'danger'});
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
 
   return (
     <View style={styles.shell}>
@@ -49,8 +103,7 @@ function DetailMenuScreen({navigation}) {
         </TouchableOpacity>
 
         <View>
-          <Text style={styles.textHeader}>Ubah menu</Text>
-          <Text style={styles.textSubHeader}>Ayam Taliwang</Text>
+          <Text style={styles.textHeader}>Buat menu</Text>
         </View>
       </View>
       <View
@@ -72,24 +125,20 @@ function DetailMenuScreen({navigation}) {
 
         <View
           style={{
-            width: wp(21),
+            width: wp(18),
             height: hp(10),
             borderRadius: 8,
             borderWidth: 1,
             marginTop: hp(1.5),
-            borderColor: '#ff3366',
+            borderColor: '#9FA2B4',
           }}></View>
 
         <Text style={styles.textSubtitle}>Nama*</Text>
         <TextInput
-          secureTextEntry={true}
-          style={{marginTop: 10}}
           underlineColorAndroid="transparent"
+          onChangeText={newText => setTextName(newText)}
           placeholder="Nama"
           placeholderTextColor="#9FA2B4"
-          ref={input => {
-            this.password = input;
-          }}
         />
         <View
           style={{
@@ -106,10 +155,23 @@ function DetailMenuScreen({navigation}) {
           open={open}
           value={value}
           items={items}
+          schema={{
+            label: 'name', // required
+            value: 'id', // required
+          }}
+          placeholder="Pilih Kategori"
           setOpen={setOpen}
           setValue={setValue}
+          placeholderStyle={{
+            color: '#9FA2B4',
+          }}
           setItems={setItems}
-          placeholder="Pilih kategori"
+          dropDownContainerStyle={{
+            borderColor: '#9FA2B4',
+          }}
+          style={{
+            borderColor: '#9FA2B4',
+          }}
         />
         <View
           style={{
@@ -121,14 +183,10 @@ function DetailMenuScreen({navigation}) {
         />
         <Text style={styles.textSubtitle}>Deskripsi*</Text>
         <TextInput
-          secureTextEntry={true}
-          style={{marginTop: 10}}
           underlineColorAndroid="transparent"
           placeholder="Deskripsi"
+          onChangeText={newText => setTextDescription(newText)}
           placeholderTextColor="#9FA2B4"
-          ref={input => {
-            this.password = input;
-          }}
         />
         <View
           style={{
@@ -138,35 +196,14 @@ function DetailMenuScreen({navigation}) {
             marginBottom: 4,
           }}
         />
-        <Text style={styles.textSubtitle}>Nama*</Text>
-        <TextInput
-          secureTextEntry={true}
-          style={{marginTop: 10}}
-          underlineColorAndroid="transparent"
-          placeholder="Nama"
-          placeholderTextColor="#9FA2B4"
-          ref={input => {
-            this.password = input;
-          }}
-        />
-        <View
-          style={{
-            height: 1,
-            backgroundColor: '#E8EBEB',
-            marginTop: 6,
-            marginBottom: 4,
-          }}
-        />
+
         <Text style={styles.textSubtitle}>Harga*</Text>
         <TextInput
-          secureTextEntry={true}
-          style={{marginTop: 10}}
           underlineColorAndroid="transparent"
+          keyboardType="number-pad"
+          onChangeText={newText => setTextPrice(newText)}
           placeholder="Harga"
           placeholderTextColor="#9FA2B4"
-          ref={input => {
-            this.password = input;
-          }}
         />
         <View
           style={{
@@ -177,7 +214,8 @@ function DetailMenuScreen({navigation}) {
           }}
         />
         <View style={{height: hp(2)}} />
-        <Text style={styles.textTitleWithEmail}>Variasi menu</Text>
+        <View style={{height: hp(10)}}></View>
+        {/* <Text style={styles.textTitleWithEmail}>Variasi menu</Text>
 
         <View style={{height: hp(2)}} />
         <View
@@ -217,13 +255,11 @@ function DetailMenuScreen({navigation}) {
           />
         </View>
 
-        <Text style={styles.textSubtitle2}>
-          Upload foto yang menarik biar pelanggan makin tertarik.
-        </Text>
+        <Text style={styles.textSubtitle2}>Hapus menu</Text>
 
-        <View style={{height: hp(15)}} />
+        <View style={{height: hp(15)}} /> */}
       </ScrollView>
-      <View
+      <TouchableOpacity
         style={{
           height: hp(5),
           backgroundColor: '#ff3366',
@@ -233,9 +269,10 @@ function DetailMenuScreen({navigation}) {
           bottom: hp(4),
           left: wp(24),
           right: wp(24),
-        }}>
-        <Text style={styles.textAddMenu}>Simpan</Text>
-      </View>
+        }}
+        onPress={() => createMenu()}>
+        <Text style={styles.textAddMenu}>Buat Menu</Text>
+      </TouchableOpacity>
     </View>
   );
 }

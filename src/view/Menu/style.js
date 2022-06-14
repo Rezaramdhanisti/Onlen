@@ -10,7 +10,7 @@ export default {
   shell: {
     flex: 1,
     backgroundColor: '#f9fafc',
-    paddingTop: hp('8%'),
+    paddingTop: hp('2%'),
   },
   containerWithEmail: {
     flex: 1,
@@ -166,5 +166,12 @@ export default {
   },
   textSubHeader: {
     color: '#565454',
+  },
+  textEditCategory: {
+    fontSize: helpers.scaling.moderateScale(14),
+    color: '#ff3366',
+    letterSpacing: 0.34,
+    fontWeight: '400',
+    marginTop: hp(1),
   },
 };
