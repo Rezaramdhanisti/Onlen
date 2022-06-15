@@ -36,6 +36,7 @@ function SettingScreen({navigation}) {
       <Image
         style={{width: wp(62), height: hp(14)}}
         source={require('../../../assets/logo-onlen.png')}
+        resizeMode={'contain'}
       />
     </View>
   );

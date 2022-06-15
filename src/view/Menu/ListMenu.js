@@ -35,7 +35,7 @@ function ListMenuScreen({navigation, route}) {
     const token = await AsyncStorage.getItem('@token');
     axios
       .get(`${API_URL}/dashboard/menus`, {
-        params: {limit: 100},
+        params: {limit: 100, categoryId},
         headers: {
           Authorization: 'Bearer ' + token,
         },
