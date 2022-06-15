@@ -10,7 +10,7 @@ export default {
   shell: {
     flex: 1,
     backgroundColor: '#f9fafc',
-    paddingTop: hp('2%'),
+    paddingTop: Platform.OS === 'ios' ? hp('8%') : hp('2%'),
   },
   containerWithEmail: {
     flex: 1,
