@@ -53,8 +53,9 @@ function ListMenuScreen({navigation, route}) {
 
   const renderItem = ({item}) => (
     <TouchableOpacity
-    // onPress={() => navigation.navigate('DetailMenu', {allDataCategory})}
-    >
+      onPress={() =>
+        navigation.navigate('DetailMenu', {allDataCategory, dataMenu: item})
+      }>
       <View
         style={{
           flexDirection: 'row',
@@ -158,7 +159,9 @@ function ListMenuScreen({navigation, route}) {
             left: wp(24),
             right: wp(24),
           }}
-          onPress={() => navigation.navigate('DetailMenu', {allDataCategory})}>
+          onPress={() =>
+            navigation.navigate('DetailMenu', {allDataCategory, dataMenu: null})
+          }>
           <Text style={styles.textAddMenu}>Tambah Menu</Text>
         </TouchableOpacity>
       </View>

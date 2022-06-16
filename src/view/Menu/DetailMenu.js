@@ -28,13 +28,21 @@ function DetailMenuScreen({navigation, route}) {
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
   const toggleSwitchDelete = () => setIsDelete(previousState => !previousState);
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(null);
+  const [value, setValue] = useState(
+    route.params.dataMenu ? route.params.dataMenu?.category?.id : null,
+  );
   const [items, setItems] = useState(route.params.allDataCategory);
   const toast = useToast();
   const [isLoading, setLoading] = useState(false);
-  const [textName, setTextName] = useState('');
-  const [textDescription, setTextDescription] = useState('');
-  const [textPrice, setTextPrice] = useState('');
+  const [textName, setTextName] = useState(
+    route.params.dataMenu ? route.params.dataMenu?.name : '',
+  );
+  const [textDescription, setTextDescription] = useState(
+    route.params.dataMenu ? route.params.dataMenu?.description : '',
+  );
+  const [textPrice, setTextPrice] = useState(
+    route.params.dataMenu ? route.params.dataMenu?.price?.toString() : '',
+  );
 
   const createMenu = async () => {
     const dataPayload = {
@@ -60,7 +68,6 @@ function DetailMenuScreen({navigation, route}) {
     if (value === null) {
       return toast.show('Isi dulu kategorinya yaa', {type: 'danger'});
     }
-    console.log('xxx', dataPayload);
     setLoading(true);
     const token = await AsyncStorage.getItem('@token');
     axios
@@ -71,6 +78,55 @@ function DetailMenuScreen({navigation, route}) {
       })
       .then(() => {
         Alert.alert('Sukses', 'Menu berhasil dibuat!', [
+          {text: 'OK', onPress: () => navigation.goBack()},
+        ]);
+      })
+      .catch(e => {
+        toast.show(e?.response?.data.message, {type: 'danger'});
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  const updateMenu = async () => {
+    const dataPayload = {
+      categoryId: value,
+      name: textName,
+      imageUrl:
+        'https://kanmakan-images.s3.ap-southeast-1.amazonaws.com/nasi-sate-gila.jpg',
+      description: textDescription,
+      isPromoEnabled: false,
+      actualPrice: parseInt(textPrice),
+      price: parseInt(textPrice),
+      isSold: false,
+    };
+    if (textName.length < 1) {
+      return toast.show('Isi dulu namanya yaa', {type: 'danger'});
+    }
+    if (textDescription.length < 1) {
+      return toast.show('Isi dulu deskripsinya yaa', {type: 'danger'});
+    }
+    if (textPrice.length < 1) {
+      return toast.show('Isi dulu harganya yaa', {type: 'danger'});
+    }
+    if (value === null) {
+      return toast.show('Isi dulu kategorinya yaa', {type: 'danger'});
+    }
+    setLoading(true);
+    const token = await AsyncStorage.getItem('@token');
+    axios
+      .put(
+        `${API_URL}/dashboard/menus/${route.params.dataMenu?.id}`,
+        dataPayload,
+        {
+          headers: {
+            Authorization: 'Bearer ' + token,
+          },
+        },
+      )
+      .then(() => {
+        Alert.alert('Sukses', 'Menu berhasil diupdate!', [
           {text: 'OK', onPress: () => navigation.goBack()},
         ]);
       })
@@ -123,20 +179,33 @@ function DetailMenuScreen({navigation, route}) {
           Upload foto yang menarik biar pelanggan makin tertarik.
         </Text>
 
-        <View
-          style={{
-            width: wp(18),
-            height: hp(10),
-            borderRadius: 8,
-            borderWidth: 1,
-            marginTop: hp(1.5),
-            borderColor: '#9FA2B4',
-          }}></View>
-
+        {route.params.dataMenu ? (
+          <Image
+            style={{
+              width: wp(21),
+              height: hp(10),
+              borderRadius: 8,
+              marginTop: hp(1.5),
+            }}
+            resizeMode={'contain'}
+            source={{uri: route.params.dataMenu.imageUrl}}
+          />
+        ) : (
+          <View
+            style={{
+              width: wp(21),
+              height: hp(10),
+              borderRadius: 8,
+              borderWidth: 1,
+              marginTop: hp(1.5),
+              borderColor: '#9FA2B4',
+            }}></View>
+        )}
         <Text style={styles.textSubtitle}>Nama*</Text>
         <TextInput
           underlineColorAndroid="transparent"
           onChangeText={newText => setTextName(newText)}
+          value={textName}
           placeholder="Nama"
           placeholderTextColor="#9FA2B4"
         />
@@ -185,6 +254,7 @@ function DetailMenuScreen({navigation, route}) {
         <TextInput
           underlineColorAndroid="transparent"
           placeholder="Deskripsi"
+          value={textDescription}
           onChangeText={newText => setTextDescription(newText)}
           placeholderTextColor="#9FA2B4"
         />
@@ -198,12 +268,14 @@ function DetailMenuScreen({navigation, route}) {
         />
 
         <Text style={styles.textSubtitle}>Harga*</Text>
+
         <TextInput
           underlineColorAndroid="transparent"
           keyboardType="number-pad"
           onChangeText={newText => setTextPrice(newText)}
           placeholder="Harga"
           placeholderTextColor="#9FA2B4"
+          value={textPrice}
         />
         <View
           style={{
@@ -270,8 +342,18 @@ function DetailMenuScreen({navigation, route}) {
           left: wp(24),
           right: wp(24),
         }}
-        onPress={() => createMenu()}>
-        <Text style={styles.textAddMenu}>Buat Menu</Text>
+        onPress={() => {
+          route.params.dataMenu ? updateMenu() : createMenu();
+        }}>
+        {isLoading ? (
+          <ActivityIndicator size="small" color="white" />
+        ) : (
+          <View>
+            <Text style={styles.textAddMenu}>
+              {route.params.dataMenu ? 'Update Menu' : 'Buat Menu'}
+            </Text>
+          </View>
+        )}
       </TouchableOpacity>
     </View>
   );
