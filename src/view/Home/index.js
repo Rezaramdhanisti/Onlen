@@ -222,7 +222,8 @@ function HomeScreen({navigation}) {
           </View>
 
           <View style={{alignItems: 'center'}}>
-            <View
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Employee')}
               style={{
                 width: 50,
                 height: 50,
@@ -240,7 +241,7 @@ function HomeScreen({navigation}) {
                 }}
                 source={require('../../../assets/employees.png')}
               />
-            </View>
+            </TouchableOpacity>
             <Text style={styles.textMenu}>Pegawai</Text>
           </View>
         </View>

@@ -11,6 +11,8 @@ import ListMenuScreen from './src/view/Menu/ListMenu';
 import DetailMenuScreen from './src/view/Menu/DetailMenu';
 import AddCategoryScreen from './src/view/Menu/AddCategory';
 import SplashScreen from './src/view/Splash';
+import EmployeeScreen from './src/view/Employee';
+import AddEmployeeScreen from './src/view/Employee/AddEmployee';
 
 import {ToastProvider} from 'react-native-toast-notifications';
 
@@ -34,6 +36,8 @@ function App() {
           <Stack.Screen name="ListMenu" component={ListMenuScreen} />
           <Stack.Screen name="DetailMenu" component={DetailMenuScreen} />
           <Stack.Screen name="AddCategory" component={AddCategoryScreen} />
+          <Stack.Screen name="Employee" component={EmployeeScreen} />
+          <Stack.Screen name="AddEmployee" component={AddEmployeeScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </ToastProvider>
