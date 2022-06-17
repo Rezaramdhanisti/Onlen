@@ -1,10 +1,11 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   TouchableOpacity,
   Text,
   Image,
   TextInput,
+  FlatList,
   ActivityIndicator,
   ScrollView,
   Alert,
@@ -26,25 +27,69 @@ function AddEmployeeScreen({navigation, route}) {
   );
   const toast = useToast();
   const [isLoading, setLoading] = useState(false);
+  const [dataRoles, setDataRoles] = useState([]);
+  const [idRoles, setIdRoles] = useState('');
 
-  const createEmployee = async () => {
-    if (text.length < 1) {
-      return toast.show('Isi dulu Karyawannya yaa', {type: 'danger'});
-    }
+  const [textEmail, setTextEmail] = useState('');
+  const [textPassword, setTextPassword] = useState('');
+
+  useEffect(() => {
+    getListRoles();
+  }, []);
+
+  const getListRoles = async () => {
+    console.log('sssss');
     setLoading(true);
     const token = await AsyncStorage.getItem('@token');
     axios
-      .post(
-        `${API_URL}/dashboard/categories`,
-        {name: text},
-        {
-          headers: {
-            Authorization: 'Bearer ' + token,
-          },
+      .get(`${API_URL}/dashboard/accounts/roles`, {
+        headers: {
+          Authorization: 'Bearer ' + token,
         },
-      )
+      })
+      .then(res => {
+        console.log('xxxx', res);
+        setDataRoles(res.data.data);
+      })
+      .catch(e => {
+        console.log('xxxx', e);
+        toast.show(e?.response?.data.message, {type: 'danger'});
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  const createEmployee = async () => {
+    if (text.length < 1) {
+      return toast.show('Isi dulu nama karyawannya yaa', {type: 'danger'});
+    }
+    if (textEmail.length < 1) {
+      return toast.show('Isi dulu email yaa', {type: 'danger'});
+    }
+    if (textPassword.length < 1) {
+      return toast.show('Isi dulu password yaa', {type: 'danger'});
+    }
+    if (idRoles.length < 1) {
+      return toast.show('Pilih Role dulu password yaa', {type: 'danger'});
+    }
+    const dataPayload = {
+      name: text,
+      email: textEmail,
+      password: textPassword,
+      roleId: idRoles,
+    };
+    console.log('dataPay', dataPayload);
+    setLoading(true);
+    const token = await AsyncStorage.getItem('@token');
+    axios
+      .post(`${API_URL}/dashboard/accounts`, dataPayload, {
+        headers: {
+          Authorization: 'Bearer ' + token,
+        },
+      })
       .then(() => {
-        Alert.alert('Sukses', 'Karyawan berhasil dibuat!', [
+        Alert.alert('Sukses', 'Karyawan berhasil ditambahkan!', [
           {text: 'OK', onPress: () => navigation.goBack()},
         ]);
       })
@@ -55,6 +100,57 @@ function AddEmployeeScreen({navigation, route}) {
         setLoading(false);
       });
   };
+
+  const renderItem = ({item}) => (
+    <TouchableOpacity onPress={() => setIdRoles(item.id)}>
+      <View
+        style={{
+          flexDirection: 'row',
+          marginTop: 18,
+          alignItems: 'center',
+          marginLeft: 20,
+        }}>
+        {item.id === idRoles ? (
+          <View
+            style={{
+              width: 20,
+              height: 20,
+              borderRadius: 20,
+              borderWidth: 1,
+              borderColor: '#ff3366',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <View
+              style={{
+                width: 10,
+                height: 10,
+                borderRadius: 16,
+                backgroundColor: '#ff3366',
+              }}></View>
+          </View>
+        ) : (
+          <View
+            style={{
+              width: 20,
+              height: 20,
+              borderRadius: 20,
+              borderWidth: 1,
+              borderColor: 'grey',
+            }}></View>
+        )}
+        <Text style={styles.textSubtitleNoMargin}>{item.name}</Text>
+      </View>
+
+      <View
+        style={{
+          height: 1,
+          backgroundColor: '#E8EBEB',
+          marginVertical: 16,
+        }}
+      />
+    </TouchableOpacity>
+  );
 
   return (
     <View style={styles.shell}>
@@ -95,65 +191,11 @@ function AddEmployeeScreen({navigation, route}) {
         <Text style={styles.textSubtitle2}>
           Peran mereka akan menentukan tingkat akses mereka
         </Text>
-        <View
-          style={{
-            flexDirection: 'row',
-            marginTop: 18,
-            alignItems: 'center',
-            marginLeft: 20,
-          }}>
-          <View
-            style={{
-              width: 20,
-              height: 20,
-              borderRadius: 20,
-              borderWidth: 1,
-              borderColor: 'grey',
-            }}></View>
-
-          <Text style={styles.textSubtitleNoMargin}>Admin</Text>
-        </View>
-        <View
-          style={{
-            height: 1,
-            backgroundColor: '#E8EBEB',
-            marginVertical: 16,
-          }}
-        />
-        <View
-          style={{
-            flexDirection: 'row',
-            marginTop: 10,
-            alignItems: 'center',
-            marginLeft: 20,
-          }}>
-          <View
-            style={{
-              width: 20,
-              height: 20,
-              borderRadius: 20,
-              borderWidth: 1,
-              borderColor: '#ff3366',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-            <View
-              style={{
-                width: 10,
-                height: 10,
-                borderRadius: 16,
-                backgroundColor: '#ff3366',
-              }}></View>
-          </View>
-
-          <Text style={styles.textSubtitleNoMargin}>Admin</Text>
-        </View>
-        <View
-          style={{
-            height: 1,
-            backgroundColor: '#E8EBEB',
-            marginVertical: 20,
-          }}
+        <FlatList
+          data={dataRoles}
+          renderItem={renderItem}
+          keyExtractor={item => item.id}
+          showsVerticalScrollIndicator={false}
         />
 
         <Text style={styles.textSubtitle}>Detail Karyawan</Text>
@@ -166,7 +208,6 @@ function AddEmployeeScreen({navigation, route}) {
           onChangeText={newText => setText(newText)}
           placeholder="Nama"
           placeholderTextColor="#9FA2B4"
-          value={text}
         />
         <View
           style={{
@@ -179,10 +220,25 @@ function AddEmployeeScreen({navigation, route}) {
         <TextInput
           style={{marginTop: 18}}
           underlineColorAndroid="transparent"
-          onChangeText={newText => setText(newText)}
+          onChangeText={newText => setTextEmail(newText)}
           placeholder="Email"
           placeholderTextColor="#9FA2B4"
-          value={text}
+        />
+        <View
+          style={{
+            height: 1,
+            backgroundColor: '#E8EBEB',
+            marginTop: 6,
+            marginBottom: 4,
+          }}
+        />
+        <TextInput
+          secureTextEntry
+          style={{marginTop: 18}}
+          underlineColorAndroid="transparent"
+          onChangeText={newText => setTextPassword(newText)}
+          placeholder="Password"
+          placeholderTextColor="#9FA2B4"
         />
         <View
           style={{
@@ -193,28 +249,26 @@ function AddEmployeeScreen({navigation, route}) {
           }}
         />
       </ScrollView>
-      {!route.params && (
-        <TouchableOpacity
-          style={{
-            height: hp(5),
-            backgroundColor: '#ff3366',
-            borderRadius: 4,
-            justifyContent: 'center',
-            position: 'absolute',
-            bottom: hp(10),
-            left: wp(24),
-            right: wp(24),
-          }}
-          onPress={() => createEmployee()}>
-          {isLoading ? (
-            <ActivityIndicator size="small" color="white" />
-          ) : (
-            <View>
-              <Text style={styles.textAddMenu}>Simpan</Text>
-            </View>
-          )}
-        </TouchableOpacity>
-      )}
+      <TouchableOpacity
+        style={{
+          height: hp(5),
+          backgroundColor: '#ff3366',
+          borderRadius: 4,
+          justifyContent: 'center',
+          position: 'absolute',
+          bottom: hp(10),
+          left: wp(24),
+          right: wp(24),
+        }}
+        onPress={() => createEmployee()}>
+        {isLoading ? (
+          <ActivityIndicator size="small" color="white" />
+        ) : (
+          <View>
+            <Text style={styles.textAddMenu}>Simpan</Text>
+          </View>
+        )}
+      </TouchableOpacity>
     </View>
   );
 }

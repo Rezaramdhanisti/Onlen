@@ -26,11 +26,11 @@ function EmployeeScreen({navigation}) {
 
   useFocusEffect(
     useCallback(() => {
-      getListCategory();
+      getListEmployee();
     }, []),
   );
 
-  const getListCategory = async () => {
+  const getListEmployee = async () => {
     setLoading(true);
     const token = await AsyncStorage.getItem('@token');
     axios
@@ -63,14 +63,8 @@ function EmployeeScreen({navigation}) {
           <Text style={styles.textSales}>{item?.name}</Text>
           <Text style={styles.textSales2}>{item?.roleName}</Text>
         </View>
-        <TouchableOpacity
-          onPress={() =>
-            navigation.navigate('AddEmployee', {
-              categoryName: item?.name,
-              categoryId: item?.id,
-              roleId: item?.roleId,
-            })
-          }
+        {/* <TouchableOpacity
+         
           style={{
             width: 120,
             height: 50,
@@ -85,7 +79,7 @@ function EmployeeScreen({navigation}) {
             }}
             source={require('../../../assets/ic_right_arrow.png')}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
       <View
         style={{
