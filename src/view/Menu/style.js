@@ -9,7 +9,7 @@ const {width, height} = Dimensions.get('window');
 export default {
   shell: {
     flex: 1,
-    backgroundColor: '#f9fafc',
+    backgroundColor: 'white',
     paddingTop: Platform.OS === 'ios' ? hp('8%') : hp('2%'),
   },
   containerWithEmail: {
@@ -173,5 +173,12 @@ export default {
     letterSpacing: 0.34,
     fontWeight: '400',
     marginTop: hp(1),
+  },
+  textEditImage: {
+    fontSize: helpers.scaling.moderateScale(12),
+    color: '#ff3366',
+    letterSpacing: 0.34,
+    fontWeight: '400',
+    marginTop: hp(0.5),
   },
 };

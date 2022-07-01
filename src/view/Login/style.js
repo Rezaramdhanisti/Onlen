@@ -5,7 +5,7 @@ const {width, height} = Dimensions.get('window');
 export default {
   shell: {
     flex: 1,
-    backgroundColor: '#f9fafc',
+    backgroundColor: 'white',
     paddingTop: '30%',
   },
   imageLogo: {

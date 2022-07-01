@@ -13,7 +13,10 @@ import {
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DropDownPicker from 'react-native-dropdown-picker';
+
+import {launchImageLibrary} from 'react-native-image-picker';
 import {useToast} from 'react-native-toast-notifications';
+import mime from 'mime';
 import {API_URL} from '@env';
 import {
   widthPercentageToDP as wp,
@@ -44,12 +47,19 @@ function DetailMenuScreen({navigation, route}) {
     route.params.dataMenu ? route.params.dataMenu?.price?.toString() : '',
   );
 
+  const [imageMenu, setImageMenu] = useState(
+    route.params.dataMenu ? route.params.dataMenu?.imageUrl : '',
+  );
+
+  const [isLoadingImage, setLoadingImage] = useState(false);
+
   const createMenu = async () => {
     const dataPayload = {
       categoryId: value,
       name: textName,
-      imageUrl:
-        'https://kanmakan-images.s3.ap-southeast-1.amazonaws.com/nasi-sate-gila.jpg',
+      imageUrl: imageMenu
+        ? imageMenu
+        : 'https://kanmakan-images.s3.ap-southeast-1.amazonaws.com/default-menu.png',
       description: textDescription,
       isPromoEnabled: false,
       actualPrice: parseInt(textPrice),
@@ -93,8 +103,9 @@ function DetailMenuScreen({navigation, route}) {
     const dataPayload = {
       categoryId: value,
       name: textName,
-      imageUrl:
-        'https://kanmakan-images.s3.ap-southeast-1.amazonaws.com/nasi-sate-gila.jpg',
+      imageUrl: imageMenu
+        ? imageMenu
+        : 'https://kanmakan-images.s3.ap-southeast-1.amazonaws.com/default-menu.png',
       description: textDescription,
       isPromoEnabled: false,
       actualPrice: parseInt(textPrice),
@@ -135,6 +146,62 @@ function DetailMenuScreen({navigation, route}) {
       })
       .finally(() => {
         setLoading(false);
+      });
+  };
+
+  const pickImage = async (
+    options = {
+      mediaType: 'photo',
+    },
+  ) => {
+    setLoadingImage(true);
+    launchImageLibrary(options, response => {
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+        setLoadingImage(false);
+      } else if (response.errorCode) {
+        console.log('Unexpected error occurred on image picker.');
+        setLoadingImage(false);
+      } else {
+        take(response.assets[0].uri);
+      }
+    });
+  };
+  const take = async imageCache => {
+    const token = await AsyncStorage.getItem('@token');
+
+    var formData = new FormData();
+    // formData.append('image', imageCache);
+    formData.append('image', {
+      uri: imageCache,
+      type: mime.getType(imageCache),
+      name: `signature-${Date.now()}`,
+    });
+
+    console.log('formData', formData);
+
+    axios({
+      url: `${API_URL}/dashboard/upload/image`,
+      method: 'POST',
+      data: formData,
+      transformRequest: () => {
+        return formData;
+      },
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: 'Bearer ' + token,
+      },
+    })
+      .then(resp => {
+        console.log('response', resp.data.data);
+        setImageMenu(resp.data.data.imageURL);
+      })
+      .catch(e => {
+        console.log('error', e.response.data);
+        toast.show(e?.response?.data.message, {type: 'danger'});
+      })
+      .finally(() => {
+        setLoadingImage(false);
       });
   };
 
@@ -179,27 +246,47 @@ function DetailMenuScreen({navigation, route}) {
           Upload foto yang menarik biar pelanggan makin tertarik.
         </Text>
 
-        {route.params.dataMenu ? (
-          <Image
-            style={{
-              width: wp(21),
-              height: hp(10),
-              borderRadius: 8,
-              marginTop: hp(1.5),
-            }}
-            resizeMode={'contain'}
-            source={{uri: route.params.dataMenu.imageUrl}}
-          />
+        {imageMenu && !isLoadingImage ? (
+          <View>
+            <Image
+              style={{
+                width: wp(21),
+                height: hp(10),
+                borderRadius: 8,
+                marginTop: hp(1.5),
+              }}
+              resizeMode={'contain'}
+              source={{uri: imageMenu}}
+            />
+            <Text style={styles.textEditImage} onPress={() => pickImage()}>
+              Ubah Gambar
+            </Text>
+          </View>
         ) : (
-          <View
+          <TouchableOpacity
+            onPress={() => pickImage()}
             style={{
               width: wp(21),
               height: hp(10),
               borderRadius: 8,
               borderWidth: 1,
+              justifyContent: 'center',
               marginTop: hp(1.5),
               borderColor: '#9FA2B4',
-            }}></View>
+            }}>
+            {isLoadingImage ? (
+              <ActivityIndicator size="small" color="#ff3366" />
+            ) : (
+              <Image
+                style={{
+                  width: 16,
+                  height: 16,
+                  alignSelf: 'center',
+                }}
+                source={require('../../../assets/upload.png')}
+              />
+            )}
+          </TouchableOpacity>
         )}
         <Text style={styles.textSubtitle}>Nama*</Text>
         <TextInput

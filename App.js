@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from 'react';
+import {Animated, Image, Text, View, TouchableOpacity} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 
 import LoginScreen from './src/view/Login';
 import RegisterScreen from './src/view/Register';
@@ -13,31 +15,172 @@ import AddCategoryScreen from './src/view/Menu/AddCategory';
 import SplashScreen from './src/view/Splash';
 import EmployeeScreen from './src/view/Employee';
 import AddEmployeeScreen from './src/view/Employee/AddEmployee';
+import OrderTodayScreen from './src/view/Order/OrderToday';
 
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 import {ToastProvider} from 'react-native-toast-notifications';
 
 const Stack = createNativeStackNavigator();
+const Tab = createMaterialTopTabNavigator();
+function MyTabBar({state, descriptors, navigation, position}) {
+  return (
+    <View style={{flexDirection: 'row'}}>
+      {state.routes.map((route, index) => {
+        const {options} = descriptors[route.key];
+        const label =
+          options.tabBarLabel !== undefined
+            ? options.tabBarLabel
+            : options.title !== undefined
+            ? options.title
+            : route.name;
+
+        const isFocused = state.index === index;
+
+        const onPress = () => {
+          const event = navigation.emit({
+            type: 'tabPress',
+            target: route.key,
+            canPreventDefault: true,
+          });
+
+          if (!isFocused && !event.defaultPrevented) {
+            // The `merge: true` option makes sure that the params inside the tab screen are preserved
+            navigation.navigate({name: route.name, merge: true});
+          }
+        };
+
+        const onLongPress = () => {
+          navigation.emit({
+            type: 'tabLongPress',
+            target: route.key,
+          });
+        };
+
+        const inputRange = state.routes.map((_, i) => i);
+        const opacity = position.interpolate({
+          inputRange,
+          outputRange: inputRange.map(i => (i === index ? 1 : 0)),
+        });
+
+        return (
+          <TouchableOpacity
+            accessibilityRole="button"
+            accessibilityState={isFocused ? {selected: true} : {}}
+            accessibilityLabel={options.tabBarAccessibilityLabel}
+            testID={options.tabBarTestID}
+            onPress={onPress}
+            onLongPress={onLongPress}
+            style={{
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: 'white',
+              paddingTop: 14,
+              height: 40,
+            }}>
+            <View
+              style={{
+                backgroundColor: isFocused ? '#FFDBD4' : 'white',
+                borderRadius: 14,
+              }}>
+              <Animated.Text
+                style={{
+                  color: isFocused ? 'black' : 'grey',
+                  fontWeight: '500',
+                  fontSize: 14,
+                  paddingHorizontal: 20,
+                  paddingVertical: 6,
+                }}>
+                {label}
+              </Animated.Text>
+            </View>
+          </TouchableOpacity>
+        );
+      })}
+    </View>
+  );
+}
+
+function MyTabs() {
+  return (
+    <Tab.Navigator tabBar={props => <MyTabBar {...props} />}>
+      <Tab.Screen name="Baru" component={OrderTodayScreen} />
+      <Tab.Screen name="Proses" component={OrderTodayScreen} />
+      <Tab.Screen name="Selesai" component={OrderTodayScreen} />
+    </Tab.Navigator>
+  );
+}
 
 function App() {
   return (
     <ToastProvider>
       <NavigationContainer>
-        <Stack.Navigator screenOptions={{headerShown: false}}>
-          <Stack.Screen name="Splash" component={SplashScreen} />
-          <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Navigator>
+          <Stack.Screen
+            name="Splash"
+            component={SplashScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Login"
+            component={LoginScreen}
+            options={{headerShown: false}}
+          />
           <Stack.Screen
             name="Home"
             component={HomeScreen}
-            options={{gestureEnabled: false}}
+            options={{gestureEnabled: false, headerShown: false}}
           />
-          <Stack.Screen name="Settings" component={SettingsScreen} />
-          <Stack.Screen name="Register" component={RegisterScreen} />
-          <Stack.Screen name="Menu" component={MenuScreen} />
-          <Stack.Screen name="ListMenu" component={ListMenuScreen} />
-          <Stack.Screen name="DetailMenu" component={DetailMenuScreen} />
-          <Stack.Screen name="AddCategory" component={AddCategoryScreen} />
-          <Stack.Screen name="Employee" component={EmployeeScreen} />
-          <Stack.Screen name="AddEmployee" component={AddEmployeeScreen} />
+          <Stack.Screen
+            name="Settings"
+            component={SettingsScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Register"
+            component={RegisterScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Menu"
+            component={MenuScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="ListMenu"
+            component={ListMenuScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="DetailMenu"
+            component={DetailMenuScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="AddCategory"
+            component={AddCategoryScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Employee"
+            component={EmployeeScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="AddEmployee"
+            component={AddEmployeeScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Order"
+            component={MyTabs}
+            options={{
+              headerBackVisible: false,
+            }}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </ToastProvider>

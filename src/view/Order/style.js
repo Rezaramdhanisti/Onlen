@@ -15,45 +15,14 @@ export default {
   containerWithEmail: {
     flex: 1,
     height: height,
+    backgroundColor: 'white',
     paddingHorizontal: wp(5),
-    paddingTop: hp('4%'),
-  },
-  containerDetailMenu: {
-    flex: 1,
-    height: height,
-    paddingHorizontal: wp(5),
-    paddingTop: hp('2%'),
   },
   textTitleWithEmail: {
     fontSize: helpers.scaling.moderateScale(16),
     color: '#565454',
     letterSpacing: 0.34,
     fontWeight: 'bold',
-  },
-  textSubtitle: {
-    fontSize: helpers.scaling.moderateScale(14),
-    color: '#565454',
-    letterSpacing: 0.34,
-    fontWeight: 'bold',
-    marginTop: hp(2),
-  },
-  textToggle: {
-    fontSize: helpers.scaling.moderateScale(14),
-    color: '#565454',
-    letterSpacing: 0.34,
-    fontWeight: 'bold',
-  },
-  textSubtitle2: {
-    fontSize: helpers.scaling.moderateScale(14),
-    color: '#565454',
-    letterSpacing: 0.34,
-    marginTop: hp(0.5),
-  },
-  textSubtitleNoMargin: {
-    fontSize: helpers.scaling.moderateScale(14),
-    color: '#565454',
-    letterSpacing: 0.34,
-    marginLeft: wp(4),
   },
   textHeader: {
     fontSize: helpers.scaling.moderateScale(16),
@@ -66,13 +35,8 @@ export default {
     fontSize: helpers.scaling.moderateScale(14),
     color: '#565454',
     letterSpacing: 0.34,
-    fontWeight: 'bold',
-  },
-  textSales2: {
-    fontSize: helpers.scaling.moderateScale(14),
-    color: '#565454',
-    letterSpacing: 0.34,
-    marginTop: 6,
+    fontWeight: '400',
+    marginLeft: wp(3),
   },
   textMenu: {
     fontSize: helpers.scaling.moderateScale(13),
@@ -149,41 +113,9 @@ export default {
     fontWeight: 'bold',
     marginTop: hp(3),
   },
-  textMenu: {
-    fontSize: helpers.scaling.moderateScale(14),
-    color: '#565454',
+  textSales: {
+    fontSize: helpers.scaling.moderateScale(16),
     letterSpacing: 0.34,
-    fontWeight: 'bold',
-    marginTop: 6,
-  },
-  textDescription: {
-    fontSize: helpers.scaling.moderateScale(13),
-    color: '#565454',
-    letterSpacing: 0.34,
-    marginTop: 4,
-  },
-  textPrice: {
-    fontSize: helpers.scaling.moderateScale(13),
-    color: '#565454',
-    letterSpacing: 0.34,
-    fontWeight: '500',
-    marginTop: hp(1.5),
-  },
-  textAddMenu: {
-    fontSize: helpers.scaling.moderateScale(14),
-    color: 'white',
-    letterSpacing: 0.34,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  textSubHeader: {
-    color: '#565454',
-  },
-  textEditCategory: {
-    fontSize: helpers.scaling.moderateScale(14),
-    color: '#ff3366',
-    letterSpacing: 0.34,
-    fontWeight: '400',
-    marginTop: hp(1),
+    fontWeight: '700',
   },
 };

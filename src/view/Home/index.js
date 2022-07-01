@@ -83,7 +83,7 @@ function HomeScreen({navigation}) {
     if (!dataProfile?.isPremium) {
       return alertPremium2();
     }
-    navigation.navigate('Settings');
+    navigation.navigate('Order');
   };
   const goToReport = () => {
     if (!dataProfile?.isPremium) {
@@ -315,7 +315,7 @@ function HomeScreen({navigation}) {
               borderRadius: 12,
               marginRight: wp(3),
             }}
-            source={require('../../../assets/background-gradient.png')}></Image>
+            source={require('../../../assets/banner-1.jpg')}></Image>
           <Image
             style={{
               width: wp(70),
@@ -326,7 +326,7 @@ function HomeScreen({navigation}) {
               borderRadius: 12,
               marginRight: wp(3),
             }}
-            source={require('../../../assets/background-gradient.png')}></Image>
+            source={require('../../../assets/banner-2.jpg')}></Image>
           <Image
             style={{
               width: wp(70),
@@ -336,7 +336,7 @@ function HomeScreen({navigation}) {
               paddingVertical: 22,
               borderRadius: 12,
             }}
-            source={require('../../../assets/background-gradient.png')}></Image>
+            source={require('../../../assets/banner-3.jpg')}></Image>
         </ScrollView>
       </View>
     </View>
