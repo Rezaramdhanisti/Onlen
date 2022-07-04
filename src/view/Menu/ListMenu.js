@@ -96,6 +96,26 @@ function ListMenuScreen({navigation, route}) {
     </TouchableOpacity>
   );
 
+  const renderEmptyItem = () => (
+    <View>
+      <View
+        style={{
+          alignItems: 'center',
+          marginTop: hp(10),
+        }}>
+        <Image
+          style={{
+            width: 120,
+            height: 120,
+            resizeMode: 'contain',
+          }}
+          source={require('../../../assets/default-menu.png')}
+        />
+      </View>
+      <Text style={styles.textNoData}>Menu kosong</Text>
+    </View>
+  );
+
   return (
     <View style={styles.shell}>
       <View
@@ -146,6 +166,7 @@ function ListMenuScreen({navigation, route}) {
             renderItem={renderItem}
             keyExtractor={item => item.id}
             showsVerticalScrollIndicator={false}
+            ListEmptyComponent={renderEmptyItem}
           />
         )}
         <TouchableOpacity

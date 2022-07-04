@@ -61,7 +61,17 @@ function MenuScreen({navigation}) {
           marginTop: hp(1),
         }}>
         <View>
-          <Text style={styles.textSales}>{item?.name}</Text>
+          <Text
+            onPress={() =>
+              navigation.navigate('ListMenu', {
+                categoryName: item?.name,
+                categoryId: item?.id,
+                allDataCategory: dataCategory,
+              })
+            }
+            style={styles.textSales}>
+            {item?.name}
+          </Text>
           <Text
             style={styles.textEditCategory}
             onPress={() =>
@@ -105,6 +115,26 @@ function MenuScreen({navigation}) {
           marginBottom: 4,
         }}
       />
+    </View>
+  );
+
+  const renderEmptyItem = () => (
+    <View>
+      <View
+        style={{
+          alignItems: 'center',
+          marginTop: hp(10),
+        }}>
+        <Image
+          style={{
+            width: 120,
+            height: 120,
+            resizeMode: 'contain',
+          }}
+          source={require('../../../assets/default-menu.png')}
+        />
+      </View>
+      <Text style={styles.textNoData}>Kategori kosong</Text>
     </View>
   );
 
@@ -158,6 +188,7 @@ function MenuScreen({navigation}) {
             renderItem={renderItem}
             keyExtractor={item => item.id}
             showsVerticalScrollIndicator={false}
+            ListEmptyComponent={renderEmptyItem}
           />
         )}
         {/* <View style={{height: hp(5)}}></View> */}
