@@ -16,6 +16,8 @@ import SplashScreen from './src/view/Splash';
 import EmployeeScreen from './src/view/Employee';
 import AddEmployeeScreen from './src/view/Employee/AddEmployee';
 import OrderTodayScreen from './src/view/Order/OrderToday';
+import OrderProcessScreen from './src/view/Order/OrderProcess';
+import OrderFinishScreen from './src/view/Order/OrderFinish';
 
 import {
   widthPercentageToDP as wp,
@@ -108,8 +110,8 @@ function MyTabs() {
   return (
     <Tab.Navigator tabBar={props => <MyTabBar {...props} />}>
       <Tab.Screen name="Baru" component={OrderTodayScreen} />
-      <Tab.Screen name="Proses" component={OrderTodayScreen} />
-      <Tab.Screen name="Selesai" component={OrderTodayScreen} />
+      <Tab.Screen name="Proses" component={OrderProcessScreen} />
+      <Tab.Screen name="Selesai" component={OrderFinishScreen} />
     </Tab.Navigator>
   );
 }

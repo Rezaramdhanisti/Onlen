@@ -118,4 +118,18 @@ export default {
     letterSpacing: 0.34,
     fontWeight: '700',
   },
+  textEditImage: {
+    fontSize: helpers.scaling.moderateScale(12),
+    color: '#ff3366',
+    letterSpacing: 0.34,
+    fontWeight: '400',
+    marginTop: hp(0.5),
+  },
+  textNoData: {
+    fontSize: helpers.scaling.moderateScale(16),
+    color: '#565454',
+    letterSpacing: 0.34,
+    fontWeight: '600',
+    textAlign: 'center',
+  },
 };

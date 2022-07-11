@@ -6,7 +6,6 @@ import {
   Image,
   FlatList,
   ActivityIndicator,
-  ScrollView,
 } from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
 import axios from 'axios';
@@ -20,37 +19,36 @@ import {
 
 import styles from './style';
 
-function OrderTodayScreen({navigation}) {
-  const [dataOrder, setDataOrder] = useState([]);
+function OrderProcessScreen({navigation}) {
+  const [dataCategory, setDataCategory] = useState([{name: 'reza', id: '1'}]);
   const toast = useToast();
   const [isLoading, setLoading] = useState(false);
 
-  useFocusEffect(
-    useCallback(() => {
-      // getListOrder();
-    }, []),
-  );
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     getListCategory();
+  //   }, []),
+  // );
 
-  const getListOrder = async () => {
-    setLoading(true);
-    const token = await AsyncStorage.getItem('@token');
-    axios
-      .get(`${API_URL}/dashboard/orders?orderStatus=pending`, {
-        params: {limit: 100},
-        headers: {
-          Authorization: 'Bearer ' + token,
-        },
-      })
-      .then(res => {
-        console.log('res', res);
-        setDataOrder(res.data.data);
-      })
-      .catch(e => {
-        toast.show(e?.response?.data.message, {type: 'danger'});
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+  const getListCategory = async () => {
+    // setLoading(true);
+    // const token = await AsyncStorage.getItem('@token');
+    // axios
+    //   .get(`${API_URL}/dashboard/categories`, {
+    //     params: {limit: 100},
+    //     headers: {
+    //       Authorization: 'Bearer ' + token,
+    //     },
+    //   })
+    //   .then(res => {
+    //     setDataCategory(res.data.data);
+    //   })
+    //   .catch(e => {
+    //     toast.show(e?.response?.data.message, {type: 'danger'});
+    //   })
+    //   .finally(() => {
+    //     setLoading(false);
+    //   });
   };
 
   const renderItem = ({item}) => (
@@ -97,62 +95,12 @@ function OrderTodayScreen({navigation}) {
       </View>
       <View
         style={{
-          flexDirection: 'row',
-          marginTop: 14,
-          alignItems: 'center',
-        }}>
-        <View
-          style={{
-            backgroundColor: '#ff3366',
-            height: hp(4),
-            width: wp(20),
-            borderRadius: 16,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <Text style={{fontWeight: '500', color: 'white'}}>Terima</Text>
-        </View>
-        <View
-          style={{
-            backgroundColor: '#FFDBD4',
-            height: hp(4),
-            width: wp(20),
-            borderRadius: 16,
-            marginLeft: 10,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <Text style={{fontWeight: '500', color: '#ff3366'}}>Tolak</Text>
-        </View>
-      </View>
-      <View
-        style={{
           height: 1,
           backgroundColor: '#E8EBEB',
           marginTop: 14,
           marginBottom: 4,
         }}
       />
-    </View>
-  );
-
-  const renderEmptyItem = () => (
-    <View>
-      <View
-        style={{
-          alignItems: 'center',
-          marginTop: hp(10),
-        }}>
-        <Image
-          style={{
-            width: 120,
-            height: 120,
-            resizeMode: 'contain',
-          }}
-          source={require('../../../assets/default-menu.png')}
-        />
-      </View>
-      <Text style={styles.textNoData}>Order kosong</Text>
     </View>
   );
 
@@ -169,16 +117,15 @@ function OrderTodayScreen({navigation}) {
         </View>
       ) : (
         <FlatList
-          data={dataOrder}
+          data={dataCategory}
           renderItem={renderItem}
           keyExtractor={item => item.id}
           showsVerticalScrollIndicator={false}
           style={{marginTop: 10}}
-          ListEmptyComponent={renderEmptyItem}
         />
       )}
     </View>
   );
 }
 
-export default OrderTodayScreen;
+export default OrderProcessScreen;

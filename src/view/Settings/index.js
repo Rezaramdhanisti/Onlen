@@ -1,10 +1,9 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {View, TouchableOpacity, Text, Image, Linking} from 'react-native';
-import axios from 'axios';
-import CryptoJS from 'react-native-crypto-js';
-import {API_URL, ENCRYPT_KEY} from '@env';
+import {ADDRESS_URL} from '@env';
 import {useToast} from 'react-native-toast-notifications';
 import {CommonActions} from '@react-navigation/native';
+import Clipboard from '@react-native-clipboard/clipboard';
 
 import {
   widthPercentageToDP as wp,
@@ -13,7 +12,8 @@ import {
 
 import styles from './style';
 
-function SettingScreen({navigation}) {
+function SettingScreen({navigation, route}) {
+  const toast = useToast();
   const pressLogOut = () => {
     navigation.dispatch(
       CommonActions.reset({
@@ -22,6 +22,12 @@ function SettingScreen({navigation}) {
       }),
     );
   };
+
+  const copyToClipboard = () => {
+    Clipboard.setString(`${ADDRESS_URL}${route.params.merchantName}`);
+    toast.show('Tersalin', {type: 'success'});
+  };
+
   return (
     <View style={styles.shell}>
       <View
@@ -48,7 +54,8 @@ function SettingScreen({navigation}) {
       <View style={styles.containerWithEmail}>
         <Text style={styles.textTitleWithEmail}>Link Toko</Text>
 
-        <View
+        <TouchableOpacity
+          onPress={() => copyToClipboard()}
           style={{
             flexDirection: 'row',
             alignItems: 'center',
@@ -62,7 +69,7 @@ function SettingScreen({navigation}) {
             source={require('../../../assets/upload.png')}
           />
           <Text style={styles.textSales}>Bagikan link toko kamu</Text>
-        </View>
+        </TouchableOpacity>
         <View style={{height: hp(4)}}></View>
         <Text style={styles.textTitleWithEmail}>Informasi Toko</Text>
         <View

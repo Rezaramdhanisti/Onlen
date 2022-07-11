@@ -65,31 +65,28 @@ function HomeScreen({navigation}) {
     if (dataProfile?.roleName !== 'administrator') {
       return alertPremium();
     }
-    navigation.navigate('Settings');
   };
   const goToSetting = () => {
     if (dataProfile?.roleName !== 'administrator') {
       return alertPremium();
     }
-    navigation.navigate('Settings');
+    navigation.navigate('Settings', dataProfile);
   };
   const goToPromotion = () => {
     if (dataProfile?.roleName !== 'administrator') {
       return alertPremium();
     }
-    navigation.navigate('Settings');
   };
   const goToOrder = () => {
-    if (!dataProfile?.isPremium) {
-      return alertPremium2();
-    }
+    // if (!dataProfile?.isPremium) {
+    //   return alertPremium2();
+    // }
     navigation.navigate('Order');
   };
   const goToReport = () => {
     if (!dataProfile?.isPremium) {
       return alertPremium2();
     }
-    navigation.navigate('Settings');
   };
 
   return (
