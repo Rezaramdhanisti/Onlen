@@ -26,7 +26,9 @@ import {
 import styles from './style';
 
 function DetailMenuScreen({navigation, route}) {
-  const [isEnabled, setIsEnabled] = useState(false);
+  const [isEnabled, setIsEnabled] = useState(
+    route.params.dataMenu ? route.params.dataMenu?.isSold : false,
+  );
   const [isDelete, setIsDelete] = useState(false);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
   const toggleSwitchDelete = () => setIsDelete(previousState => !previousState);
@@ -64,7 +66,7 @@ function DetailMenuScreen({navigation, route}) {
       isPromoEnabled: false,
       actualPrice: parseInt(textPrice),
       price: parseInt(textPrice),
-      isSold: false,
+      isSold: isEnabled,
     };
     if (textName.length < 1) {
       return toast.show('Isi dulu namanya yaa', {type: 'danger'});
@@ -110,8 +112,9 @@ function DetailMenuScreen({navigation, route}) {
       isPromoEnabled: false,
       actualPrice: parseInt(textPrice),
       price: parseInt(textPrice),
-      isSold: false,
+      isSold: isEnabled,
     };
+
     if (textName.length < 1) {
       return toast.show('Isi dulu namanya yaa', {type: 'danger'});
     }
@@ -373,8 +376,7 @@ function DetailMenuScreen({navigation, route}) {
           }}
         />
         <View style={{height: hp(2)}} />
-        <View style={{height: hp(10)}}></View>
-        {/* <Text style={styles.textTitleWithEmail}>Variasi menu</Text>
+        <Text style={styles.textTitleWithEmail}>Variasi menu</Text>
 
         <View style={{height: hp(2)}} />
         <View
@@ -386,18 +388,18 @@ function DetailMenuScreen({navigation, route}) {
           <Text style={styles.textToggle}>Aktifkan menu</Text>
           <Switch
             trackColor={{false: '#B3B2B3', true: '#FFEBF0'}}
-            thumbColor={isEnabled ? '#ff3366' : '#EDEDED'}
+            thumbColor={!isEnabled ? '#ff3366' : '#EDEDED'}
             ios_backgroundColor="#B3B2B3"
             onValueChange={toggleSwitch}
-            value={isEnabled}
+            value={!isEnabled}
           />
         </View>
 
         <Text style={styles.textSubtitle2}>
-          Menu aktif akan muncul dan bisa di pesan oleh pelanggan.
+          Menu tidak aktif tidak bisa di pesan oleh pelanggan.
         </Text>
 
-        <View style={{height: hp(1)}} />
+        {/* <View style={{height: hp(1)}} />
         <View
           style={{
             flexDirection: 'row',
@@ -414,9 +416,9 @@ function DetailMenuScreen({navigation, route}) {
           />
         </View>
 
-        <Text style={styles.textSubtitle2}>Hapus menu</Text>
+        <Text style={styles.textSubtitle2}>Hapus menu</Text> */}
 
-        <View style={{height: hp(15)}} /> */}
+        <View style={{height: hp(15)}} />
       </ScrollView>
       <TouchableOpacity
         style={{
