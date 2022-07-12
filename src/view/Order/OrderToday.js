@@ -234,7 +234,7 @@ function OrderTodayScreen({navigation}) {
           {isLoadingDetail ? (
             <ActivityIndicator size="large" color="#ff3366" />
           ) : (
-            <View>
+            <ScrollView showsVerticalScrollIndicator={false}>
               <Text style={styles.textSales}>
                 Detail Order {dataOrderDetail?.customerName}
               </Text>
@@ -304,10 +304,11 @@ function OrderTodayScreen({navigation}) {
               <FlatList
                 data={dataOrderDetail?.items}
                 renderItem={renderItemDetail}
+                scrollEnabled={false}
                 keyExtractor={item => item.productId}
                 showsVerticalScrollIndicator={false}
               />
-            </View>
+            </ScrollView>
           )}
         </View>
       </Modal>
