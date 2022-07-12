@@ -32,6 +32,8 @@ function LoginScreen({navigation}) {
       password,
     };
 
+    console.log('xxx', API_URL);
+
     // Encrypt;
     const encryptText = CryptoJS.AES.encrypt(
       JSON.stringify(data),

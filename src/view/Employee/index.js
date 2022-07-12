@@ -33,6 +33,7 @@ function EmployeeScreen({navigation}) {
   const getListEmployee = async () => {
     setLoading(true);
     const token = await AsyncStorage.getItem('@token');
+
     axios
       .get(`${API_URL}/dashboard/accounts`, {
         headers: {

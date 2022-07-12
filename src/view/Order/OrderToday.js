@@ -7,6 +7,7 @@ import {
   FlatList,
   ActivityIndicator,
   ScrollView,
+  RefreshControl,
 } from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
 import axios from 'axios';
@@ -17,23 +18,28 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import Modal from 'react-native-modal';
 
 import styles from './style';
 
 function OrderTodayScreen({navigation}) {
   const [dataOrder, setDataOrder] = useState([]);
+  const [dataOrderDetail, setDataOrderDetail] = useState(null);
   const toast = useToast();
   const [isLoading, setLoading] = useState(false);
+  const [isLoadingDetail, setLoadingDetail] = useState(true);
+  const [modalDetail, setModalDetail] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
-      // getListOrder();
+      getListOrder();
     }, []),
   );
 
   const getListOrder = async () => {
     setLoading(true);
     const token = await AsyncStorage.getItem('@token');
+
     axios
       .get(`${API_URL}/dashboard/orders?orderStatus=pending`, {
         params: {limit: 100},
@@ -42,7 +48,7 @@ function OrderTodayScreen({navigation}) {
         },
       })
       .then(res => {
-        console.log('res', res);
+        console.log('res', res.data.data);
         setDataOrder(res.data.data);
       })
       .catch(e => {
@@ -50,6 +56,32 @@ function OrderTodayScreen({navigation}) {
       })
       .finally(() => {
         setLoading(false);
+      });
+  };
+
+  const visibilityModalDetail = () => {
+    setModalDetail(!modalDetail);
+  };
+
+  const getDetailOrder = async orderId => {
+    setModalDetail(!modalDetail);
+    setLoadingDetail(true);
+    const token = await AsyncStorage.getItem('@token');
+    console.log('token', token);
+    axios
+      .get(`${API_URL}/dashboard/orders/${orderId}`, {
+        headers: {
+          Authorization: 'Bearer ' + token,
+        },
+      })
+      .then(res => {
+        setDataOrderDetail(res.data.data);
+      })
+      .catch(e => {
+        toast.show(e?.response?.data.message, {type: 'danger'});
+      })
+      .finally(() => {
+        setLoadingDetail(false);
       });
   };
 
@@ -63,22 +95,18 @@ function OrderTodayScreen({navigation}) {
           marginTop: hp(1),
         }}>
         <View>
-          <Text style={styles.textSales}>{item?.name}</Text>
+          <Text style={styles.textSales}>{item?.customerName}</Text>
           <View
             style={{alignItems: 'center', flexDirection: 'row', marginTop: 4}}>
             <Text style={{fontWeight: '500'}}>Order pada</Text>
-            <Text style={{marginLeft: 4}}>17:30 Rabu, 30 Januari</Text>
+            <Text style={{marginLeft: 4}}>{item.createdAt}</Text>
           </View>
-          <Text style={{marginTop: 4, fontWeight: '500'}}>Makan di tempat</Text>
+          <Text style={{marginTop: 4, fontWeight: '500'}}>
+            {item.orderType === 'dine_in' ? 'Makan di tempat' : 'di bungkus'}
+          </Text>
         </View>
         <TouchableOpacity
-          onPress={() =>
-            navigation.navigate('ListMenu', {
-              categoryName: item?.name,
-              categoryId: item?.id,
-              allDataCategory: dataCategory,
-            })
-          }
+          onPress={() => getDetailOrder(item.id)}
           style={{
             width: 100,
             height: 50,
@@ -156,6 +184,20 @@ function OrderTodayScreen({navigation}) {
     </View>
   );
 
+  const renderItemDetail = item => (
+    <View style={{alignItems: 'center', flexDirection: 'row', marginTop: 14}}>
+      <View style={{flex: 1}}>
+        <Text style={{fontWeight: '500'}}>1x Nasi Kuning</Text>
+        <Text style={{color: '#A0A2A8'}}>@ 10.000</Text>
+        <Text style={{color: '#A0A2A8'}}>Pedas banget</Text>
+      </View>
+
+      <View style={{flexDirection: 'row', flex: 1}}>
+        <Text style={{marginLeft: 4}}>10.000</Text>
+      </View>
+    </View>
+  );
+
   return (
     <View style={styles.containerWithEmail}>
       {isLoading ? (
@@ -175,8 +217,95 @@ function OrderTodayScreen({navigation}) {
           showsVerticalScrollIndicator={false}
           style={{marginTop: 10}}
           ListEmptyComponent={renderEmptyItem}
+          refreshControl={
+            <RefreshControl refreshing={isLoading} onRefresh={getListOrder} />
+          }
         />
       )}
+
+      <Modal isVisible={modalDetail} onBackdropPress={visibilityModalDetail}>
+        <View
+          style={isLoadingDetail ? styles.modalLoading : styles.modalContainer}>
+          {isLoadingDetail ? (
+            <ActivityIndicator size="large" color="#ff3366" />
+          ) : (
+            <View>
+              <Text style={styles.textSales}>
+                Detail Order {dataOrderDetail?.customerName}
+              </Text>
+
+              <Text style={{fontWeight: '500', marginTop: 20}}>
+                Detail Customer
+              </Text>
+              <View
+                style={{
+                  alignItems: 'center',
+                  flexDirection: 'row',
+                  marginTop: 14,
+                }}>
+                <Text style={{fontWeight: '500', flex: 1}}>Nama</Text>
+                <Text style={{marginLeft: 4, flex: 1}}>
+                  {dataOrderDetail?.customerName}
+                </Text>
+              </View>
+              <View
+                style={{
+                  alignItems: 'center',
+                  flexDirection: 'row',
+                  marginTop: 6,
+                }}>
+                <Text style={{fontWeight: '500', flex: 1}}>Order pada</Text>
+                <Text style={{marginLeft: 4, flex: 1}}>
+                  {dataOrderDetail?.createdAt}
+                </Text>
+              </View>
+
+              <Text style={{fontWeight: '500', marginTop: 30}}>Subtotal</Text>
+              <View
+                style={{
+                  alignItems: 'center',
+                  flexDirection: 'row',
+                  marginTop: 14,
+                }}>
+                <Text style={{fontWeight: '500', flex: 1}}>Pajak</Text>
+                <Text style={{marginLeft: 4, flex: 1}}>
+                  Rp {dataOrderDetail?.taxAmount}
+                </Text>
+              </View>
+              <View
+                style={{
+                  alignItems: 'center',
+                  flexDirection: 'row',
+                  marginTop: 6,
+                }}>
+                <Text style={{fontWeight: '500', flex: 1}}>Service</Text>
+                <Text style={{marginLeft: 4, flex: 1}}>
+                  Rp {dataOrderDetail?.serviceFee}
+                </Text>
+              </View>
+              <View
+                style={{
+                  alignItems: 'center',
+                  flexDirection: 'row',
+                  marginTop: 6,
+                }}>
+                <Text style={{fontWeight: '500', flex: 1}}>Total</Text>
+                <Text style={{marginLeft: 4, flex: 1}}>
+                  Rp {dataOrderDetail?.totalAmount}
+                </Text>
+              </View>
+
+              <Text style={{fontWeight: '500', marginTop: 30}}>Order</Text>
+              <FlatList
+                data={dataOrderDetail?.items}
+                renderItem={renderItemDetail}
+                keyExtractor={item => item.productId}
+                showsVerticalScrollIndicator={false}
+              />
+            </View>
+          )}
+        </View>
+      </Modal>
     </View>
   );
 }

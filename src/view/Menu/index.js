@@ -33,6 +33,7 @@ function MenuScreen({navigation}) {
   const getListCategory = async () => {
     setLoading(true);
     const token = await AsyncStorage.getItem('@token');
+
     axios
       .get(`${API_URL}/dashboard/categories`, {
         params: {limit: 100},

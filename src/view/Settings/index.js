@@ -15,12 +15,21 @@ import styles from './style';
 function SettingScreen({navigation, route}) {
   const toast = useToast();
   const pressLogOut = () => {
+    removeValue();
     navigation.dispatch(
       CommonActions.reset({
         index: 0,
         routes: [{name: 'Login'}],
       }),
     );
+  };
+
+  const removeValue = async () => {
+    try {
+      await AsyncStorage.removeItem('@token');
+    } catch (e) {
+      // remove error
+    }
   };
 
   const copyToClipboard = () => {

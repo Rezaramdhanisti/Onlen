@@ -36,7 +36,6 @@ export default {
     color: '#565454',
     letterSpacing: 0.34,
     fontWeight: '400',
-    marginLeft: wp(3),
   },
   textMenu: {
     fontSize: helpers.scaling.moderateScale(13),
@@ -131,5 +130,25 @@ export default {
     letterSpacing: 0.34,
     fontWeight: '600',
     textAlign: 'center',
+  },
+  view: {
+    justifyContent: 'flex-end',
+    margin: 0,
+  },
+  modalContainer: {
+    backgroundColor: 'white',
+    height: hp(60),
+    borderRadius: 8,
+    padding: 16,
+    marginLeft: wp(3),
+  },
+  modalLoading: {
+    backgroundColor: 'white',
+    height: hp(10),
+    borderRadius: 8,
+    padding: 16,
+    marginLeft: wp(3),
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 };

@@ -38,7 +38,6 @@ function AddEmployeeScreen({navigation, route}) {
   }, []);
 
   const getListRoles = async () => {
-    console.log('sssss');
     setLoading(true);
     const token = await AsyncStorage.getItem('@token');
     axios

@@ -48,6 +48,7 @@ function RegisterScreen({navigation}) {
         setLoading(false);
       })
       .catch(e => {
+        console.log('hahaha', e?.response);
         setLoading(false);
         toast.show(e?.response?.data.message, {type: 'danger'});
       });
