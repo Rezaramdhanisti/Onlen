@@ -19,6 +19,8 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import Modal from 'react-native-modal';
+import moment from 'moment';
+import 'moment/locale/id';
 
 import styles from './style';
 
@@ -30,6 +32,7 @@ function OrderTodayScreen({navigation}) {
   const [isLoadingDetail, setLoadingDetail] = useState(true);
   const [modalDetail, setModalDetail] = useState(false);
 
+  moment.locale('id');
   useFocusEffect(
     useCallback(() => {
       getListOrder();
@@ -99,7 +102,9 @@ function OrderTodayScreen({navigation}) {
           <View
             style={{alignItems: 'center', flexDirection: 'row', marginTop: 4}}>
             <Text style={{fontWeight: '500'}}>Order pada</Text>
-            <Text style={{marginLeft: 4}}>{item.createdAt}</Text>
+            <Text style={{marginLeft: 4}}>
+              {moment(item.createdAt).format('h:mm:ss a')}
+            </Text>
           </View>
           <Text style={{marginTop: 4, fontWeight: '500'}}>
             {item.orderType === 'dine_in' ? 'Makan di tempat' : 'di bungkus'}
