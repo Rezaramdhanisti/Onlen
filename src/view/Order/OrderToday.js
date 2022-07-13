@@ -31,6 +31,9 @@ function OrderTodayScreen({navigation}) {
   const [isLoading, setLoading] = useState(false);
   const [isLoadingDetail, setLoadingDetail] = useState(true);
   const [modalDetail, setModalDetail] = useState(false);
+  const [modalConfirm, setModalConfirm] = useState(false);
+  const [isLoadingUpdate, setLoadingUpdate] = useState(false);
+  const [tempOrderId, setTempOrderId] = useState('');
 
   moment.locale('id');
   useFocusEffect(
@@ -51,7 +54,6 @@ function OrderTodayScreen({navigation}) {
         },
       })
       .then(res => {
-        console.log('res', res.data.data);
         setDataOrder(res.data.data);
       })
       .catch(e => {
@@ -66,11 +68,40 @@ function OrderTodayScreen({navigation}) {
     setModalDetail(!modalDetail);
   };
 
+  const visibilityModalConfirm = orderId => {
+    setTempOrderId(orderId);
+    setModalConfirm(!modalConfirm);
+  };
+
+  const updateOrder = async () => {
+    setLoadingUpdate(!isLoadingUpdate);
+    const token = await AsyncStorage.getItem('@token');
+    const dataPayload = {
+      orderStatus: 'in-progress',
+    };
+    axios
+      .put(`${API_URL}/dashboard/orders/${tempOrderId}/status`, dataPayload, {
+        headers: {
+          Authorization: 'Bearer ' + token,
+        },
+      })
+      .then(() => {
+        getListOrder();
+        visibilityModalConfirm();
+      })
+      .catch(e => {
+        toast.show(e?.response?.data.message, {type: 'danger'});
+      })
+      .finally(() => {
+        setLoadingUpdate(false);
+      });
+  };
+
   const getDetailOrder = async orderId => {
     setModalDetail(!modalDetail);
     setLoadingDetail(true);
     const token = await AsyncStorage.getItem('@token');
-    console.log('token', token);
+
     axios
       .get(`${API_URL}/dashboard/orders/${orderId}`, {
         headers: {
@@ -134,7 +165,8 @@ function OrderTodayScreen({navigation}) {
           marginTop: 14,
           alignItems: 'center',
         }}>
-        <View
+        <TouchableOpacity
+          onPress={() => visibilityModalConfirm(item.id)}
           style={{
             backgroundColor: '#ff3366',
             height: hp(4),
@@ -144,7 +176,7 @@ function OrderTodayScreen({navigation}) {
             alignItems: 'center',
           }}>
           <Text style={{fontWeight: '500', color: 'white'}}>Terima</Text>
-        </View>
+        </TouchableOpacity>
         <View
           style={{
             backgroundColor: '#FFDBD4',
@@ -192,13 +224,15 @@ function OrderTodayScreen({navigation}) {
   const renderItemDetail = item => (
     <View style={{alignItems: 'center', flexDirection: 'row', marginTop: 14}}>
       <View style={{flex: 1}}>
-        <Text style={{fontWeight: '500'}}>1x Nasi Kuning</Text>
-        <Text style={{color: '#A0A2A8'}}>@ 10.000</Text>
+        <Text style={{fontWeight: '500'}}>
+          {item.quantity}x {item.productName}
+        </Text>
+        <Text style={{color: '#A0A2A8'}}>@ {item.price}</Text>
         <Text style={{color: '#A0A2A8'}}>Pedas banget</Text>
       </View>
 
       <View style={{flexDirection: 'row', flex: 1}}>
-        <Text style={{marginLeft: 4}}>10.000</Text>
+        <Text style={{marginLeft: 4}}>{item.totalPrice}</Text>
       </View>
     </View>
   );
@@ -310,6 +344,49 @@ function OrderTodayScreen({navigation}) {
               />
             </ScrollView>
           )}
+        </View>
+      </Modal>
+
+      <Modal isVisible={modalConfirm} onBackdropPress={visibilityModalConfirm}>
+        <View style={styles.modalConfirm}>
+          <Text style={styles.textSales}>Proses orderan ini?</Text>
+
+          <View
+            style={{
+              flexDirection: 'row',
+              marginTop: 24,
+              alignItems: 'center',
+            }}>
+            <TouchableOpacity
+              onPress={() => updateOrder()}
+              style={{
+                backgroundColor: '#ff3366',
+                height: hp(4),
+                width: wp(20),
+                borderRadius: 16,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              {isLoadingUpdate ? (
+                <ActivityIndicator size="small" color="white" />
+              ) : (
+                <Text style={{fontWeight: '500', color: 'white'}}>Proses</Text>
+              )}
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => visibilityModalConfirm()}
+              style={{
+                backgroundColor: '#FFDBD4',
+                height: hp(4),
+                width: wp(20),
+                borderRadius: 16,
+                marginLeft: 10,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Text style={{fontWeight: '500', color: '#ff3366'}}>Batal</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </Modal>
     </View>

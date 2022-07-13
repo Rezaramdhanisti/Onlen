@@ -151,4 +151,12 @@ export default {
     justifyContent: 'center',
     alignItems: 'center',
   },
+  modalConfirm: {
+    backgroundColor: 'white',
+    height: hp(14),
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 16,
+  },
 };
