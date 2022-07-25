@@ -17,6 +17,8 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
+import OneSignal from 'react-native-onesignal';
+
 import styles from './style';
 
 function HomeScreen({navigation}) {
@@ -30,6 +32,12 @@ function HomeScreen({navigation}) {
       }),
     [navigation],
   );
+
+  //Method for handling notifications opened
+  OneSignal.setNotificationOpenedHandler(notification => {
+    console.log('OneSignal: notification opened:', notification);
+    navigation.navigate('Order');
+  });
 
   useEffect(() => {
     getDetailProfile();

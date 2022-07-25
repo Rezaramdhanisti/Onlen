@@ -19,6 +19,8 @@ import OrderTodayScreen from './src/view/Order/OrderToday';
 import OrderProcessScreen from './src/view/Order/OrderProcess';
 import OrderFinishScreen from './src/view/Order/OrderFinish';
 
+import {navigationRef, isReadyRef} from './RootNavigation';
+
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -28,6 +30,12 @@ import {ToastProvider} from 'react-native-toast-notifications';
 const Stack = createNativeStackNavigator();
 const Tab = createMaterialTopTabNavigator();
 function MyTabBar({state, descriptors, navigation, position}) {
+  useEffect(() => {
+    return () => {
+      isReadyRef.current = false;
+    };
+  }, []);
+
   return (
     <View style={{flexDirection: 'row'}}>
       {state.routes.map((route, index) => {
@@ -119,7 +127,11 @@ function MyTabs() {
 function App() {
   return (
     <ToastProvider>
-      <NavigationContainer>
+      <NavigationContainer
+        ref={navigationRef}
+        onReady={() => {
+          isReadyRef.current = true;
+        }}>
         <Stack.Navigator>
           <Stack.Screen
             name="Splash"

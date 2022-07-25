@@ -16,6 +16,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import OneSignal from 'react-native-onesignal';
 
 import styles from './style';
 
@@ -26,13 +27,15 @@ function LoginScreen({navigation}) {
   const toast = useToast();
 
   const onSubmitLogin = async () => {
+    const tokenNotification = await OneSignal.getDeviceState();
     setLoading(true);
     const data = {
       email,
       password,
+      notificationId: tokenNotification.userId,
     };
 
-    console.log('xxx', API_URL);
+    console.log('xxx', data);
 
     // Encrypt;
     const encryptText = CryptoJS.AES.encrypt(
@@ -109,7 +112,7 @@ function LoginScreen({navigation}) {
               onChangeText={text => {
                 setPasswordText(text);
               }}
-              onSubmitEditing={this._loginUsingEmail}
+              onSubmitEditing={onSubmitLogin}
             />
           </View>
           <View

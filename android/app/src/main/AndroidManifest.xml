@@ -24,6 +24,10 @@
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
+         <meta-data 
+        android:name="com.onesignal.messaging.default_notification_icon"
+        android:resource="@mipmap/ic_stat_onesignal_default" />
       </activity>
+     
     </application>
 </manifest>

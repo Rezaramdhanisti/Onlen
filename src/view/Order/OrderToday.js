@@ -109,6 +109,7 @@ function OrderTodayScreen({navigation}) {
         },
       })
       .then(res => {
+        console.log('data', res.data.data);
         setDataOrderDetail(res.data.data);
       })
       .catch(e => {
@@ -128,19 +129,21 @@ function OrderTodayScreen({navigation}) {
           alignItems: 'center',
           marginTop: hp(1),
         }}>
-        <View>
+        <TouchableOpacity onPress={() => getDetailOrder(item.id)}>
           <Text style={styles.textSales}>{item?.customerName}</Text>
           <View
             style={{alignItems: 'center', flexDirection: 'row', marginTop: 4}}>
-            <Text style={{fontWeight: '500'}}>Order pada</Text>
-            <Text style={{marginLeft: 4}}>
+            <Text style={{fontWeight: '500', color: '#565454'}}>
+              Order pada
+            </Text>
+            <Text style={{marginLeft: 4, color: '#565454'}}>
               {moment(item.createdAt).format('h:mm:ss a')}
             </Text>
           </View>
-          <Text style={{marginTop: 4, fontWeight: '500'}}>
+          <Text style={{marginTop: 4, fontWeight: '500', color: '#565454'}}>
             {item.orderType === 'dine_in' ? 'Makan di tempat' : 'di bungkus'}
           </Text>
-        </View>
+        </TouchableOpacity>
         <TouchableOpacity
           onPress={() => getDetailOrder(item.id)}
           style={{
@@ -224,15 +227,17 @@ function OrderTodayScreen({navigation}) {
   const renderItemDetail = item => (
     <View style={{alignItems: 'center', flexDirection: 'row', marginTop: 14}}>
       <View style={{flex: 1}}>
-        <Text style={{fontWeight: '500'}}>
-          {item.quantity}x {item.productName}
+        <Text style={{fontWeight: '500', color: '#A0A2A8'}}>
+          {item.item.quantity}x {item.item.productName}
         </Text>
-        <Text style={{color: '#A0A2A8'}}>@ {item.price}</Text>
+        <Text style={{color: '#A0A2A8'}}>@ {item.item.price}</Text>
         <Text style={{color: '#A0A2A8'}}>Pedas banget</Text>
       </View>
 
       <View style={{flexDirection: 'row', flex: 1}}>
-        <Text style={{marginLeft: 4}}>{item.totalPrice}</Text>
+        <Text style={{marginLeft: 4, color: '#565454'}}>
+          {item.item.totalPrice}
+        </Text>
       </View>
     </View>
   );
@@ -282,8 +287,10 @@ function OrderTodayScreen({navigation}) {
                   flexDirection: 'row',
                   marginTop: 14,
                 }}>
-                <Text style={{fontWeight: '500', flex: 1}}>Nama</Text>
-                <Text style={{marginLeft: 4, flex: 1}}>
+                <Text style={{fontWeight: '500', flex: 1, color: '#A0A2A8'}}>
+                  Nama
+                </Text>
+                <Text style={{marginLeft: 4, flex: 1, color: '#A0A2A8'}}>
                   {dataOrderDetail?.customerName}
                 </Text>
               </View>
@@ -293,8 +300,10 @@ function OrderTodayScreen({navigation}) {
                   flexDirection: 'row',
                   marginTop: 6,
                 }}>
-                <Text style={{fontWeight: '500', flex: 1}}>Order pada</Text>
-                <Text style={{marginLeft: 4, flex: 1}}>
+                <Text style={{fontWeight: '500', flex: 1, color: '#A0A2A8'}}>
+                  Order pada
+                </Text>
+                <Text style={{marginLeft: 4, flex: 1, color: '#A0A2A8'}}>
                   {dataOrderDetail?.createdAt}
                 </Text>
               </View>
@@ -306,8 +315,10 @@ function OrderTodayScreen({navigation}) {
                   flexDirection: 'row',
                   marginTop: 14,
                 }}>
-                <Text style={{fontWeight: '500', flex: 1}}>Pajak</Text>
-                <Text style={{marginLeft: 4, flex: 1}}>
+                <Text style={{fontWeight: '500', flex: 1, color: '#A0A2A8'}}>
+                  Pajak
+                </Text>
+                <Text style={{marginLeft: 4, flex: 1, color: '#A0A2A8'}}>
                   Rp {dataOrderDetail?.taxAmount}
                 </Text>
               </View>
@@ -317,8 +328,10 @@ function OrderTodayScreen({navigation}) {
                   flexDirection: 'row',
                   marginTop: 6,
                 }}>
-                <Text style={{fontWeight: '500', flex: 1}}>Service</Text>
-                <Text style={{marginLeft: 4, flex: 1}}>
+                <Text style={{fontWeight: '500', flex: 1, color: '#A0A2A8'}}>
+                  Service
+                </Text>
+                <Text style={{marginLeft: 4, flex: 1, color: '#A0A2A8'}}>
                   Rp {dataOrderDetail?.serviceFee}
                 </Text>
               </View>
@@ -328,13 +341,18 @@ function OrderTodayScreen({navigation}) {
                   flexDirection: 'row',
                   marginTop: 6,
                 }}>
-                <Text style={{fontWeight: '500', flex: 1}}>Total</Text>
-                <Text style={{marginLeft: 4, flex: 1}}>
+                <Text style={{fontWeight: '500', flex: 1, color: '#A0A2A8'}}>
+                  Total
+                </Text>
+                <Text style={{marginLeft: 4, flex: 1, color: '#A0A2A8'}}>
                   Rp {dataOrderDetail?.totalAmount}
                 </Text>
               </View>
 
-              <Text style={{fontWeight: '500', marginTop: 30}}>Order</Text>
+              <Text
+                style={{fontWeight: '500', marginTop: 30, color: '#A0A2A8'}}>
+                Order
+              </Text>
               <FlatList
                 data={dataOrderDetail?.items}
                 renderItem={renderItemDetail}

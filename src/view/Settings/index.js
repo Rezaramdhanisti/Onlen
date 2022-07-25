@@ -4,6 +4,7 @@ import {ADDRESS_URL} from '@env';
 import {useToast} from 'react-native-toast-notifications';
 import {CommonActions} from '@react-navigation/native';
 import Clipboard from '@react-native-clipboard/clipboard';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {
   widthPercentageToDP as wp,
@@ -14,21 +15,19 @@ import styles from './style';
 
 function SettingScreen({navigation, route}) {
   const toast = useToast();
-  const pressLogOut = () => {
-    removeValue();
-    navigation.dispatch(
-      CommonActions.reset({
-        index: 0,
-        routes: [{name: 'Login'}],
-      }),
-    );
-  };
 
   const removeValue = async () => {
     try {
       await AsyncStorage.removeItem('@token');
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{name: 'Login'}],
+        }),
+      );
     } catch (e) {
       // remove error
+      console.log('error', e);
     }
   };
 
@@ -120,7 +119,7 @@ function SettingScreen({navigation, route}) {
 
         <View style={{height: hp(4)}}></View>
         <TouchableOpacity
-          onPress={pressLogOut}
+          onPress={removeValue}
           style={{
             flexDirection: 'row',
             alignItems: 'center',

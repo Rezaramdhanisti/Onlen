@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {View, TouchableOpacity, Text, Image, Linking} from 'react-native';
+import {View, Image} from 'react-native';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
@@ -17,6 +17,7 @@ function SettingScreen({navigation}) {
   const getData = async () => {
     try {
       const value = await AsyncStorage.getItem('@token');
+      console.log('value', value);
       if (value !== null) {
         // value previously stored
         setTimeout(() => {

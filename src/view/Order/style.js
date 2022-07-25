@@ -116,6 +116,7 @@ export default {
     fontSize: helpers.scaling.moderateScale(16),
     letterSpacing: 0.34,
     fontWeight: '700',
+    color: '#565454',
   },
   textEditImage: {
     fontSize: helpers.scaling.moderateScale(12),
