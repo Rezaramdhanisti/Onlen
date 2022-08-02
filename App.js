@@ -19,6 +19,8 @@ import OrderTodayScreen from './src/view/Order/OrderToday';
 import OrderProcessScreen from './src/view/Order/OrderProcess';
 import OrderFinishScreen from './src/view/Order/OrderFinish';
 
+import MerchantSettingScreen from './src/view/Settings/MerchantSetting';
+
 import {navigationRef, isReadyRef} from './RootNavigation';
 
 import {
@@ -186,6 +188,11 @@ function App() {
           <Stack.Screen
             name="AddEmployee"
             component={AddEmployeeScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="MerchantSetting"
+            component={MerchantSettingScreen}
             options={{headerShown: false}}
           />
           <Stack.Screen

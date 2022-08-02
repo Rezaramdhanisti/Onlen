@@ -80,7 +80,8 @@ function SettingScreen({navigation, route}) {
         </TouchableOpacity>
         <View style={{height: hp(4)}}></View>
         <Text style={styles.textTitleWithEmail}>Informasi Toko</Text>
-        <View
+        <TouchableOpacity
+          onPress={() => navigation.navigate('MerchantSetting')}
           style={{
             flexDirection: 'row',
             alignItems: 'center',
@@ -94,7 +95,7 @@ function SettingScreen({navigation, route}) {
             source={require('../../../assets/settings.png')}
           />
           <Text style={styles.textSales}>Pengaturan toko</Text>
-        </View>
+        </TouchableOpacity>
 
         <View style={{height: hp(4)}}></View>
         <Text style={styles.textTitleWithEmail}>Bantuan</Text>
