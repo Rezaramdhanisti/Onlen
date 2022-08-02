@@ -60,25 +60,6 @@ function SettingScreen({navigation, route}) {
       </View>
 
       <View style={styles.containerWithEmail}>
-        <Text style={styles.textTitleWithEmail}>Link Toko</Text>
-
-        <TouchableOpacity
-          onPress={() => copyToClipboard()}
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            marginTop: hp(2),
-          }}>
-          <Image
-            style={{
-              width: 16,
-              height: 16,
-            }}
-            source={require('../../../assets/upload.png')}
-          />
-          <Text style={styles.textSales}>Bagikan link toko kamu</Text>
-        </TouchableOpacity>
-        <View style={{height: hp(4)}}></View>
         <Text style={styles.textTitleWithEmail}>Informasi Toko</Text>
         <TouchableOpacity
           onPress={() => navigation.navigate('MerchantSetting')}
@@ -94,7 +75,25 @@ function SettingScreen({navigation, route}) {
             }}
             source={require('../../../assets/settings.png')}
           />
-          <Text style={styles.textSales}>Pengaturan toko</Text>
+          <Text style={styles.textSales}>Pengaturan Toko</Text>
+        </TouchableOpacity>
+        <View style={{height: hp(4)}}></View>
+        <Text style={styles.textTitleWithEmail}>Pegawai</Text>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('Employee')}
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginTop: hp(2),
+          }}>
+          <Image
+            style={{
+              width: 16,
+              height: 16,
+            }}
+            source={require('../../../assets/employees.png')}
+          />
+          <Text style={styles.textSales}>Pengaturan pegawai</Text>
         </TouchableOpacity>
 
         <View style={{height: hp(4)}}></View>

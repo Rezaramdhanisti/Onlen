@@ -188,4 +188,26 @@ export default {
     fontWeight: '600',
     textAlign: 'center',
   },
+  textTitleShareMenu: {
+    fontSize: helpers.scaling.moderateScale(20),
+    color: '#565454',
+    letterSpacing: 0.34,
+    fontWeight: 'bold',
+    marginTop: 30,
+  },
+  textSubtitleShareMenu: {
+    fontSize: helpers.scaling.moderateScale(14),
+    color: '#565454',
+    letterSpacing: 0.34,
+    marginTop: hp(2),
+    textAlign: 'center',
+  },
+  textSubtitleShareMenuBold: {
+    fontSize: helpers.scaling.moderateScale(14),
+    color: '#565454',
+    letterSpacing: 0.34,
+    marginTop: hp(2),
+    textAlign: 'center',
+    fontWeight: 'bold',
+  },
 };

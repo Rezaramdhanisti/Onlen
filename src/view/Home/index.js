@@ -76,9 +76,6 @@ function HomeScreen({navigation}) {
     }
   };
   const goToSetting = () => {
-    if (dataProfile?.roleName !== 'administrator') {
-      return alertPremium();
-    }
     navigation.navigate('Settings', dataProfile);
   };
   const goToPromotion = () => {
@@ -229,59 +226,6 @@ function HomeScreen({navigation}) {
 
           <View style={{alignItems: 'center'}}>
             <TouchableOpacity
-              onPress={() => navigation.navigate('Employee')}
-              style={{
-                width: 50,
-                height: 50,
-                borderRadius: 12,
-                borderWidth: 1.5,
-                borderColor: '#E8EBEB',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Image
-                style={{
-                  width: 23,
-                  height: 23,
-                  alignSelf: 'center',
-                }}
-                source={require('../../../assets/employees.png')}
-              />
-            </TouchableOpacity>
-            <Text style={styles.textMenu}>Pegawai</Text>
-          </View>
-        </View>
-
-        <View
-          style={{
-            flexDirection: 'row',
-            marginTop: hp(3),
-            paddingHorizontal: wp(2),
-          }}>
-          <View style={{alignItems: 'center'}}>
-            <View
-              style={{
-                width: 50,
-                height: 50,
-                borderRadius: 12,
-                borderWidth: 1.5,
-                borderColor: '#E8EBEB',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Image
-                style={{
-                  width: 23,
-                  height: 23,
-                  alignSelf: 'center',
-                }}
-                source={require('../../../assets/promotion.png')}
-              />
-            </View>
-            <Text style={styles.textMenu}>Promosi</Text>
-          </View>
-          <View style={{alignItems: 'center', marginLeft: wp(7.2)}}>
-            <TouchableOpacity
               onPress={() => goToSetting()}
               style={{
                 width: 50,
@@ -302,6 +246,60 @@ function HomeScreen({navigation}) {
               />
             </TouchableOpacity>
             <Text style={styles.textMenu}>Pengaturan</Text>
+          </View>
+        </View>
+
+        <View
+          style={{
+            flexDirection: 'row',
+            marginTop: hp(3),
+            marginLeft: -12,
+          }}>
+          {/* <View style={{alignItems: 'center'}}>
+            <View
+              style={{
+                width: 50,
+                height: 50,
+                borderRadius: 12,
+                borderWidth: 1.5,
+                borderColor: '#E8EBEB',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Image
+                style={{
+                  width: 23,
+                  height: 23,
+                  alignSelf: 'center',
+                }}
+                source={require('../../../assets/promotion.png')}
+              />
+            </View>
+            <Text style={styles.textMenu}>Promosi</Text>
+          </View> */}
+
+          <View style={{alignItems: 'center'}}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('ShowMenu', dataProfile)}
+              style={{
+                width: 50,
+                height: 50,
+                borderRadius: 12,
+                borderWidth: 1.5,
+                borderColor: '#E8EBEB',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Image
+                style={{
+                  width: 23,
+                  height: 23,
+                  alignSelf: 'center',
+                }}
+                source={require('../../../assets/paper-plane.png')}
+              />
+            </TouchableOpacity>
+            <Text style={styles.textMenu}>Bagikan Menu</Text>
           </View>
         </View>
         <Text style={styles.textTitleInfo}>Info terbaru buat Kamu</Text>

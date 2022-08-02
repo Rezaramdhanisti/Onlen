@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {Animated, Image, Text, View, TouchableOpacity} from 'react-native';
+import React, {useEffect} from 'react';
+import {Animated, View, TouchableOpacity} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
@@ -12,6 +12,7 @@ import MenuScreen from './src/view/Menu';
 import ListMenuScreen from './src/view/Menu/ListMenu';
 import DetailMenuScreen from './src/view/Menu/DetailMenu';
 import AddCategoryScreen from './src/view/Menu/AddCategory';
+import ShowMenuScreen from './src/view/Menu/ShowMenu';
 import SplashScreen from './src/view/Splash';
 import EmployeeScreen from './src/view/Employee';
 import AddEmployeeScreen from './src/view/Employee/AddEmployee';
@@ -22,11 +23,6 @@ import OrderFinishScreen from './src/view/Order/OrderFinish';
 import MerchantSettingScreen from './src/view/Settings/MerchantSetting';
 
 import {navigationRef, isReadyRef} from './RootNavigation';
-
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from 'react-native-responsive-screen';
 import {ToastProvider} from 'react-native-toast-notifications';
 
 const Stack = createNativeStackNavigator();
@@ -193,6 +189,11 @@ function App() {
           <Stack.Screen
             name="MerchantSetting"
             component={MerchantSettingScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="ShowMenu"
+            component={ShowMenuScreen}
             options={{headerShown: false}}
           />
           <Stack.Screen
