@@ -9,7 +9,7 @@ import OneSignal from 'react-native-onesignal';
 
 //OneSignal Init Code
 OneSignal.setLogLevel(6, 0);
-OneSignal.setAppId('6d207adb-00f5-4e7d-b500-4dce37514b2d', {
+OneSignal.setAppId('7b799cf0-356b-4f90-93d8-b723c09dd027', {
   kOSSettingsKeyAutoPrompt: false,
   kOSSettingsKeyInFocusDisplayOption: 2,
 });

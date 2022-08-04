@@ -124,7 +124,7 @@ function AddCategoryScreen({navigation, route}) {
         showsVerticalScrollIndicator={false}>
         <Text style={styles.textSubtitle}>Nama Kategori</Text>
         <TextInput
-          style={{marginTop: 10}}
+          style={{marginTop: 10, color: '#565454'}}
           underlineColorAndroid="transparent"
           onChangeText={newText => setText(newText)}
           placeholder="Contoh: Makanan berat, minuman, cemilan"

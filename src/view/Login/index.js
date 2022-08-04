@@ -35,8 +35,6 @@ function LoginScreen({navigation}) {
       notificationId: tokenNotification.userId,
     };
 
-    console.log('xxx', data);
-
     // Encrypt;
     const encryptText = CryptoJS.AES.encrypt(
       JSON.stringify(data),
@@ -45,7 +43,6 @@ function LoginScreen({navigation}) {
     axios
       .post(`${API_URL}/login`, {data: encryptText})
       .then(async res => {
-        console.log('sukses', res.data.data.token);
         storeData(res.data.data.token);
         navigation.navigate('Home');
         setLoading(false);

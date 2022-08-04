@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {View, Image} from 'react-native';
+import {View, Image, StatusBar} from 'react-native';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
@@ -34,6 +34,7 @@ function SettingScreen({navigation}) {
   };
   return (
     <View style={styles.shell}>
+      <StatusBar backgroundColor={'white'} barStyle="dark-content" />
       <Image
         style={{width: wp(62), height: hp(14)}}
         source={require('../../../assets/logo-onlen.png')}

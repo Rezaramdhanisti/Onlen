@@ -89,6 +89,7 @@ export default {
     fontSize: 16,
     height: 50,
     width: 200,
+    color: '#565454',
   },
   textSubTitleGrey: {
     fontSize: 12,

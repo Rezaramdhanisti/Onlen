@@ -131,7 +131,7 @@ function RegisterScreen({navigation}) {
           <View style={{marginTop: 32, flexDirection: 'row'}}>
             <Image
               style={{width: 28, height: 28, marginTop: 10}}
-              source={require('../../../assets/ic_password.png')}
+              source={require('../../../assets/ic-telephone.png')}
             />
             <TextInput
               style={[styles.input]}
@@ -139,6 +139,7 @@ function RegisterScreen({navigation}) {
               placeholder="Nomor Handphone"
               placeholderTextColor="#d4d4d4"
               returnKeyType="next"
+              keyboardType="number-pad"
               onChangeText={text => {
                 setPhoneNumber(text);
               }}

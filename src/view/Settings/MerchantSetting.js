@@ -176,6 +176,7 @@ function MerchantSettingScreen({navigation}) {
         <TextInput
           underlineColorAndroid="transparent"
           keyboardType="number-pad"
+          style={{color: '#565454'}}
           placeholderTextColor="#9FA2B4"
           onChangeText={value => setTextServiceFee(value)}
           value={textServiceFee}
@@ -192,6 +193,7 @@ function MerchantSettingScreen({navigation}) {
         <TextInput
           underlineColorAndroid="transparent"
           keyboardType="numeric"
+          style={{color: '#565454'}}
           placeholderTextColor="#9FA2B4"
           onChangeText={newText => setTextTaxFee(newText)}
           value={textTaxFee}
@@ -261,25 +263,6 @@ function MerchantSettingScreen({navigation}) {
         </View>
         <Text style={styles.textSubtitle2}>Pelanggan minta dikirim</Text>
 
-        {/* <View style={{height: hp(1)}} />
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}>
-          <Text style={styles.textToggle}>Hapus menu</Text>
-          <Switch
-            trackColor={{false: '#B3B2B3', true: '#FFEBF0'}}
-            thumbColor={isDelete ? '#ff3366' : '#EDEDED'}
-            ios_backgroundColor="#B3B2B3"
-            onValueChange={toggleSwitchDelete}
-            value={isDelete}
-          />
-        </View>
-
-        <Text style={styles.textSubtitle2}>Hapus menu</Text> */}
-
         <View style={{height: hp(15)}} />
       </ScrollView>
       <TouchableOpacity
@@ -300,7 +283,7 @@ function MerchantSettingScreen({navigation}) {
           <ActivityIndicator size="small" color="white" />
         ) : (
           <View>
-            <Text style={styles.textAddMenu}>Buat Menu</Text>
+            <Text style={styles.textAddMenu}>Simpan</Text>
           </View>
         )}
       </TouchableOpacity>

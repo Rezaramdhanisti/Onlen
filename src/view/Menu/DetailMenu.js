@@ -294,6 +294,7 @@ function DetailMenuScreen({navigation, route}) {
         <Text style={styles.textSubtitle}>Nama*</Text>
         <TextInput
           underlineColorAndroid="transparent"
+          style={{color: '#565454'}}
           onChangeText={newText => setTextName(newText)}
           value={textName}
           placeholder="Nama"
@@ -344,6 +345,7 @@ function DetailMenuScreen({navigation, route}) {
         <TextInput
           underlineColorAndroid="transparent"
           placeholder="Deskripsi"
+          style={{color: '#565454'}}
           value={textDescription}
           onChangeText={newText => setTextDescription(newText)}
           placeholderTextColor="#9FA2B4"
@@ -362,6 +364,7 @@ function DetailMenuScreen({navigation, route}) {
         <TextInput
           underlineColorAndroid="transparent"
           keyboardType="number-pad"
+          style={{color: '#565454'}}
           onChangeText={newText => setTextPrice(newText)}
           placeholder="Harga"
           placeholderTextColor="#9FA2B4"
@@ -385,7 +388,7 @@ function DetailMenuScreen({navigation, route}) {
             alignItems: 'center',
             justifyContent: 'space-between',
           }}>
-          <Text style={styles.textToggle}>Aktifkan menu</Text>
+          <Text style={styles.textToggle}>Menu kosong</Text>
           <Switch
             trackColor={{false: '#B3B2B3', true: '#FFEBF0'}}
             thumbColor={!isEnabled ? '#ff3366' : '#EDEDED'}
@@ -396,7 +399,7 @@ function DetailMenuScreen({navigation, route}) {
         </View>
 
         <Text style={styles.textSubtitle2}>
-          Menu tidak aktif tidak bisa di pesan oleh pelanggan.
+          Menu kosong tidak bisa di pesan oleh pelanggan.
         </Text>
 
         {/* <View style={{height: hp(1)}} />
