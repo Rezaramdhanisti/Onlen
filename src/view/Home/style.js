@@ -94,9 +94,9 @@ export default {
   textTotalSales: {
     fontSize: helpers.scaling.moderateScale(14),
     color: 'white',
-    marginTop: hp(0.5),
+    marginTop: hp(3),
     letterSpacing: 0.34,
-    fontWeight: '400',
+    fontWeight: '500',
   },
   textTitleInfo: {
     fontSize: helpers.scaling.moderateScale(14),

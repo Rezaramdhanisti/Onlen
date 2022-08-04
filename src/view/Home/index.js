@@ -111,30 +111,34 @@ function HomeScreen({navigation}) {
           <Text style={styles.textSalesValue}>10,000.00</Text>
         </View> */}
 
-        <ImageBackground
-          style={{
-            width: wp(90),
-            height: hp(14),
-            flexDirection: 'row',
-            paddingHorizontal: 6,
-            paddingVertical: 22,
-            marginTop: hp(3),
-          }}
-          imageStyle={{borderRadius: 12}}
-          source={require('../../../assets/background-gradient.png')}>
-          <Image
+        <TouchableOpacity
+          onPress={() => navigation.navigate('ShowMenu', dataProfile)}>
+          <ImageBackground
             style={{
-              width: 26,
-              height: 26,
-              marginLeft: 20,
-              marginRight: 4,
-              alignSelf: 'center',
+              width: wp(90),
+              height: hp(14),
+              flexDirection: 'row',
+              paddingHorizontal: 6,
+              paddingVertical: 22,
+              marginTop: hp(3),
             }}
-            source={require('../../../assets/wallet-white.png')}
-          />
-          <View style={{marginLeft: 14}}>
-            <Text style={styles.textTotalSales}>Total Penjualan Hari Ini</Text>
-            <View
+            imageStyle={{borderRadius: 12}}
+            source={require('../../../assets/background-gradient.png')}>
+            <Image
+              style={{
+                width: 26,
+                height: 26,
+                marginLeft: 20,
+                marginRight: 4,
+                alignSelf: 'center',
+              }}
+              source={require('../../../assets/paper-plane-white.png')}
+            />
+            <View style={{marginLeft: 14}}>
+              <Text style={styles.textTotalSales}>
+                Klik disini untuk bagikan menu
+              </Text>
+              {/* <View
               style={{
                 flexDirection: 'row',
                 marginTop: 6,
@@ -142,9 +146,10 @@ function HomeScreen({navigation}) {
               }}>
               <Text style={styles.textCurrencyWhite}>Rp</Text>
               <Text style={styles.textSalesValueWhite}>10,000,000.00</Text>
+            </View> */}
             </View>
-          </View>
-        </ImageBackground>
+          </ImageBackground>
+        </TouchableOpacity>
         <View
           style={{
             flexDirection: 'row',
@@ -278,7 +283,7 @@ function HomeScreen({navigation}) {
             <Text style={styles.textMenu}>Promosi</Text>
           </View> */}
 
-          <View style={{alignItems: 'center'}}>
+          {/* <View style={{alignItems: 'center'}}>
             <TouchableOpacity
               onPress={() => navigation.navigate('ShowMenu', dataProfile)}
               style={{
@@ -300,7 +305,7 @@ function HomeScreen({navigation}) {
               />
             </TouchableOpacity>
             <Text style={styles.textMenu}>Bagikan Menu</Text>
-          </View>
+          </View> */}
         </View>
         <Text style={styles.textTitleInfo}>Info terbaru buat Kamu</Text>
         <ScrollView
