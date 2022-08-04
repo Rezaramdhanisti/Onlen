@@ -88,7 +88,7 @@ export default {
     marginLeft: 16,
     fontSize: 16,
     height: 50,
-    width: 200,
+    width: 180,
     color: '#565454',
   },
   textSubTitleGrey: {

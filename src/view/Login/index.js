@@ -24,7 +24,12 @@ function LoginScreen({navigation}) {
   const [email, setUsernameText] = useState('');
   const [password, setPasswordText] = useState('');
   const [isLoading, setLoading] = useState(false);
+  const [isSecure, setSecure] = useState(true);
   const toast = useToast();
+
+  const securePassword = () => {
+    setSecure(!isSecure);
+  };
 
   const onSubmitLogin = async () => {
     const tokenNotification = await OneSignal.getDeviceState();
@@ -98,7 +103,7 @@ function LoginScreen({navigation}) {
               source={require('../../../assets/ic_password.png')}
             />
             <TextInput
-              secureTextEntry={true}
+              secureTextEntry={isSecure}
               style={styles.input}
               underlineColorAndroid="transparent"
               placeholder="Password"
@@ -111,6 +116,16 @@ function LoginScreen({navigation}) {
               }}
               onSubmitEditing={onSubmitLogin}
             />
+            <TouchableOpacity onPress={() => securePassword()}>
+              <Image
+                style={{width: 20, height: 20, marginTop: 16}}
+                source={
+                  isSecure
+                    ? require('../../../assets/hidden.png')
+                    : require('../../../assets/view.png')
+                }
+              />
+            </TouchableOpacity>
           </View>
           <View
             style={{
