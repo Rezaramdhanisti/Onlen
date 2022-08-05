@@ -22,6 +22,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import CurrencyInput from 'react-native-currency-input';
 
 import styles from './style';
 
@@ -360,7 +361,7 @@ function DetailMenuScreen({navigation, route}) {
         />
 
         <Text style={styles.textSubtitle}>Harga*</Text>
-
+        {/* 
         <TextInput
           underlineColorAndroid="transparent"
           keyboardType="number-pad"
@@ -369,6 +370,14 @@ function DetailMenuScreen({navigation, route}) {
           placeholder="Harga"
           placeholderTextColor="#9FA2B4"
           value={textPrice}
+        /> */}
+        <CurrencyInput
+          value={textPrice}
+          onChangeValue={setTextPrice}
+          prefix="Rp "
+          minValue={0}
+          precision={0}
+          style={{color: '#565454'}}
         />
         <View
           style={{

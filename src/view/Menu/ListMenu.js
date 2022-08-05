@@ -29,6 +29,11 @@ function ListMenuScreen({navigation, route}) {
       getListMenu();
     }, []),
   );
+  const formatNumber = value => {
+    // format number 1000000 to 1,234,567
+    const text = value.toString();
+    return text.replace(/\D/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  };
 
   const getListMenu = async () => {
     setLoading(true);
@@ -71,7 +76,7 @@ function ListMenuScreen({navigation, route}) {
         <View style={{marginLeft: wp(4)}}>
           <Text style={styles.textMenu}>{item.name}</Text>
           <Text style={styles.textDescription}>{item.description}</Text>
-          <Text style={styles.textPrice}>Rp{item.price}</Text>
+          <Text style={styles.textPrice}>Rp {formatNumber(item.price)}</Text>
         </View>
 
         <Image
