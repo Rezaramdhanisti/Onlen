@@ -96,7 +96,7 @@ function HomeScreen({navigation}) {
   };
 
   return (
-    <View style={styles.shell}>
+    <ScrollView style={styles.shell}>
       <View style={styles.containerWithEmail}>
         <Text style={styles.textTitleWithEmail}>
           Selamat Datang, {dataProfile?.name}
@@ -115,7 +115,7 @@ function HomeScreen({navigation}) {
           onPress={() => navigation.navigate('ShowMenu', dataProfile)}>
           <ImageBackground
             style={{
-              width: wp(90),
+              width: wp('90%'),
               height: hp(14),
               flexDirection: 'row',
               paddingHorizontal: 6,
@@ -348,7 +348,7 @@ function HomeScreen({navigation}) {
             source={require('../../../assets/banner-3.jpg')}></Image>
         </ScrollView>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
