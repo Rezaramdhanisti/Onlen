@@ -400,10 +400,10 @@ function DetailMenuScreen({navigation, route}) {
           <Text style={styles.textToggle}>Menu kosong</Text>
           <Switch
             trackColor={{false: '#B3B2B3', true: '#FFEBF0'}}
-            thumbColor={!isEnabled ? '#ff3366' : '#EDEDED'}
+            thumbColor={isEnabled ? '#ff3366' : '#EDEDED'}
             ios_backgroundColor="#B3B2B3"
             onValueChange={toggleSwitch}
-            value={!isEnabled}
+            value={isEnabled}
           />
         </View>
 
