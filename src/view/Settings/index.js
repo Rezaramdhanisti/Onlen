@@ -72,6 +72,7 @@ function SettingScreen({navigation, route}) {
             style={{
               width: 16,
               height: 16,
+              marginRight: 10,
             }}
             source={require('../../../assets/settings.png')}
           />
@@ -90,6 +91,7 @@ function SettingScreen({navigation, route}) {
             style={{
               width: 16,
               height: 16,
+              marginRight: 10,
             }}
             source={require('../../../assets/employees.png')}
           />
@@ -111,6 +113,7 @@ function SettingScreen({navigation, route}) {
             style={{
               width: 16,
               height: 16,
+              marginRight: 10,
             }}
             source={require('../../../assets/support.png')}
           />
@@ -129,6 +132,7 @@ function SettingScreen({navigation, route}) {
             style={{
               width: 16,
               height: 16,
+              marginRight: 10,
             }}
             source={require('../../../assets/log-out.png')}
           />

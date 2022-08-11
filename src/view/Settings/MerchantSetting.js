@@ -37,8 +37,8 @@ function MerchantSettingScreen({navigation}) {
   const [dataMerchant, seDataMerchant] = useState({});
   const toast = useToast();
   const [isLoading, setLoading] = useState(false);
-  const [textServiceFee, setTextServiceFee] = useState('');
-  const [textTaxFee, setTextTaxFee] = useState('');
+  const [textServiceFee, setTextServiceFee] = useState('0');
+  const [textTaxFee, setTextTaxFee] = useState('0');
 
   useEffect(() => {
     getDetailMerchant();
@@ -56,15 +56,19 @@ function MerchantSettingScreen({navigation}) {
       })
       .then(res => {
         const {data} = res.data;
+        console.log('data', data);
         seDataMerchant(data);
-        setIsEnabledDineIn(data.isDinein);
-        setIsEnabled(data.isDelivery);
-        setIsEnabledTakeAway(data.isTakeaway);
-        setIsEnabledOnline(data.isOnlineOrder);
-        setTextTaxFee(data.tax.toString());
-        setTextServiceFee(data.serviceFee.toString());
+        setIsEnabledDineIn(data?.isDinein);
+        setIsEnabled(data?.isDelivery);
+        setIsEnabledTakeAway(data?.isTakeaway);
+        setIsEnabledOnline(data?.isOnlineOrder);
+        setTextTaxFee(data?.tax ? data?.tax?.toString() : '0');
+        setTextServiceFee(
+          data?.serviceFee ? data?.serviceFee?.toString() : '0',
+        );
       })
       .catch(e => {
+        console.log('eee', e);
         toast.show(e?.response?.data.message, {type: 'danger'});
       })
       .finally(() => {
@@ -74,22 +78,21 @@ function MerchantSettingScreen({navigation}) {
 
   const updateMenu = async () => {
     setLoading(true);
-
     const dataPayload = {
-      name: dataMerchant.name,
-      address: dataMerchant.address,
-      latitude: dataMerchant.latitude,
-      longitude: dataMerchant.longitude,
-      phoneNumber: dataMerchant.phoneNumber,
+      name: dataMerchant?.name,
+      address: dataMerchant?.address ? dataMerchant?.address : 'kosong',
+      latitude: dataMerchant?.latitude ? dataMerchant?.latitude : 12121212,
+      longitude: dataMerchant?.longitude ? dataMerchant?.longitude : 12121212,
+      phoneNumber: dataMerchant?.phoneNumber,
       isDinein: isEnabledDineIn,
       isDelivery: isEnabled,
       isTakeaway: isEnabledTakeAway,
       isOnlineOrder: isEnabledOnline,
-      tax: parseFloat(textTaxFee),
-      serviceFee: parseFloat(textServiceFee),
+      tax: textTaxFee ? parseFloat(textTaxFee) : 0,
+      serviceFee: textServiceFee ? parseFloat(textServiceFee) : 0,
     };
-
     const token = await AsyncStorage.getItem('@token');
+    console.log('address', dataPayload);
     axios
       .put(`${API_URL}/dashboard/merchants`, dataPayload, {
         headers: {

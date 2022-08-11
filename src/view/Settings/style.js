@@ -36,7 +36,7 @@ export default {
     color: '#565454',
     letterSpacing: 0.34,
     fontWeight: '400',
-    marginLeft: wp(3),
+    marginLeft: wp(4),
   },
   textMenu: {
     fontSize: helpers.scaling.moderateScale(13),
