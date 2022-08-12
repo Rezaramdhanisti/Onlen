@@ -258,9 +258,9 @@ function HomeScreen({navigation}) {
           style={{
             flexDirection: 'row',
             marginTop: hp(3),
-            marginLeft: -12,
+            marginLeft: 12,
           }}>
-          {/* <View style={{alignItems: 'center'}}>
+          <View style={{alignItems: 'center'}}>
             <View
               style={{
                 width: 50,
@@ -273,15 +273,17 @@ function HomeScreen({navigation}) {
               }}>
               <Image
                 style={{
-                  width: 23,
-                  height: 23,
+                  width: 30,
+                  height: 30,
                   alignSelf: 'center',
+                  tintColor: 'black',
+                  resizeMode: 'contain',
                 }}
-                source={require('../../../assets/promotion.png')}
+                source={require('../../../assets/qris.png')}
               />
             </View>
-            <Text style={styles.textMenu}>Promosi</Text>
-          </View> */}
+            <Text style={styles.textMenu}>QRIS</Text>
+          </View>
 
           {/* <View style={{alignItems: 'center'}}>
             <TouchableOpacity
