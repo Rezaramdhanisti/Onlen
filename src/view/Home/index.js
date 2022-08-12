@@ -7,6 +7,7 @@ import {
   ImageBackground,
   ScrollView,
   Alert,
+  RefreshControl,
 } from 'react-native';
 import axios from 'axios';
 import {API_URL} from '@env';
@@ -96,7 +97,9 @@ function HomeScreen({navigation}) {
   };
 
   return (
-    <ScrollView style={styles.shell}>
+    <ScrollView
+      style={styles.shell}
+      refreshControl={<RefreshControl onRefresh={getDetailProfile} />}>
       <View style={styles.containerWithEmail}>
         <Text style={styles.textTitleWithEmail}>
           Selamat Datang, {dataProfile?.name}
@@ -261,7 +264,8 @@ function HomeScreen({navigation}) {
             marginLeft: 12,
           }}>
           <View style={{alignItems: 'center'}}>
-            <View
+            <TouchableOpacity
+              onPress={() => navigation.navigate('MyQris')}
               style={{
                 width: 50,
                 height: 50,
@@ -281,7 +285,7 @@ function HomeScreen({navigation}) {
                 }}
                 source={require('../../../assets/qris.png')}
               />
-            </View>
+            </TouchableOpacity>
             <Text style={styles.textMenu}>QRIS</Text>
           </View>
 

@@ -47,6 +47,8 @@ function RegisterScreen({navigation}) {
       password,
     };
 
+    console.log('data', data);
+
     // Encrypt
     const encryptText = CryptoJS.AES.encrypt(
       JSON.stringify(data),

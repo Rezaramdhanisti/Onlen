@@ -19,6 +19,7 @@ import AddEmployeeScreen from './src/view/Employee/AddEmployee';
 import OrderTodayScreen from './src/view/Order/OrderToday';
 import OrderProcessScreen from './src/view/Order/OrderProcess';
 import OrderFinishScreen from './src/view/Order/OrderFinish';
+import MyQrisScreen from './src/view/Settings/MyQris';
 
 import MerchantSettingScreen from './src/view/Settings/MerchantSetting';
 
@@ -194,6 +195,11 @@ function App() {
           <Stack.Screen
             name="ShowMenu"
             component={ShowMenuScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="MyQris"
+            component={MyQrisScreen}
             options={{headerShown: false}}
           />
           <Stack.Screen

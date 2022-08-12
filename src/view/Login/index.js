@@ -26,6 +26,7 @@ function LoginScreen({navigation}) {
   const [isLoading, setLoading] = useState(false);
   const [isSecure, setSecure] = useState(true);
   const toast = useToast();
+  console.log('env', ENCRYPT_KEY);
 
   const securePassword = () => {
     setSecure(!isSecure);
