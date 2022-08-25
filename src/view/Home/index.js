@@ -289,9 +289,9 @@ function HomeScreen({navigation}) {
             <Text style={styles.textMenu}>QRIS</Text>
           </View>
 
-          {/* <View style={{alignItems: 'center'}}>
+          <View style={{alignItems: 'center', marginLeft: 16}}>
             <TouchableOpacity
-              onPress={() => navigation.navigate('ShowMenu', dataProfile)}
+              onPress={() => navigation.navigate('LandingPage')}
               style={{
                 width: 50,
                 height: 50,
@@ -310,8 +310,8 @@ function HomeScreen({navigation}) {
                 source={require('../../../assets/paper-plane.png')}
               />
             </TouchableOpacity>
-            <Text style={styles.textMenu}>Bagikan Menu</Text>
-          </View> */}
+            <Text style={styles.textMenu}>Welcome Page</Text>
+          </View>
         </View>
         <Text style={styles.textTitleInfo}>Info terbaru buat Kamu</Text>
         <ScrollView

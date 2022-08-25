@@ -9,6 +9,8 @@ import RegisterScreen from './src/view/Register';
 import HomeScreen from './src/view/Home';
 import SettingsScreen from './src/view/Settings';
 import MenuScreen from './src/view/Menu';
+import LandingPageScreen from './src/view/LandingPage';
+import LandingDetailScreen from './src/view/LandingPage/LandingDetail';
 import ListMenuScreen from './src/view/Menu/ListMenu';
 import DetailMenuScreen from './src/view/Menu/DetailMenu';
 import AddCategoryScreen from './src/view/Menu/AddCategory';
@@ -208,6 +210,16 @@ function App() {
             options={{
               headerBackVisible: false,
             }}
+          />
+          <Stack.Screen
+            name="LandingPage"
+            component={LandingPageScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="LandingDetail"
+            component={LandingDetailScreen}
+            options={{headerShown: false}}
           />
         </Stack.Navigator>
       </NavigationContainer>
