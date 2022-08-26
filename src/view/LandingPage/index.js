@@ -56,9 +56,9 @@ function LandingPageScreen({navigation}) {
     <TouchableOpacity
       onPress={() =>
         navigation.navigate('LandingDetail', {
-          categoryName: item?.name,
-          categoryId: item?.id,
-          allDataCategory: dataLandingPage,
+          title: item?.title,
+          link: item?.value,
+          linkId: item?.id,
         })
       }>
       <View
@@ -70,7 +70,7 @@ function LandingPageScreen({navigation}) {
         }}>
         <View>
           <Text style={styles.textSales}>{item?.title}</Text>
-          <Text style={styles.textEditCategory}>Edit Kategori</Text>
+          <Text style={styles.textEditCategory}>Edit Tautan</Text>
         </View>
         <TouchableOpacity
           onPress={() =>

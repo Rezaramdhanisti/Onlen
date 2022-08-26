@@ -39,6 +39,7 @@ function MerchantSettingScreen({navigation}) {
   const [isLoading, setLoading] = useState(false);
   const [textServiceFee, setTextServiceFee] = useState('0');
   const [textTaxFee, setTextTaxFee] = useState('0');
+  const [merchantName, setMerchantName] = useState(null);
 
   useEffect(() => {
     getDetailMerchant();
@@ -66,6 +67,7 @@ function MerchantSettingScreen({navigation}) {
         setTextServiceFee(
           data?.serviceFee ? data?.serviceFee?.toString() : '0',
         );
+        setMerchantName(data?.name ? data?.name.toString() : '');
       })
       .catch(e => {
         console.log('eee', e);
@@ -75,11 +77,11 @@ function MerchantSettingScreen({navigation}) {
         setLoading(false);
       });
   };
-
+  console.log('haha', dataMerchant.name, merchantName);
   const updateMenu = async () => {
     setLoading(true);
     const dataPayload = {
-      name: dataMerchant?.name,
+      name: merchantName,
       address: dataMerchant?.address ? dataMerchant?.address : 'kosong',
       latitude: dataMerchant?.latitude ? dataMerchant?.latitude : 12121212,
       longitude: dataMerchant?.longitude ? dataMerchant?.longitude : 12121212,
@@ -150,7 +152,20 @@ function MerchantSettingScreen({navigation}) {
         <Text style={styles.textTitleWithEmail}>Management Merchant</Text>
         <View style={{height: hp(1)}} />
         <Text style={styles.textSubtitle}>Nama Merchant</Text>
-        <Text style={styles.textSubtitle2}>{dataMerchant.name}</Text>
+        <TextInput
+          underlineColorAndroid="transparent"
+          style={{color: '#565454', marginTop: 6}}
+          placeholderTextColor="#9FA2B4"
+          onChangeText={value => setMerchantName(value)}
+          value={merchantName}
+        />
+        <View
+          style={{
+            height: 1,
+            backgroundColor: '#E8EBEB',
+            marginTop: 6,
+          }}
+        />
 
         <Text style={styles.textSubtitle}>Nomor Handphone Merchant</Text>
         <Text style={styles.textSubtitle2}>{dataMerchant.phoneNumber}</Text>
@@ -179,7 +194,7 @@ function MerchantSettingScreen({navigation}) {
         <TextInput
           underlineColorAndroid="transparent"
           keyboardType="number-pad"
-          style={{color: '#565454'}}
+          style={{color: '#565454', marginTop: 6}}
           placeholderTextColor="#9FA2B4"
           onChangeText={value => setTextServiceFee(value)}
           value={textServiceFee}
@@ -196,7 +211,7 @@ function MerchantSettingScreen({navigation}) {
         <TextInput
           underlineColorAndroid="transparent"
           keyboardType="numeric"
-          style={{color: '#565454'}}
+          style={{color: '#565454', marginTop: 6}}
           placeholderTextColor="#9FA2B4"
           onChangeText={newText => setTextTaxFee(newText)}
           value={textTaxFee}

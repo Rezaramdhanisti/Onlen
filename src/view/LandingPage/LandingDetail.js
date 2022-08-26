@@ -27,10 +27,11 @@ function LandingDetailScreen({navigation, route}) {
   );
   const toast = useToast();
   const [isLoading, setLoading] = useState(false);
+  const [isLoadingDelete, setLoadingDelete] = useState(false);
 
   const createCategory = async () => {
     if (text.length < 1) {
-      return toast.show('Isi dulu kategorinya yaa', {type: 'danger'});
+      return toast.show('Isi dulu nama tautannyaa yaa', {type: 'danger'});
     }
     setLoading(true);
     const token = await AsyncStorage.getItem('@token');
@@ -59,7 +60,7 @@ function LandingDetailScreen({navigation, route}) {
 
   const updateCategory = async () => {
     if (text.length < 1) {
-      return toast.show('Isi dulu kategorinya yaa', {type: 'danger'});
+      return toast.show('Isi dulu nama tautannyaa yaa', {type: 'danger'});
     }
     setLoading(true);
     const token = await AsyncStorage.getItem('@token');
@@ -83,6 +84,31 @@ function LandingDetailScreen({navigation, route}) {
       })
       .finally(() => {
         setLoading(false);
+      });
+  };
+
+  const deleteTautan = async () => {
+    setLoadingDelete(true);
+    const token = await AsyncStorage.getItem('@token');
+    axios
+      .delete(
+        `${API_URL}/dashboard/merchant-landing-page-metadata/${route?.params?.linkId}`,
+        {
+          headers: {
+            Authorization: 'Bearer ' + token,
+          },
+        },
+      )
+      .then(() => {
+        Alert.alert('Sukses', 'Tautan berhasil dihapus!', [
+          {text: 'OK', onPress: () => navigation.goBack()},
+        ]);
+      })
+      .catch(e => {
+        toast.show(e?.response?.data.message, {type: 'danger'});
+      })
+      .finally(() => {
+        setLoadingDelete(false);
       });
   };
 
@@ -158,6 +184,26 @@ function LandingDetailScreen({navigation, route}) {
           }}
         />
       </ScrollView>
+
+      <TouchableOpacity
+        style={{
+          height: hp(5),
+          borderRadius: 4,
+          justifyContent: 'center',
+          position: 'absolute',
+          bottom: hp(10),
+          left: wp(24),
+          right: wp(24),
+        }}
+        onPress={() => deleteTautan()}>
+        {isLoadingDelete ? (
+          <ActivityIndicator size="small" color="#ff3366" />
+        ) : (
+          <View>
+            <Text style={styles.textDeleteTautan}>Hapus Tautan</Text>
+          </View>
+        )}
+      </TouchableOpacity>
       <TouchableOpacity
         style={{
           height: hp(5),
@@ -165,7 +211,7 @@ function LandingDetailScreen({navigation, route}) {
           borderRadius: 4,
           justifyContent: 'center',
           position: 'absolute',
-          bottom: hp(6),
+          bottom: hp(4),
           left: wp(24),
           right: wp(24),
         }}

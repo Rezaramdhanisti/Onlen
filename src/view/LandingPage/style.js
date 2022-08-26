@@ -164,6 +164,13 @@ export default {
     fontWeight: 'bold',
     textAlign: 'center',
   },
+  textDeleteTautan: {
+    fontSize: helpers.scaling.moderateScale(14),
+    color: '#ff3366',
+    letterSpacing: 0.34,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
   textSubHeader: {
     color: '#565454',
   },
