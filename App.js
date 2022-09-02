@@ -22,6 +22,7 @@ import OrderTodayScreen from './src/view/Order/OrderToday';
 import OrderProcessScreen from './src/view/Order/OrderProcess';
 import OrderFinishScreen from './src/view/Order/OrderFinish';
 import MyQrisScreen from './src/view/Settings/MyQris';
+import PrinterSettingsScreen from './src/view/PrinterSettings';
 
 import MerchantSettingScreen from './src/view/Settings/MerchantSetting';
 
@@ -134,6 +135,11 @@ function App() {
           isReadyRef.current = true;
         }}>
         <Stack.Navigator>
+          <Stack.Screen
+            name="PrinterSettings"
+            component={PrinterSettingsScreen}
+            options={{headerShown: false}}
+          />
           <Stack.Screen
             name="Splash"
             component={SplashScreen}
