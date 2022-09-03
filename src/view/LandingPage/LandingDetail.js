@@ -60,7 +60,7 @@ function LandingDetailScreen({navigation, route}) {
 
   const updateCategory = async () => {
     if (text.length < 1) {
-      return toast.show('Isi dulu nama tautannyaa yaa', {type: 'danger'});
+      return toast.show('Isi dulu judul tautannyaa yaa', {type: 'danger'});
     }
     setLoading(true);
     const token = await AsyncStorage.getItem('@token');
@@ -149,7 +149,7 @@ function LandingDetailScreen({navigation, route}) {
       <ScrollView
         style={styles.containerDetailMenu}
         showsVerticalScrollIndicator={false}>
-        <Text style={styles.textSubtitle}>Nama Tautan</Text>
+        <Text style={styles.textSubtitle}>Judul</Text>
         <TextInput
           style={{marginTop: 10, color: '#565454'}}
           underlineColorAndroid="transparent"
@@ -166,7 +166,7 @@ function LandingDetailScreen({navigation, route}) {
             marginBottom: 4,
           }}
         />
-        <Text style={styles.textSubtitle}>Link Tautan</Text>
+        <Text style={styles.textSubtitle}>Url</Text>
         <TextInput
           style={{marginTop: 10, color: '#565454'}}
           underlineColorAndroid="transparent"

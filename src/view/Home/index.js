@@ -289,7 +289,7 @@ function HomeScreen({navigation}) {
             <Text style={styles.textMenu}>QRIS</Text>
           </View>
 
-          <View style={{alignItems: 'center', marginLeft: 16}}>
+          <View style={{alignItems: 'center', marginLeft: 38}}>
             <TouchableOpacity
               onPress={() => navigation.navigate('LandingPage')}
               style={{
@@ -310,7 +310,7 @@ function HomeScreen({navigation}) {
                 source={require('../../../assets/paper-plane.png')}
               />
             </TouchableOpacity>
-            <Text style={styles.textMenu}>Welcome Page</Text>
+            <Text style={styles.textMenu}>Dasbor</Text>
           </View>
         </View>
         <Text style={styles.textTitleInfo}>Info terbaru buat Kamu</Text>

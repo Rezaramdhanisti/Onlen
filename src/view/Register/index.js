@@ -25,10 +25,23 @@ function RegisterScreen({navigation}) {
   const [isLoading, setLoading] = useState(false);
   const [isSecure, setSecure] = useState(true);
   const [isSecureConfirm, setSecureConfirm] = useState(true);
+  const [showError, setShowError] = useState(false);
   const toast = useToast();
 
   const securePassword = () => {
     setSecure(!isSecure);
+  };
+  const validationBusinessName = text => {
+    let regSpace = new RegExp(/^[a-zA-Z0-9_.-]*$/); // what should i add to check *%#:& currently its checking only white space
+    // Check for white space and (*%#:&)
+    if (regSpace.test(text)) {
+      console.log('hahaha true');
+      setBusinessName(text);
+      setShowError(false);
+    } else {
+      console.log('hahaha false');
+      setShowError(true);
+    }
   };
 
   const securePasswordConfirm = () => {
@@ -39,7 +52,7 @@ function RegisterScreen({navigation}) {
     if (password !== passwordConfirm) {
       return toast.show('Pastikan password benar', {type: 'danger'});
     }
-    setLoading(true);
+    // setLoading(true);
     const data = {
       businessName,
       email,
@@ -95,10 +108,10 @@ function RegisterScreen({navigation}) {
             <TextInput
               style={styles.input}
               underlineColorAndroid="transparent"
-              placeholder="Nama bisnis"
+              placeholder="Onlen.id/Nama bisnis"
               placeholderTextColor="#d4d4d4"
               onChangeText={text => {
-                setBusinessName(text);
+                validationBusinessName(text);
               }}
               blurOnSubmit={false}
               returnKeyType="next"
@@ -114,7 +127,12 @@ function RegisterScreen({navigation}) {
               borderBottomWidth: 1,
             }}
           />
-          <View style={{marginTop: 32, flexDirection: 'row'}}>
+          {showError && (
+            <Text style={{color: '#EE4266', marginTop: 8}}>
+              Tidak boleh menggunakan spasi yaaa
+            </Text>
+          )}
+          <View style={{marginTop: 30, flexDirection: 'row'}}>
             <Image
               style={{width: 28, height: 28, marginTop: 10}}
               source={require('../../../assets/ic_email.png')}
@@ -144,7 +162,7 @@ function RegisterScreen({navigation}) {
               borderBottomWidth: 1,
             }}
           />
-          <View style={{marginTop: 32, flexDirection: 'row'}}>
+          <View style={{marginTop: 30, flexDirection: 'row'}}>
             <Image
               style={{width: 28, height: 28, marginTop: 10}}
               source={require('../../../assets/ic-telephone.png')}
@@ -175,7 +193,7 @@ function RegisterScreen({navigation}) {
             }}
           />
 
-          <View style={{marginTop: 32, flexDirection: 'row'}}>
+          <View style={{marginTop: 30, flexDirection: 'row'}}>
             <Image
               style={{width: 28, height: 28, marginTop: 10}}
               source={require('../../../assets/ic_password.png')}
@@ -215,7 +233,7 @@ function RegisterScreen({navigation}) {
               borderBottomWidth: 1,
             }}
           />
-          <View style={{marginTop: 32, flexDirection: 'row'}}>
+          <View style={{marginTop: 30, flexDirection: 'row'}}>
             <Image
               style={{width: 28, height: 28, marginTop: 10}}
               source={require('../../../assets/ic_password.png')}
@@ -256,13 +274,14 @@ function RegisterScreen({navigation}) {
 
           <TouchableOpacity
             onPress={onSubmitRegis}
+            disabled={showError}
             style={{
-              marginTop: 32,
+              marginTop: 152,
               height: 46,
               width: '100%',
               alignSelf: 'center',
               justifyContent: 'center',
-              backgroundColor: '#ff3e6c',
+              backgroundColor: showError ? 'grey' : '#ff3e6c',
               borderRadius: 8,
             }}>
             {isLoading ? (

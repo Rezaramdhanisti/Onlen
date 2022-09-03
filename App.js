@@ -136,11 +136,6 @@ function App() {
         }}>
         <Stack.Navigator>
           <Stack.Screen
-            name="PrinterSettings"
-            component={PrinterSettingsScreen}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
             name="Splash"
             component={SplashScreen}
             options={{headerShown: false}}
@@ -225,6 +220,11 @@ function App() {
           <Stack.Screen
             name="LandingDetail"
             component={LandingDetailScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="PrinterSettings"
+            component={PrinterSettingsScreen}
             options={{headerShown: false}}
           />
         </Stack.Navigator>

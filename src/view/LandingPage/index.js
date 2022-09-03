@@ -147,11 +147,11 @@ function LandingPageScreen({navigation}) {
           />
         </TouchableOpacity>
 
-        <Text style={styles.textHeader}>Welcome Page Setting</Text>
+        <Text style={styles.textHeader}>Pengaturan Dasbor</Text>
       </View>
 
       <View style={styles.containerWithEmail}>
-        <Text style={styles.textTitleWithEmail}>Buat Tautan</Text>
+        <Text style={styles.textTitleWithEmail}>Tautan kamu</Text>
 
         <View
           style={{
@@ -193,7 +193,7 @@ function LandingPageScreen({navigation}) {
             right: wp(24),
           }}
           onPress={() => navigation.navigate('LandingDetail')}>
-          <Text style={styles.textAddMenu}>Tambah Tautan</Text>
+          <Text style={styles.textAddMenu}>Tambah Tautan Baru</Text>
         </TouchableOpacity>
       </View>
     </View>
