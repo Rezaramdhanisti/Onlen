@@ -93,7 +93,7 @@ export default {
     marginLeft: 16,
     fontSize: 16,
     height: 50,
-    width: '87%',
+    width: wp(55),
     color: '#565454',
   },
   textSubTitleGrey: {

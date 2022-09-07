@@ -10,7 +10,7 @@ export default {
   shell: {
     flex: 1,
     backgroundColor: 'white',
-    paddingTop: hp('30%'),
+    paddingTop: hp('20%'),
   },
   imageLogo: {
     width: width * 0.8,
@@ -98,7 +98,7 @@ export default {
     marginLeft: 16,
     fontSize: 16,
     height: 50,
-    width: '87%',
+    width: wp(54),
     color: '#565454',
   },
   textSubTitleGrey: {

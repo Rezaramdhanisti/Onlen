@@ -89,17 +89,24 @@ function RegisterScreen({navigation}) {
   };
 
   return (
-    <ScrollView style={styles.shell} showsVerticalScrollIndicator={false}>
-      <TouchableOpacity onPress={() => navigation.goBack()}>
+    <ScrollView
+      style={styles.shell}
+      showsVerticalScrollIndicator={false}
+      keyboardShouldPersistTaps="always">
+      <TouchableOpacity
+        onPress={() => navigation.goBack()}
+        style={{
+          right: wp(10),
+          position: 'absolute',
+          marginTop: hp(5),
+        }}>
         <Image
           style={{
-            width: 28,
-            height: 28,
-            marginTop: 16,
-            alignSelf: 'flex-start',
-            left: 26,
+            width: wp(5),
+            height: hp(3),
+            alignSelf: 'flex-end',
           }}
-          source={require('../../../assets/back.png')}
+          source={require('../../../assets/ic_close.png')}
         />
       </TouchableOpacity>
       <View style={styles.containerWithEmail}>

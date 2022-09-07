@@ -82,7 +82,7 @@ function LoginScreen({navigation}) {
     }
   };
   return (
-    <ScrollView style={styles.shell}>
+    <ScrollView style={styles.shell} keyboardShouldPersistTaps="always">
       <View style={styles.containerWithEmail}>
         <Text style={styles.textTitleWithEmail}>Masuk ke Dashboard</Text>
         <View style={{marginTop: hp(10), width: wp('70%')}}>
