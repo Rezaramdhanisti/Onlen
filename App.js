@@ -28,6 +28,10 @@ import MerchantSettingScreen from './src/view/Settings/MerchantSetting';
 
 import {navigationRef, isReadyRef} from './RootNavigation';
 import {ToastProvider} from 'react-native-toast-notifications';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createMaterialTopTabNavigator();
@@ -91,7 +95,7 @@ function MyTabBar({state, descriptors, navigation, position}) {
               alignItems: 'center',
               backgroundColor: 'white',
               paddingTop: 14,
-              height: 40,
+              height: hp(5),
             }}>
             <View
               style={{

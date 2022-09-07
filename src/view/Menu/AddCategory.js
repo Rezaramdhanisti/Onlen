@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Modal from 'react-native-modal';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -26,6 +27,7 @@ function AddCategoryScreen({navigation, route}) {
   );
   const toast = useToast();
   const [isLoading, setLoading] = useState(false);
+  const [modalSuccess, setModalSuccess] = useState(false);
 
   const createCategory = async () => {
     if (text.length < 1) {
@@ -44,9 +46,7 @@ function AddCategoryScreen({navigation, route}) {
         },
       )
       .then(() => {
-        Alert.alert('Sukses', 'Kategori berhasil dibuat!', [
-          {text: 'OK', onPress: () => navigation.goBack()},
-        ]);
+        visibilityModalSuccess();
       })
       .catch(e => {
         toast.show(e?.response?.data.message, {type: 'danger'});
@@ -73,9 +73,7 @@ function AddCategoryScreen({navigation, route}) {
         },
       )
       .then(() => {
-        Alert.alert('Sukses', 'Kategori berhasil diubah!', [
-          {text: 'OK', onPress: () => navigation.goBack()},
-        ]);
+        visibilityModalSuccess();
       })
       .catch(e => {
         toast.show(e?.response?.data.message, {type: 'danger'});
@@ -83,6 +81,10 @@ function AddCategoryScreen({navigation, route}) {
       .finally(() => {
         setLoading(false);
       });
+  };
+
+  const visibilityModalSuccess = () => {
+    setModalSuccess(!modalSuccess);
   };
 
   return (
@@ -160,6 +162,31 @@ function AddCategoryScreen({navigation, route}) {
           </View>
         )}
       </TouchableOpacity>
+      <Modal isVisible={modalSuccess} onBackdropPress={visibilityModalSuccess}>
+        <View style={styles.modalSuccess}>
+          <Text style={styles.textTitle}>Berhasil!</Text>
+
+          <View
+            style={{
+              flexDirection: 'row',
+              marginTop: '5%',
+              alignItems: 'center',
+            }}>
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={{
+                backgroundColor: '#ff3366',
+                height: hp(4),
+                width: wp(20),
+                borderRadius: 16,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Text style={{fontWeight: '500', color: 'white'}}>Ok</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }

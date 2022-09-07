@@ -8,11 +8,13 @@ import {
   ScrollView,
   Alert,
   RefreshControl,
+  BackHandler,
 } from 'react-native';
 import axios from 'axios';
 import {API_URL} from '@env';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useToast} from 'react-native-toast-notifications';
+import {useFocusEffect} from '@react-navigation/native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -25,6 +27,19 @@ import styles from './style';
 function HomeScreen({navigation}) {
   const toast = useToast();
   const [dataProfile, setDataProfile] = useState({});
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        return true;
+      };
+
+      BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+      return () =>
+        BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+    }, []),
+  );
 
   useEffect(
     () =>
@@ -261,7 +276,7 @@ function HomeScreen({navigation}) {
           style={{
             flexDirection: 'row',
             marginTop: hp(3),
-            marginLeft: 12,
+            marginLeft: wp(5),
           }}>
           <View style={{alignItems: 'center'}}>
             <TouchableOpacity
@@ -289,7 +304,7 @@ function HomeScreen({navigation}) {
             <Text style={styles.textMenu}>QRIS</Text>
           </View>
 
-          <View style={{alignItems: 'center', marginLeft: 38}}>
+          <View style={{alignItems: 'center', marginLeft: wp(15.8)}}>
             <TouchableOpacity
               onPress={() => navigation.navigate('LandingPage')}
               style={{

@@ -13,6 +13,7 @@ import {
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DropDownPicker from 'react-native-dropdown-picker';
+import Modal from 'react-native-modal';
 
 import {launchImageLibrary} from 'react-native-image-picker';
 import {useToast} from 'react-native-toast-notifications';
@@ -55,6 +56,7 @@ function DetailMenuScreen({navigation, route}) {
   );
 
   const [isLoadingImage, setLoadingImage] = useState(false);
+  const [modalSuccess, setModalSuccess] = useState(false);
 
   const createMenu = async () => {
     const dataPayload = {
@@ -90,9 +92,7 @@ function DetailMenuScreen({navigation, route}) {
         },
       })
       .then(() => {
-        Alert.alert('Sukses', 'Menu berhasil dibuat!', [
-          {text: 'OK', onPress: () => navigation.goBack()},
-        ]);
+        visibilityModalSuccess();
       })
       .catch(e => {
         toast.show(e?.response?.data.message, {type: 'danger'});
@@ -100,6 +100,10 @@ function DetailMenuScreen({navigation, route}) {
       .finally(() => {
         setLoading(false);
       });
+  };
+
+  const visibilityModalSuccess = () => {
+    setModalSuccess(!modalSuccess);
   };
 
   const updateMenu = async () => {
@@ -141,9 +145,7 @@ function DetailMenuScreen({navigation, route}) {
         },
       )
       .then(() => {
-        Alert.alert('Sukses', 'Menu berhasil diupdate!', [
-          {text: 'OK', onPress: () => navigation.goBack()},
-        ]);
+        visibilityModalSuccess();
       })
       .catch(e => {
         toast.show(e?.response?.data.message, {type: 'danger'});
@@ -456,6 +458,31 @@ function DetailMenuScreen({navigation, route}) {
           </View>
         )}
       </TouchableOpacity>
+      <Modal isVisible={modalSuccess} onBackdropPress={visibilityModalSuccess}>
+        <View style={styles.modalSuccess}>
+          <Text style={styles.textTitle}>Berhasil!</Text>
+
+          <View
+            style={{
+              flexDirection: 'row',
+              marginTop: '5%',
+              alignItems: 'center',
+            }}>
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={{
+                backgroundColor: '#ff3366',
+                height: hp(4),
+                width: wp(20),
+                borderRadius: 16,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Text style={{fontWeight: '500', color: 'white'}}>Ok</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }

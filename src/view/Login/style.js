@@ -1,12 +1,16 @@
 import {Platform, Dimensions} from 'react-native';
 import helpers from '../../helpers';
 const {width, height} = Dimensions.get('window');
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 
 export default {
   shell: {
     flex: 1,
     backgroundColor: 'white',
-    paddingTop: '30%',
+    paddingTop: hp('30%'),
   },
   imageLogo: {
     width: width * 0.8,
@@ -94,7 +98,7 @@ export default {
     marginLeft: 16,
     fontSize: 16,
     height: 50,
-    width: '74%',
+    width: '87%',
     color: '#565454',
   },
   textSubTitleGrey: {

@@ -14,6 +14,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {useToast} from 'react-native-toast-notifications';
+import Modal from 'react-native-modal';
 import {API_URL} from '@env';
 import {
   widthPercentageToDP as wp,
@@ -40,6 +41,7 @@ function MerchantSettingScreen({navigation}) {
   const [textServiceFee, setTextServiceFee] = useState('0');
   const [textTaxFee, setTextTaxFee] = useState('0');
   const [merchantName, setMerchantName] = useState(null);
+  const [modalSuccess, setModalSuccess] = useState(false);
 
   useEffect(() => {
     getDetailMerchant();
@@ -102,9 +104,7 @@ function MerchantSettingScreen({navigation}) {
         },
       })
       .then(() => {
-        Alert.alert('Sukses', 'Pengaturan toko berhasil diupdate!', [
-          {text: 'OK', onPress: () => navigation.goBack()},
-        ]);
+        visibilityModalSuccess();
       })
       .catch(e => {
         toast.show(e?.response?.data.message, {type: 'danger'});
@@ -112,6 +112,10 @@ function MerchantSettingScreen({navigation}) {
       .finally(() => {
         setLoading(false);
       });
+  };
+
+  const visibilityModalSuccess = () => {
+    setModalSuccess(!modalSuccess);
   };
 
   return (
@@ -305,6 +309,31 @@ function MerchantSettingScreen({navigation}) {
           </View>
         )}
       </TouchableOpacity>
+      <Modal isVisible={modalSuccess} onBackdropPress={visibilityModalSuccess}>
+        <View style={styles.modalSuccess}>
+          <Text style={styles.textTitle}>Berhasil!</Text>
+
+          <View
+            style={{
+              flexDirection: 'row',
+              marginTop: '5%',
+              alignItems: 'center',
+            }}>
+            <TouchableOpacity
+              onPress={visibilityModalSuccess}
+              style={{
+                backgroundColor: '#ff3366',
+                height: hp(4),
+                width: wp(20),
+                borderRadius: 16,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Text style={{fontWeight: '500', color: 'white'}}>Ok</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }

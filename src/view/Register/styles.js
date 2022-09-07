@@ -1,11 +1,16 @@
 import {Platform, Dimensions} from 'react-native';
 const {width, height} = Dimensions.get('window');
+import helpers from '../../helpers';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 
 export default {
   shell: {
     flex: 1,
     backgroundColor: 'white',
-    paddingTop: '16%',
+    paddingTop: hp('5%'),
   },
   container: {
     flex: 1,
@@ -15,7 +20,7 @@ export default {
   containerWithEmail: {
     flex: 1,
     height: height,
-    marginTop: 16,
+    marginTop: hp('10%'),
     alignItems: 'center',
   },
   textTitleWithEmail: {
@@ -88,7 +93,7 @@ export default {
     marginLeft: 16,
     fontSize: 16,
     height: 50,
-    width: 180,
+    width: '87%',
     color: '#565454',
   },
   textSubTitleGrey: {
@@ -102,5 +107,21 @@ export default {
     letterSpacing: 0.34,
     marginTop: 34,
     textDecorationLine: 'underline',
+  },
+  modalSuccess: {
+    backgroundColor: 'white',
+    height: hp(14),
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+    width: wp(50),
+    padding: 16,
+  },
+  textTitle: {
+    fontSize: helpers.scaling.moderateScale(14),
+    color: '#565454',
+    letterSpacing: 0.34,
+    fontWeight: '400',
   },
 };

@@ -13,6 +13,11 @@ import axios from 'axios';
 import CryptoJS from 'react-native-crypto-js';
 import {API_URL, ENCRYPT_KEY} from '@env';
 import {useToast} from 'react-native-toast-notifications';
+import Modal from 'react-native-modal';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 
 import styles from './styles';
 
@@ -27,6 +32,7 @@ function RegisterScreen({navigation}) {
   const [isSecureConfirm, setSecureConfirm] = useState(true);
   const [showError, setShowError] = useState(false);
   const toast = useToast();
+  const [modalSuccess, setModalSuccess] = useState(false);
 
   const securePassword = () => {
     setSecure(!isSecure);
@@ -52,15 +58,13 @@ function RegisterScreen({navigation}) {
     if (password !== passwordConfirm) {
       return toast.show('Pastikan password benar', {type: 'danger'});
     }
-    // setLoading(true);
+    setLoading(true);
     const data = {
       businessName,
       email,
       phoneNumber,
       password,
     };
-
-    console.log('data', data);
 
     // Encrypt
     const encryptText = CryptoJS.AES.encrypt(
@@ -70,17 +74,18 @@ function RegisterScreen({navigation}) {
 
     axios
       .post(`${API_URL}/register`, {data: encryptText})
-      .then(res => {
-        Alert.alert('Sukses', 'Akun berhasil dibuat!', [
-          {text: 'OK', onPress: () => navigation.goBack()},
-        ]);
+      .then(() => {
         setLoading(false);
+        visibilityModalSuccess();
       })
       .catch(e => {
-        console.log('hahaha', e?.response);
         setLoading(false);
         toast.show(e?.response?.data.message, {type: 'danger'});
       });
+  };
+
+  const visibilityModalSuccess = () => {
+    setModalSuccess(!modalSuccess);
   };
 
   return (
@@ -94,12 +99,12 @@ function RegisterScreen({navigation}) {
             alignSelf: 'flex-start',
             left: 26,
           }}
-          source={require('../../../assets/ic_close.png')}
+          source={require('../../../assets/back.png')}
         />
       </TouchableOpacity>
       <View style={styles.containerWithEmail}>
         <Text style={styles.textTitleWithEmail}>Daftarkan Bisnis</Text>
-        <View style={{marginTop: 44, width: 250}}>
+        <View style={{marginTop: 44, width: '75%'}}>
           <View style={{flexDirection: 'row'}}>
             <Image
               style={{width: 28, height: 28, marginTop: 10}}
@@ -251,13 +256,13 @@ function RegisterScreen({navigation}) {
                 this.confirmPassword = input;
               }}
               blurOnSubmit={false}
-              onSubmitEditing={this._loginUsingEmail}
+              onSubmitEditing={onSubmitRegis}
             />
             <TouchableOpacity onPress={() => securePasswordConfirm()}>
               <Image
                 style={{width: 20, height: 20, marginTop: 16}}
                 source={
-                  isSecure
+                  isSecureConfirm
                     ? require('../../../assets/hidden.png')
                     : require('../../../assets/view.png')
                 }
@@ -273,10 +278,10 @@ function RegisterScreen({navigation}) {
           />
 
           <TouchableOpacity
-            onPress={onSubmitRegis}
+            onPress={visibilityModalSuccess}
             disabled={showError}
             style={{
-              marginTop: 152,
+              marginTop: hp(5),
               height: 46,
               width: '100%',
               alignSelf: 'center',
@@ -312,6 +317,31 @@ function RegisterScreen({navigation}) {
           />
         </View>
       </View>
+      <Modal isVisible={modalSuccess} onBackdropPress={visibilityModalSuccess}>
+        <View style={styles.modalSuccess}>
+          <Text style={styles.textTitle}>Akun berhasil dibuat!</Text>
+
+          <View
+            style={{
+              flexDirection: 'row',
+              marginTop: '5%',
+              alignItems: 'center',
+            }}>
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={{
+                backgroundColor: '#ff3366',
+                height: hp(4),
+                width: wp(20),
+                borderRadius: 16,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Text style={{fontWeight: '500', color: 'white'}}>Ok</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </ScrollView>
   );
 }

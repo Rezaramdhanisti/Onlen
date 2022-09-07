@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   TouchableOpacity,
@@ -6,12 +6,15 @@ import {
   Image,
   TextInput,
   ActivityIndicator,
+  BackHandler,
+  ScrollView,
 } from 'react-native';
 import axios from 'axios';
 import CryptoJS from 'react-native-crypto-js';
 import {API_URL, ENCRYPT_KEY} from '@env';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useToast} from 'react-native-toast-notifications';
+import {useFocusEffect} from '@react-navigation/native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -31,6 +34,18 @@ function LoginScreen({navigation}) {
   const securePassword = () => {
     setSecure(!isSecure);
   };
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        return true;
+      };
+
+      BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+      return () =>
+        BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+    }, []),
+  );
 
   const onSubmitLogin = async () => {
     const tokenNotification = await OneSignal.getDeviceState();
@@ -67,7 +82,7 @@ function LoginScreen({navigation}) {
     }
   };
   return (
-    <View style={styles.shell}>
+    <ScrollView style={styles.shell}>
       <View style={styles.containerWithEmail}>
         <Text style={styles.textTitleWithEmail}>Masuk ke Dashboard</Text>
         <View style={{marginTop: hp(10), width: wp('70%')}}>
@@ -188,7 +203,7 @@ function LoginScreen({navigation}) {
           </View>
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 

@@ -16,6 +16,7 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import {useToast} from 'react-native-toast-notifications';
+import Modal from 'react-native-modal';
 import {API_URL} from '@env';
 
 import styles from './style';
@@ -28,6 +29,7 @@ function LandingDetailScreen({navigation, route}) {
   const toast = useToast();
   const [isLoading, setLoading] = useState(false);
   const [isLoadingDelete, setLoadingDelete] = useState(false);
+  const [modalSuccess, setModalSuccess] = useState(false);
 
   const createCategory = async () => {
     if (text.length < 1) {
@@ -46,9 +48,7 @@ function LandingDetailScreen({navigation, route}) {
         },
       )
       .then(() => {
-        Alert.alert('Sukses', 'Tautan berhasil dibuat!', [
-          {text: 'OK', onPress: () => navigation.goBack()},
-        ]);
+        visibilityModalSuccess();
       })
       .catch(e => {
         toast.show(e?.response?.data.message, {type: 'danger'});
@@ -75,9 +75,7 @@ function LandingDetailScreen({navigation, route}) {
         },
       )
       .then(() => {
-        Alert.alert('Sukses', 'Tautan berhasil diubah!', [
-          {text: 'OK', onPress: () => navigation.goBack()},
-        ]);
+        visibilityModalSuccess();
       })
       .catch(e => {
         toast.show(e?.response?.data.message, {type: 'danger'});
@@ -100,9 +98,7 @@ function LandingDetailScreen({navigation, route}) {
         },
       )
       .then(() => {
-        Alert.alert('Sukses', 'Tautan berhasil dihapus!', [
-          {text: 'OK', onPress: () => navigation.goBack()},
-        ]);
+        visibilityModalSuccess();
       })
       .catch(e => {
         toast.show(e?.response?.data.message, {type: 'danger'});
@@ -110,6 +106,10 @@ function LandingDetailScreen({navigation, route}) {
       .finally(() => {
         setLoadingDelete(false);
       });
+  };
+
+  const visibilityModalSuccess = () => {
+    setModalSuccess(!modalSuccess);
   };
 
   return (
@@ -224,6 +224,31 @@ function LandingDetailScreen({navigation, route}) {
           </View>
         )}
       </TouchableOpacity>
+      <Modal isVisible={modalSuccess} onBackdropPress={visibilityModalSuccess}>
+        <View style={styles.modalSuccess}>
+          <Text style={styles.textTitle}>Berhasil!</Text>
+
+          <View
+            style={{
+              flexDirection: 'row',
+              marginTop: '5%',
+              alignItems: 'center',
+            }}>
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={{
+                backgroundColor: '#ff3366',
+                height: hp(4),
+                width: wp(20),
+                borderRadius: 16,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Text style={{fontWeight: '500', color: 'white'}}>Ok</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }

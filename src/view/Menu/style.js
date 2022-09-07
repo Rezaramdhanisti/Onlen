@@ -210,4 +210,20 @@ export default {
     textAlign: 'center',
     fontWeight: 'bold',
   },
+  modalSuccess: {
+    backgroundColor: 'white',
+    height: hp(14),
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 16,
+    width: wp(50),
+    alignSelf: 'center',
+  },
+  textTitle: {
+    fontSize: helpers.scaling.moderateScale(14),
+    color: '#565454',
+    letterSpacing: 0.34,
+    fontWeight: '400',
+  },
 };
