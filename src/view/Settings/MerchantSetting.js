@@ -21,6 +21,9 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
+import {launchImageLibrary} from 'react-native-image-picker';
+import mime from 'mime';
+
 import styles from './style';
 
 function MerchantSettingScreen({navigation}) {
@@ -42,6 +45,9 @@ function MerchantSettingScreen({navigation}) {
   const [textTaxFee, setTextTaxFee] = useState('0');
   const [merchantName, setMerchantName] = useState(null);
   const [modalSuccess, setModalSuccess] = useState(false);
+  const [imageMenu, setImageMenu] = useState('');
+
+  const [isLoadingImage, setLoadingImage] = useState(false);
 
   useEffect(() => {
     getDetailMerchant();
@@ -62,6 +68,7 @@ function MerchantSettingScreen({navigation}) {
         seDataMerchant(data);
         setIsEnabledDineIn(data?.isDinein);
         setIsEnabled(data?.isDelivery);
+        setImageMenu(data?.imageUrl);
         setIsEnabledTakeAway(data?.isTakeaway);
         setIsEnabledOnline(data?.isOnlineOrder);
         setTextTaxFee(data?.tax ? data?.tax?.toString() : '0');
@@ -91,6 +98,7 @@ function MerchantSettingScreen({navigation}) {
       isOnlineOrder: isEnabledOnline,
       tax: textTaxFee ? parseFloat(textTaxFee) : 0,
       serviceFee: textServiceFee ? parseFloat(textServiceFee) : 0,
+      imageUrl: imageMenu,
     };
     const token = await AsyncStorage.getItem('@token');
     axios
@@ -112,6 +120,56 @@ function MerchantSettingScreen({navigation}) {
 
   const visibilityModalSuccess = () => {
     setModalSuccess(!modalSuccess);
+  };
+
+  const pickImage = async (
+    options = {
+      mediaType: 'photo',
+    },
+  ) => {
+    setLoadingImage(true);
+    launchImageLibrary(options, response => {
+      if (response.didCancel) {
+        setLoadingImage(false);
+      } else if (response.errorCode) {
+        setLoadingImage(false);
+      } else {
+        take(response.assets[0].uri);
+      }
+    });
+  };
+  const take = async imageCache => {
+    const token = await AsyncStorage.getItem('@token');
+
+    var formData = new FormData();
+    // formData.append('image', imageCache);
+    formData.append('image', {
+      uri: imageCache,
+      type: mime.getType(imageCache),
+      name: `signature-${Date.now()}`,
+    });
+
+    axios({
+      url: `${API_URL}/dashboard/upload/image`,
+      method: 'POST',
+      data: formData,
+      transformRequest: () => {
+        return formData;
+      },
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: 'Bearer ' + token,
+      },
+    })
+      .then(resp => {
+        setImageMenu(resp.data.data.imageURL);
+      })
+      .catch(e => {
+        toast.show(e?.response?.data.message, {type: 'danger'});
+      })
+      .finally(() => {
+        setLoadingImage(false);
+      });
   };
 
   return (
@@ -151,6 +209,49 @@ function MerchantSettingScreen({navigation}) {
         showsVerticalScrollIndicator={false}>
         <Text style={styles.textTitleWithEmail}>Management Merchant</Text>
         <View style={{height: hp(1)}} />
+        <Text style={styles.textSubtitle}>Logo Merchant</Text>
+        {imageMenu && !isLoadingImage ? (
+          <View>
+            <Image
+              style={{
+                width: wp(21),
+                height: hp(10),
+                borderRadius: 8,
+                marginTop: hp(1.5),
+              }}
+              resizeMode={'contain'}
+              source={{uri: imageMenu}}
+            />
+            <Text style={styles.textEditImage} onPress={() => pickImage()}>
+              Ubah Gambar
+            </Text>
+          </View>
+        ) : (
+          <TouchableOpacity
+            onPress={() => pickImage()}
+            style={{
+              width: wp(21),
+              height: hp(10),
+              borderRadius: 8,
+              borderWidth: 1,
+              justifyContent: 'center',
+              marginTop: hp(1.5),
+              borderColor: '#9FA2B4',
+            }}>
+            {isLoadingImage ? (
+              <ActivityIndicator size="small" color="#ff3366" />
+            ) : (
+              <Image
+                style={{
+                  width: 16,
+                  height: 16,
+                  alignSelf: 'center',
+                }}
+                source={require('../../../assets/upload.png')}
+              />
+            )}
+          </TouchableOpacity>
+        )}
         <Text style={styles.textSubtitle}>Nama Merchant</Text>
         <TextInput
           underlineColorAndroid="transparent"
@@ -316,7 +417,7 @@ function MerchantSettingScreen({navigation}) {
               alignItems: 'center',
             }}>
             <TouchableOpacity
-              onPress={visibilityModalSuccess}
+              onPress={() => navigation.goBack()}
               style={{
                 backgroundColor: '#ff3366',
                 height: hp(4),
