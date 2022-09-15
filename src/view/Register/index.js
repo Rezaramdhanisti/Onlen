@@ -283,7 +283,7 @@ function RegisterScreen({navigation}) {
           />
 
           <TouchableOpacity
-            onPress={visibilityModalSuccess}
+            onPress={onSubmitRegis}
             disabled={showError}
             style={{
               marginTop: hp(5),
