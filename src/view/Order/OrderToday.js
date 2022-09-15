@@ -109,7 +109,6 @@ function OrderTodayScreen({navigation}) {
         },
       })
       .then(res => {
-        console.log('data', res.data.data);
         setDataOrderDetail(res.data.data);
       })
       .catch(e => {

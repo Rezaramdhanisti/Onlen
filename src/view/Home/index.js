@@ -61,7 +61,6 @@ function HomeScreen({navigation}) {
 
   const getDetailProfile = async () => {
     const token = await AsyncStorage.getItem('@token');
-    console.log('hahaha', token);
     axios
       .get(`${API_URL}/dashboard/profiles`, {
         headers: {

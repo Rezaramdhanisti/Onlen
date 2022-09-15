@@ -47,11 +47,9 @@ function AddEmployeeScreen({navigation, route}) {
         },
       })
       .then(res => {
-        console.log('xxxx', res);
         setDataRoles(res.data.data);
       })
       .catch(e => {
-        console.log('xxxx', e);
         toast.show(e?.response?.data.message, {type: 'danger'});
       })
       .finally(() => {
@@ -78,7 +76,6 @@ function AddEmployeeScreen({navigation, route}) {
       password: textPassword,
       roleId: idRoles,
     };
-    console.log('dataPay', dataPayload);
     setLoading(true);
     const token = await AsyncStorage.getItem('@token');
     axios

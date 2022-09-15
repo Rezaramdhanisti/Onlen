@@ -17,7 +17,6 @@ function SettingScreen({navigation}) {
   const getData = async () => {
     try {
       const value = await AsyncStorage.getItem('@token');
-      console.log('value', value);
       if (value !== null) {
         // value previously stored
         setTimeout(() => {

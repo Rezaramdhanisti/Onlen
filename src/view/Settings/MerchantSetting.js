@@ -59,7 +59,6 @@ function MerchantSettingScreen({navigation}) {
       })
       .then(res => {
         const {data} = res.data;
-        console.log('data', data);
         seDataMerchant(data);
         setIsEnabledDineIn(data?.isDinein);
         setIsEnabled(data?.isDelivery);
@@ -72,14 +71,12 @@ function MerchantSettingScreen({navigation}) {
         setMerchantName(data?.name ? data?.name.toString() : '');
       })
       .catch(e => {
-        console.log('eee', e);
         toast.show(e?.response?.data.message, {type: 'danger'});
       })
       .finally(() => {
         setLoading(false);
       });
   };
-  console.log('haha', dataMerchant.name, merchantName);
   const updateMenu = async () => {
     setLoading(true);
     const dataPayload = {
@@ -96,7 +93,6 @@ function MerchantSettingScreen({navigation}) {
       serviceFee: textServiceFee ? parseFloat(textServiceFee) : 0,
     };
     const token = await AsyncStorage.getItem('@token');
-    console.log('address', dataPayload);
     axios
       .put(`${API_URL}/dashboard/merchants`, dataPayload, {
         headers: {

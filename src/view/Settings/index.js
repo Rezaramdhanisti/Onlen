@@ -27,7 +27,6 @@ function SettingScreen({navigation, route}) {
       );
     } catch (e) {
       // remove error
-      console.log('error', e);
     }
   };
 

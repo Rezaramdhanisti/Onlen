@@ -51,7 +51,6 @@ function OrderFinishScreen({navigation}) {
         },
       })
       .then(res => {
-        console.log('res', res.data.data);
         setDataOrder(res.data.data);
       })
       .catch(e => {
@@ -70,7 +69,6 @@ function OrderFinishScreen({navigation}) {
     setModalDetail(!modalDetail);
     setLoadingDetail(true);
     const token = await AsyncStorage.getItem('@token');
-    console.log('token', token);
     axios
       .get(`${API_URL}/dashboard/orders/${orderId}`, {
         headers: {

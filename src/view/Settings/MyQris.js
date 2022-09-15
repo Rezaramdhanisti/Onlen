@@ -35,7 +35,6 @@ function MyQrisScreen({navigation}) {
 
   const getDataQRIS = async () => {
     const token = await AsyncStorage.getItem('@token');
-    console.log('hahaha', token);
     axios
       .get(`${API_URL}/dashboard/merchants/qris`, {
         headers: {
@@ -56,7 +55,6 @@ function MyQrisScreen({navigation}) {
     const dataPayload = {
       imageUrl: imageMenu,
     };
-    console.log('datapayload', dataPayload);
     const token = await AsyncStorage.getItem('@token');
     axios
       .put(`${API_URL}/dashboard/merchants/qris`, dataPayload, {
@@ -73,7 +71,6 @@ function MyQrisScreen({navigation}) {
         ]);
       })
       .catch(e => {
-        console.log('eee', e.response);
         toast.show(e?.response?.data.message, {type: 'danger'});
       })
       .finally(() => {
@@ -93,10 +90,8 @@ function MyQrisScreen({navigation}) {
     setLoadingImage(true);
     launchImageLibrary(options, response => {
       if (response.didCancel) {
-        console.log('User cancelled image picker');
         setLoadingImage(false);
       } else if (response.errorCode) {
-        console.log('Unexpected error occurred on image picker.');
         setLoadingImage(false);
       } else {
         take(response.assets[0].uri);
@@ -114,8 +109,6 @@ function MyQrisScreen({navigation}) {
       name: `signature-${Date.now()}`,
     });
 
-    console.log('formData', formData);
-
     axios({
       url: `${API_URL}/dashboard/upload/image`,
       method: 'POST',
@@ -129,11 +122,9 @@ function MyQrisScreen({navigation}) {
       },
     })
       .then(resp => {
-        console.log('response', resp.data.data);
         setImageMenu(resp.data.data.imageURL);
       })
       .catch(e => {
-        console.log('error', e.response.data);
         toast.show(e?.response?.data.message, {type: 'danger'});
       })
       .finally(() => {

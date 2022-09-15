@@ -41,7 +41,6 @@ function LandingPageScreen({navigation}) {
         },
       })
       .then(res => {
-        console.log('res', res.data.data);
         setDataLandingPage(res.data.data);
       })
       .catch(e => {

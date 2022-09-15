@@ -18,6 +18,7 @@ target 'Onlen' do
     # An absolute path to your application root.
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
+  pod 'rn-fetch-blob', :path => '../node_modules/rn-fetch-blob'
 
   target 'OnlenTests' do
     inherit! :complete

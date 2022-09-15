@@ -41,11 +41,9 @@ function RegisterScreen({navigation}) {
     let regSpace = new RegExp(/^[a-zA-Z0-9_.-]*$/); // what should i add to check *%#:& currently its checking only white space
     // Check for white space and (*%#:&)
     if (regSpace.test(text)) {
-      console.log('hahaha true');
       setBusinessName(text);
       setShowError(false);
     } else {
-      console.log('hahaha false');
       setShowError(true);
     }
   };

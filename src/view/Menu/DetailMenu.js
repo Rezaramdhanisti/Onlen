@@ -163,10 +163,8 @@ function DetailMenuScreen({navigation, route}) {
     setLoadingImage(true);
     launchImageLibrary(options, response => {
       if (response.didCancel) {
-        console.log('User cancelled image picker');
         setLoadingImage(false);
       } else if (response.errorCode) {
-        console.log('Unexpected error occurred on image picker.');
         setLoadingImage(false);
       } else {
         take(response.assets[0].uri);
@@ -184,8 +182,6 @@ function DetailMenuScreen({navigation, route}) {
       name: `signature-${Date.now()}`,
     });
 
-    console.log('formData', formData);
-
     axios({
       url: `${API_URL}/dashboard/upload/image`,
       method: 'POST',
@@ -199,11 +195,9 @@ function DetailMenuScreen({navigation, route}) {
       },
     })
       .then(resp => {
-        console.log('response', resp.data.data);
         setImageMenu(resp.data.data.imageURL);
       })
       .catch(e => {
-        console.log('error', e.response.data);
         toast.show(e?.response?.data.message, {type: 'danger'});
       })
       .finally(() => {
