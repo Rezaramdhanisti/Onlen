@@ -93,10 +93,11 @@ function HomeScreen({navigation}) {
   const goToSetting = () => {
     navigation.navigate('Settings', dataProfile);
   };
-  const goToPromotion = () => {
+  const goToPrinter = () => {
     if (dataProfile?.roleName !== 'administrator') {
       return alertPremium();
     }
+    navigation.navigate('PrinterSettings');
   };
   const goToOrder = () => {
     if (!dataProfile?.isPremium) {
@@ -270,12 +271,11 @@ function HomeScreen({navigation}) {
             <Text style={styles.textMenu}>Pengaturan</Text>
           </View>
         </View>
-
         <View
           style={{
             flexDirection: 'row',
             marginTop: hp(3),
-            marginLeft: wp(5),
+            marginLeft: 12,
           }}>
           <View style={{alignItems: 'center'}}>
             <TouchableOpacity
@@ -303,7 +303,7 @@ function HomeScreen({navigation}) {
             <Text style={styles.textMenu}>QRIS</Text>
           </View>
 
-          <View style={{alignItems: 'center', marginLeft: wp(15.8)}}>
+          <View style={{alignItems: 'center', marginLeft: 38}}>
             <TouchableOpacity
               onPress={() => navigation.navigate('LandingPage')}
               style={{
