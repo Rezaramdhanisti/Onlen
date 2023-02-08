@@ -1,0 +1,126 @@
+import {Platform, Dimensions} from 'react-native';
+const {width, height} = Dimensions.get('window');
+import helpers from '../../helpers';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
+
+export default {
+  shell: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
+  container: {
+    flex: 1,
+    marginTop: 67,
+    alignItems: 'center',
+  },
+  containerWithEmail: {
+    flex: 1,
+    height: height,
+    marginTop: hp('10%'),
+    alignItems: 'center',
+  },
+  textTitleWithEmail: {
+    fontSize: 28,
+    color: '#565454',
+    letterSpacing: 0.34,
+    alignItems: 'center',
+    fontWeight: 'bold',
+  },
+  textTitle: {
+    fontSize: 20,
+    color: '#565454',
+    letterSpacing: 0.34,
+    alignItems: 'center',
+    fontWeight: 'bold',
+  },
+  textTermServices: {
+    fontSize: 16,
+    color: '#565454',
+    letterSpacing: 0.34,
+    alignItems: 'center',
+    textDecorationLine: 'underline',
+    marginBottom: 23,
+  },
+  textHaveAccount: {
+    fontSize: 16,
+    color: '#565454',
+    letterSpacing: 0.34,
+    alignItems: 'center',
+    marginTop: 25,
+  },
+  textSignUp: {
+    fontSize: 16,
+    color: '#ff3e6c',
+    letterSpacing: 0.34,
+    alignItems: 'center',
+    marginTop: 25,
+  },
+  text: {
+    fontSize: 16,
+    paddingLeft: 10,
+    color: '#565454',
+    marginLeft: 10,
+  },
+  inputEmail: {
+    width: 296,
+    flexDirection: 'row',
+    paddingLeft: 15,
+    alignItems: 'center',
+    margin: 10,
+    height: 56,
+  },
+  submitButton: {
+    borderRadius: 4,
+    shadowColor: Platform.OS === 'ios' ? '#000' : null,
+    shadowOffset: Platform.OS === 'ios' ? {width: 0, height: 5} : null,
+    shadowOpacity: Platform.OS === 'ios' ? 0.1 : null,
+    shadowRadius: Platform.OS === 'ios' ? 1 : null,
+    shadowColor: '#000',
+    elevation: Platform.OS === 'ios' ? 3 : 4,
+    width: 296,
+    flexDirection: 'row',
+    backgroundColor: '#fff',
+    paddingLeft: 15,
+    alignItems: 'center',
+    margin: 10,
+    height: 56,
+  },
+  input: {
+    marginLeft: 16,
+    fontSize: 16,
+    height: 50,
+    width: wp(55),
+    color: '#565454',
+  },
+  textSubTitleGrey: {
+    fontSize: 12,
+    color: '#565454',
+  },
+  textForgotPass: {
+    alignSelf: 'center',
+    fontSize: 16,
+    color: '#656363',
+    letterSpacing: 0.34,
+    marginTop: 34,
+    textDecorationLine: 'underline',
+  },
+  modalSuccess: {
+    backgroundColor: 'white',
+    height: hp(14),
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+    width: wp(50),
+    padding: 16,
+  },
+  textTitle: {
+    fontSize: helpers.scaling.moderateScale(14),
+    color: '#565454',
+    letterSpacing: 0.34,
+    fontWeight: '400',
+  },
+};

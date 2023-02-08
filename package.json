@@ -1,0 +1,56 @@
+{
+  "name": "Onlen",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "android": "APP_ENV=develop npx react-native run-android",
+    "ios": "APP_ENV=develop npx react-native run-ios",
+    "start": "react-native start",
+    "test": "jest",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@react-native-async-storage/async-storage": "^1.17.4",
+    "@react-native-clipboard/clipboard": "^1.10.0",
+    "@react-navigation/bottom-tabs": "^6.3.1",
+    "@react-navigation/material-top-tabs": "^6.2.1",
+    "@react-navigation/native": "^6.0.10",
+    "@react-navigation/native-stack": "^6.6.1",
+    "axios": "^0.26.1",
+    "crypto-js": "^4.1.1",
+    "mime": "^3.0.0",
+    "moment": "^2.29.4",
+    "react": "17.0.2",
+    "react-native": "0.68.1",
+    "react-native-bluetooth-escpos-printer": "^0.0.5",
+    "react-native-crypto-js": "^1.0.0",
+    "react-native-currency-input": "^1.0.1",
+    "react-native-dotenv": "^3.3.1",
+    "react-native-dropdown-picker": "^5.4.2",
+    "react-native-image-picker": "^4.8.4",
+    "react-native-modal": "^13.0.1",
+    "react-native-onesignal": "^4.3.11",
+    "react-native-pager-view": "^5.4.24",
+    "react-native-qrcode-svg": "^6.1.2",
+    "react-native-responsive-screen": "^1.4.2",
+    "react-native-safe-area-context": "^4.2.4",
+    "react-native-screens": "^3.13.1",
+    "react-native-svg": "^12.4.3",
+    "react-native-tab-view": "^3.1.1",
+    "react-native-toast-notifications": "^3.2.3",
+    "rn-fetch-blob": "^0.12.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.17.9",
+    "@babel/runtime": "^7.17.9",
+    "@react-native-community/eslint-config": "^3.0.1",
+    "babel-jest": "^27.5.1",
+    "eslint": "^8.13.0",
+    "jest": "^27.5.1",
+    "metro-react-native-babel-preset": "^0.70.1",
+    "react-test-renderer": "17.0.2"
+  },
+  "jest": {
+    "preset": "react-native"
+  }
+}
