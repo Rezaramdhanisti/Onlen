@@ -116,10 +116,11 @@ function HomeScreen({navigation}) {
       style={styles.shell}
       refreshControl={<RefreshControl onRefresh={getDetailProfile} />}>
       <View style={styles.containerWithEmail}>
-        <Text style={styles.textTitleWithEmail}>
-Beranda
+        <Text style={styles.textTitleWithEmail}>Beranda</Text>
+        <Text style={styles.textWelcome}>
+          {' '}
+          Selamat datang di Onlen, {dataProfile?.name}
         </Text>
-        <Text style={styles.textWelcome}>  Selamat datang di Onlen, {dataProfile?.name}</Text>
         {/* <View style={styles.containerSales}>
           <Image
             style={{width: 14, height: 14, marginLeft: 6, marginRight: 4}}
@@ -168,7 +169,7 @@ Beranda
             </View>
           </ImageBackground>
         </TouchableOpacity>
-        {/* <View
+        <View
           style={{
             flexDirection: 'row',
             marginTop: hp(3),
@@ -270,7 +271,7 @@ Beranda
             </TouchableOpacity>
             <Text style={styles.textMenu}>Pengaturan</Text>
           </View>
-        </View> */}
+        </View>
         <View
           style={{
             flexDirection: 'row',

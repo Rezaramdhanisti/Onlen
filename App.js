@@ -1,14 +1,22 @@
 import React, {useEffect} from 'react';
-import {Animated, View, TouchableOpacity, Image, SafeAreaView, Text} from 'react-native';
+import {
+  Animated,
+  View,
+  TouchableOpacity,
+  Image,
+  SafeAreaView,
+  Text,
+} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import helpers from './src/helpers';
 
 import LoginScreen from './src/view/Login';
 import RegisterScreen from './src/view/Register';
 import HomeScreen from './src/view/Home';
+import HomeV2Screen from './src/view/Home-v2';
 import SettingsScreen from './src/view/Settings';
 import MenuScreen from './src/view/Menu';
 import LandingPageScreen from './src/view/LandingPage';
@@ -41,112 +49,124 @@ const BottomTab = createBottomTabNavigator();
 
 function BottomTabs() {
   return (
-    <BottomTab.Navigator  screenOptions={{
-      tabBarActiveTintColor: '#ff3366',
-      tabBarLabelStyle:{
-        fontSize: 12
-      },
-      tabBarStyle: {
-        width: '100%',
-        height: 60,
-        paddingBottom:10, 
-        paddingTop:5,
-        borderTopWidth: 0,
-        shadowColor: 'black',
-        elevation: 8,
-        position:'absolute',
-        bottom:0
-        
-    },
-    }} >
-      <BottomTab.Screen  name="Home"  component={HomeScreen} options={{
-        gestureEnabled: false, 
-        headerShown: false,
-        tabBarLabel: 'Beranda',
-          tabBarIcon: ({ focused }) => (
+    <BottomTab.Navigator
+      screenOptions={{
+        tabBarActiveTintColor: '#ff3366',
+        tabBarLabelStyle: {
+          fontSize: 12,
+        },
+        tabBarStyle: {
+          width: '100%',
+          height: 60,
+          paddingBottom: 10,
+          paddingTop: 5,
+          borderTopWidth: 0,
+          shadowColor: 'black',
+          elevation: 8,
+          position: 'absolute',
+          bottom: 0,
+        },
+      }}>
+      <BottomTab.Screen
+        name="Home"
+        component={HomeV2Screen}
+        options={{
+          gestureEnabled: false,
+          headerShown: false,
+          tabBarLabel: 'Beranda',
+          tabBarIcon: ({focused}) => (
             <View
-        style={{
-          alignItems: 'center',
-        }}>
-        <Image
-          style={{
-            width: 28,
-            tintColor: focused ? '#ff3366': '#2D2D2D',
-            height: 28,
-            resizeMode: 'contain',
-          }}
-          source={require('./assets/home.png')}
-        />
-      </View>
+              style={{
+                alignItems: 'center',
+              }}>
+              <Image
+                style={{
+                  width: 28,
+                  tintColor: focused ? '#ff3366' : '#2D2D2D',
+                  height: 28,
+                  resizeMode: 'contain',
+                }}
+                source={require('./assets/home.png')}
+              />
+            </View>
           ),
         }}
- />
-      <BottomTab.Screen name="Pesanan" component={MyTabs}  
-      options={{
-        gestureEnabled: false, 
-        headerShown: false,
-        tabBarLabel: 'Pesanan',
-          tabBarIcon: ({ focused }) => (
+      />
+      <BottomTab.Screen
+        name="Pesanan"
+        component={MyTabs}
+        options={{
+          gestureEnabled: false,
+          headerShown: false,
+          tabBarLabel: 'Pesanan',
+          tabBarIcon: ({focused}) => (
             <View
-        style={{
-          alignItems: 'center',
-        }}>
-        <Image
-          style={{
-            width: 28,
-            height: 28,
-            tintColor: focused ? '#ff3366': '#2D2D2D',
-            resizeMode: 'contain',
-          }}
-          source={require('./assets/order.png')}
-        />
-      </View>
+              style={{
+                alignItems: 'center',
+              }}>
+              <Image
+                style={{
+                  width: 28,
+                  height: 28,
+                  tintColor: focused ? '#ff3366' : '#2D2D2D',
+                  resizeMode: 'contain',
+                }}
+                source={require('./assets/order.png')}
+              />
+            </View>
           ),
-        }}/>
-      <BottomTab.Screen name="Produk" component={MenuScreen} 
-      options={{
-        gestureEnabled: false, 
-        headerShown: false,
-        tabBarLabel: 'Produk',
-          tabBarIcon: ({ focused }) => (
+        }}
+      />
+      <BottomTab.Screen
+        name="Produk"
+        component={MenuScreen}
+        options={{
+          gestureEnabled: false,
+          headerShown: false,
+          tabBarLabel: 'Produk',
+          tabBarIcon: ({focused}) => (
             <View
-        style={{
-          alignItems: 'center',
-        }}>
-        <Image
-          style={{
-            width: 28,
-            height: 28,
-            tintColor: focused ? '#ff3366': '#2D2D2D',
-            resizeMode: 'contain',
-          }}
-          source={require('./assets/product.png')}
-        />
-      </View>
+              style={{
+                alignItems: 'center',
+              }}>
+              <Image
+                style={{
+                  width: 28,
+                  height: 28,
+                  tintColor: focused ? '#ff3366' : '#2D2D2D',
+                  resizeMode: 'contain',
+                }}
+                source={require('./assets/product.png')}
+              />
+            </View>
           ),
-        }}/>
-      <BottomTab.Screen name="Pengaturan" component={SettingsScreen} 
-      options={{
-        gestureEnabled: false, 
-        headerShown: false,
-        tabBarLabel: 'Pengaturan',
-          tabBarIcon: ({ focused }) => (
+        }}
+      />
+      <BottomTab.Screen
+        name="Pengaturan"
+        component={SettingsScreen}
+        options={{
+          gestureEnabled: false,
+          headerShown: false,
+          tabBarLabel: 'Pengaturan',
+          tabBarIcon: ({focused}) => (
             <View
-        style={{
-          alignItems: 'center',
-        }}>
-        <Image
-          style={{
-            width: 28,
-            height: 28,
-            tintColor: focused ? '#ff3366': '#2D2D2D',
-            resizeMode: 'contain',
-          }}
-          source={require('./assets/setting.png')}
-        />
-      </View>
+              style={{
+                alignItems: 'center',
+              }}>
+              <Image
+                style={{
+                  width: 28,
+                  height: 28,
+                  tintColor: focused ? '#ff3366' : '#2D2D2D',
+                  resizeMode: 'contain',
+                }}
+                source={require('./assets/setting.png')}
+              />
+            </View>
           ),
-        }} />
+        }}
+      />
     </BottomTab.Navigator>
   );
 }
@@ -159,97 +179,100 @@ function MyTabBar({state, descriptors, navigation, position}) {
   }, []);
 
   return (
-    <SafeAreaView style={{backgroundColor:'white'}}>
+    <SafeAreaView style={{backgroundColor: 'white'}}>
       <View
         style={{
           flexDirection: 'row',
           paddingHorizontal: wp(5),
           alignItems: 'center',
           marginTop: hp(2),
-          marginBottom: hp(2)
+          marginBottom: hp(2),
         }}>
-        <Text style={{  fontSize: helpers.scaling.moderateScale(16),
-    color: '#565454',
-    letterSpacing: 0.34,
-    fontWeight: 'bold',
-    textAlign: 'center',}}>Pesanan</Text>
+        <Text
+          style={{
+            fontSize: helpers.scaling.moderateScale(16),
+            color: '#565454',
+            letterSpacing: 0.34,
+            fontWeight: 'bold',
+            textAlign: 'center',
+          }}>
+          Pesanan
+        </Text>
       </View>
 
       <View style={{flexDirection: 'row'}}>
+        {state.routes.map((route, index) => {
+          const {options} = descriptors[route.key];
+          const label =
+            options.tabBarLabel !== undefined
+              ? options.tabBarLabel
+              : options.title !== undefined
+              ? options.title
+              : route.name;
 
-      {state.routes.map((route, index) => {
-        const {options} = descriptors[route.key];
-        const label =
-          options.tabBarLabel !== undefined
-            ? options.tabBarLabel
-            : options.title !== undefined
-            ? options.title
-            : route.name;
+          const isFocused = state.index === index;
 
-        const isFocused = state.index === index;
+          const onPress = () => {
+            const event = navigation.emit({
+              type: 'tabPress',
+              target: route.key,
+              canPreventDefault: true,
+            });
 
-        const onPress = () => {
-          const event = navigation.emit({
-            type: 'tabPress',
-            target: route.key,
-            canPreventDefault: true,
+            if (!isFocused && !event.defaultPrevented) {
+              // The `merge: true` option makes sure that the params inside the tab screen are preserved
+              navigation.navigate({name: route.name, merge: true});
+            }
+          };
+
+          const onLongPress = () => {
+            navigation.emit({
+              type: 'tabLongPress',
+              target: route.key,
+            });
+          };
+
+          const inputRange = state.routes.map((_, i) => i);
+          const opacity = position.interpolate({
+            inputRange,
+            outputRange: inputRange.map(i => (i === index ? 1 : 0)),
           });
 
-          if (!isFocused && !event.defaultPrevented) {
-            // The `merge: true` option makes sure that the params inside the tab screen are preserved
-            navigation.navigate({name: route.name, merge: true});
-          }
-        };
-
-        const onLongPress = () => {
-          navigation.emit({
-            type: 'tabLongPress',
-            target: route.key,
-          });
-        };
-
-        const inputRange = state.routes.map((_, i) => i);
-        const opacity = position.interpolate({
-          inputRange,
-          outputRange: inputRange.map(i => (i === index ? 1 : 0)),
-        });
-
-        return (
-          <TouchableOpacity
-            accessibilityRole="button"
-            accessibilityState={isFocused ? {selected: true} : {}}
-            accessibilityLabel={options.tabBarAccessibilityLabel}
-            testID={options.tabBarTestID}
-            onPress={onPress}
-            onLongPress={onLongPress}
-            style={{
-              flex: 1,
-              justifyContent: 'center',
-              alignItems: 'center',
-              backgroundColor: 'white',
-              height: hp(5),
-            }}>
-            <View
+          return (
+            <TouchableOpacity
+              accessibilityRole="button"
+              accessibilityState={isFocused ? {selected: true} : {}}
+              accessibilityLabel={options.tabBarAccessibilityLabel}
+              testID={options.tabBarTestID}
+              onPress={onPress}
+              onLongPress={onLongPress}
               style={{
-                backgroundColor: isFocused ? '#FFDBD4' : 'white',
-                borderRadius: 14,
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: 'white',
+                height: hp(5),
               }}>
-              <Animated.Text
+              <View
                 style={{
-                  color: isFocused ? 'black' : 'grey',
-                  fontWeight: '500',
-                  fontSize: 14,
-                  paddingHorizontal: 20,
-                  paddingVertical: 6,
+                  backgroundColor: isFocused ? '#FFDBD4' : 'white',
+                  borderRadius: 14,
                 }}>
-                {label}
-              </Animated.Text>
-            </View>
-          </TouchableOpacity>
-        );
-      })}
+                <Animated.Text
+                  style={{
+                    color: isFocused ? 'black' : 'grey',
+                    fontWeight: '500',
+                    fontSize: 14,
+                    paddingHorizontal: 20,
+                    paddingVertical: 6,
+                  }}>
+                  {label}
+                </Animated.Text>
+              </View>
+            </TouchableOpacity>
+          );
+        })}
       </View>
-
     </SafeAreaView>
   );
 }

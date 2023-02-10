@@ -40,7 +40,7 @@ function ShowMenuScreen({navigation, route}) {
           />
         </TouchableOpacity>
 
-        <Text style={styles.textHeader}>Bagikan Menu</Text>
+        <Text style={styles.textHeader}>Bagikan Toko</Text>
       </View>
 
       <View
@@ -57,10 +57,10 @@ function ShowMenuScreen({navigation, route}) {
           />
         </View>
 
-        <Text style={styles.textTitleShareMenu}>Bagikan menu kamu yuk!</Text>
+        <Text style={styles.textTitleShareMenu}>Bagikan toko kamu yuk!</Text>
         <Text style={styles.textSubtitleShareMenu}>
-          Kasih liat QR menu ini ke customer kamu, tanpa repot repot atau bisa
-          kasih customer link ini ✌🏻
+          Kasih liat QR toko ini ke customer kamu, tanpa repot repot atau bisa
+          kasih customer link ini.
         </Text>
         <Text style={styles.textSubtitleShareMenuBold}>
           {ADDRESS_URL}
