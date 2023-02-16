@@ -75,4 +75,9 @@ export default {
     color: '#565454',
     letterSpacing: 0.34,
   },
+  textPrinterStatus: color => ({
+    fontSize: helpers.scaling.moderateScale(14),
+    color: color,
+    letterSpacing: 0.34,
+  }),
 };

@@ -345,9 +345,10 @@ function PrinterSettingScreen({navigation, route}) {
         }}>
         <View style={{flexDirection: 'row'}}>
           <Text style={styles.textToggle}>Status bluetooth</Text>
-          <Text style={styles.textToggleDesc}>
+          <Text
+            style={styles.textPrinterStatus(bleOpend ? '#47BF34' : '#E9493F')}>
             {' '}
-            ({bleOpend ? 'aktif' : 'tidak aktif'})
+            ({bleOpend ? 'Aktif' : 'Tidak aktif'})
           </Text>
         </View>
       </View>
