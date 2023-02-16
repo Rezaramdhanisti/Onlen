@@ -38,8 +38,9 @@ function PrinterSettingScreen({navigation, route}) {
   );
 
   useEffect(() => {
-    _activateBluetooth();
-    _pullToRefresh();
+    setTimeout(() => {
+      _activateBluetooth();
+    }, 1500);
   }, []);
 
   const _activateBluetooth = useCallback(() => {
@@ -92,57 +93,52 @@ function PrinterSettingScreen({navigation, route}) {
   }, []);
 
   useEffect(() => {
-    if (Platform.OS === 'ios') {
-      let bluetoothManagerEmitter = new NativeEventEmitter(BluetoothManager);
-      bluetoothManagerEmitter.addListener(
-        BluetoothManager.EVENT_DEVICE_ALREADY_PAIRED,
-        rsp => {
-          deviceAlreadPaired(rsp);
-        },
-      );
-      bluetoothManagerEmitter.addListener(
-        BluetoothManager.EVENT_DEVICE_FOUND,
-        rsp => {
-          deviceFoundEvent(rsp);
-        },
-      );
-      bluetoothManagerEmitter.addListener(
-        BluetoothManager.EVENT_CONNECTION_LOST,
-        () => {
-          setName('');
-          setBoundAddress('');
-        },
-      );
-    } else if (Platform.OS === 'android') {
-      DeviceEventEmitter.addListener(
-        BluetoothManager.EVENT_DEVICE_ALREADY_PAIRED,
-        rsp => {
-          deviceAlreadPaired(rsp);
-        },
-      );
-      DeviceEventEmitter.addListener(
-        BluetoothManager.EVENT_DEVICE_FOUND,
-        rsp => {
-          deviceFoundEvent(rsp);
-        },
-      );
-      DeviceEventEmitter.addListener(
-        BluetoothManager.EVENT_CONNECTION_LOST,
-        () => {
-          setName('');
-          setBoundAddress('');
-        },
-      );
-      DeviceEventEmitter.addListener(
-        BluetoothManager.EVENT_BLUETOOTH_NOT_SUPPORT,
-        () => {
-          ToastAndroid.show(
-            'Device Not Support Bluetooth !',
-            ToastAndroid.LONG,
-          );
-        },
-      );
-    }
+    // if (Platform.OS === 'ios') {
+    //   let bluetoothManagerEmitter = new NativeEventEmitter(BluetoothManager);
+    //   bluetoothManagerEmitter.addListener(
+    //     BluetoothManager.EVENT_DEVICE_ALREADY_PAIRED,
+    //     rsp => {
+    //       deviceAlreadPaired(rsp);
+    //     },
+    //   );
+    //   bluetoothManagerEmitter.addListener(
+    //     BluetoothManager.EVENT_DEVICE_FOUND,
+    //     rsp => {
+    //       deviceFoundEvent(rsp);
+    //     },
+    //   );
+    //   bluetoothManagerEmitter.addListener(
+    //     BluetoothManager.EVENT_CONNECTION_LOST,
+    //     () => {
+    //       setName('');
+    //       setBoundAddress('');
+    //     },
+    //   );
+    // } else if
+    //  (Platform.OS === 'android') {
+    DeviceEventEmitter.addListener(
+      BluetoothManager.EVENT_DEVICE_ALREADY_PAIRED,
+      rsp => {
+        deviceAlreadPaired(rsp);
+      },
+    );
+    DeviceEventEmitter.addListener(BluetoothManager.EVENT_DEVICE_FOUND, rsp => {
+      deviceFoundEvent(rsp);
+    });
+    DeviceEventEmitter.addListener(
+      BluetoothManager.EVENT_CONNECTION_LOST,
+      () => {
+        setName('');
+        setBoundAddress('');
+      },
+    );
+    DeviceEventEmitter.addListener(
+      BluetoothManager.EVENT_BLUETOOTH_NOT_SUPPORT,
+      () => {
+        ToastAndroid.show('Device Not Support Bluetooth !', ToastAndroid.LONG);
+      },
+    );
+    // }
     if (pairedDevices.length < 1) {
       scan();
     }
@@ -199,7 +195,7 @@ function PrinterSettingScreen({navigation, route}) {
   );
 
   const connect = row => {
-    // setLoading(true);
+    setLoading(true);
     BluetoothManager.connect(row.address).then(
       s => {
         setLoading(false);
@@ -209,7 +205,7 @@ function PrinterSettingScreen({navigation, route}) {
       },
       e => {
         setLoading(false);
-        alert(e);
+        alert('Pastikan printer dalam keadaan aktif');
       },
     );
   };

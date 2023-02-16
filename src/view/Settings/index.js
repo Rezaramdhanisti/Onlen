@@ -6,6 +6,7 @@ import {
   Image,
   Linking,
   Platform,
+  PermissionsAndroid,
 } from 'react-native';
 import {ADDRESS_URL} from '@env';
 import {useToast} from 'react-native-toast-notifications';
@@ -13,7 +14,7 @@ import {CommonActions} from '@react-navigation/native';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {useFocusEffect} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import Modal from 'react-native-modal';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -24,6 +25,7 @@ import styles from './style';
 function SettingScreen({navigation, route}) {
   const toast = useToast();
   const [printerName, setPrinterName] = useState('');
+  const [modalPermission, setModalPermission] = useState(false);
 
   const removeValue = async () => {
     try {
@@ -39,6 +41,37 @@ function SettingScreen({navigation, route}) {
     }
   };
 
+  _requestLocationPermission = async () => {
+    if (Platform.Version > 28) {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        );
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          navigation.navigate('PrinterSettings', printerName);
+        } else {
+          console.log('Permission Denied.');
+          // setModalPermission(true);
+        }
+      } catch (err) {
+        console.warn(err);
+      }
+    } else {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
+        );
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          navigation.navigate('PrinterSettings', printerName);
+        } else {
+          console.log('Permission Denied.');
+          // setModalPermission(true);
+        }
+      } catch (err) {
+        console.warn(err);
+      }
+    }
+  };
   useFocusEffect(
     useCallback(() => {
       getData();
@@ -63,6 +96,10 @@ function SettingScreen({navigation, route}) {
   const copyToClipboard = () => {
     Clipboard.setString(`${ADDRESS_URL}${route.params.merchantName}`);
     toast.show('Tersalin', {type: 'success'});
+  };
+
+  const visibilityModalPermission = () => {
+    setModalPermission(!modalPermission);
   };
 
   return (
@@ -97,7 +134,7 @@ function SettingScreen({navigation, route}) {
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={() => navigation.navigate('PrinterSettings', printerName)}
+          onPress={_requestLocationPermission}
           style={{
             flexDirection: 'row',
             alignItems: 'center',
@@ -176,6 +213,36 @@ function SettingScreen({navigation, route}) {
         </TouchableOpacity>
         <View style={{height: hp(4)}}></View>
       </View>
+      <Modal
+        isVisible={modalPermission}
+        onBackdropPress={visibilityModalPermission}>
+        <View style={styles.modalPermission}>
+          <Text style={styles.textTitlePermission}>Akses Lokasi</Text>
+          <Text style={styles.textSubTitlePermission}>
+            Membutuhkan akses lokasi untuk menggunakan printer, berikan akses
+            lokasi di setting handphone Anda
+          </Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              marginTop: '5%',
+              alignItems: 'center',
+            }}>
+            <TouchableOpacity
+              onPress={visibilityModalPermission}
+              style={{
+                backgroundColor: '#ff3366',
+                height: hp(4),
+                width: wp(20),
+                borderRadius: 16,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Text style={{fontWeight: '500', color: 'white'}}>Ok</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }

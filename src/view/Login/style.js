@@ -10,7 +10,7 @@ export default {
   shell: {
     flex: 1,
     backgroundColor: 'white',
-    paddingTop: hp('20%'),
+    paddingTop: hp('12%'),
   },
   imageLogo: {
     width: width * 0.8,

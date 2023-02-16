@@ -299,4 +299,28 @@ export default {
     letterSpacing: 0.34,
     fontWeight: '400',
   },
+  modalPermission: {
+    backgroundColor: 'white',
+    height: hp(26),
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 16,
+    width: wp(74),
+    alignSelf: 'center',
+  },
+  textTitlePermission: {
+    fontSize: helpers.scaling.moderateScale(16),
+    color: '#565454',
+    letterSpacing: 0.34,
+    fontWeight: 'bold',
+  },
+  textSubTitlePermission: {
+    fontSize: helpers.scaling.moderateScale(14),
+    color: '#565454',
+    letterSpacing: 0.34,
+    fontWeight: '400',
+    textAlign: 'center',
+    marginTop: 14,
+  },
 };
