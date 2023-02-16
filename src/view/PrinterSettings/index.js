@@ -17,6 +17,7 @@ import {
 import {BluetoothManager} from 'tp-react-native-bluetooth-printer';
 import ItemList from './ItemList';
 import SamplePrint from './SamplePrint';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -24,16 +25,20 @@ import {
 
 import styles from './style';
 
-function PrinterSettingScreen({navigation}) {
+function PrinterSettingScreen({navigation, route}) {
   const [pairedDevices, setPairedDevices] = useState([]);
   const [foundDs, setFoundDs] = useState([]);
   const [bleOpend, setBleOpend] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [name, setName] = useState('');
-  const [boundAddress, setBoundAddress] = useState('');
-  const [isActiveBluetooth, setisActiveBluetooth] = useState(false);
+  const [name, setName] = useState(
+    route.params ? JSON.parse(route?.params).name : '',
+  );
+  const [boundAddress, setBoundAddress] = useState(
+    route.params ? JSON.parse(route?.params).address : '',
+  );
 
   useEffect(() => {
+    _activateBluetooth();
     _pullToRefresh();
   }, []);
 
@@ -78,6 +83,12 @@ function PrinterSettingScreen({navigation}) {
   const _pullToRefresh = useCallback(() => {
     _checkBluetooth();
     scan();
+    DeviceEventEmitter.addListener(
+      BluetoothManager.EVENT_DEVICE_ALREADY_PAIRED,
+      rsp => {
+        deviceAlreadPaired(rsp);
+      },
+    );
   }, []);
 
   useEffect(() => {
@@ -194,12 +205,21 @@ function PrinterSettingScreen({navigation}) {
         setLoading(false);
         setBoundAddress(row.address);
         setName(row.name || 'UNKNOWN');
+        storePrinterData(row);
       },
       e => {
         setLoading(false);
         alert(e);
       },
     );
+  };
+
+  const storePrinterData = async value => {
+    try {
+      await AsyncStorage.setItem('@printer', JSON.stringify(value));
+    } catch (e) {
+      // saving error
+    }
   };
 
   const unPair = address => {

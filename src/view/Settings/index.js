@@ -1,9 +1,17 @@
-import React from 'react';
-import {View, TouchableOpacity, Text, Image, Linking} from 'react-native';
+import React, {useCallback, useState} from 'react';
+import {
+  View,
+  TouchableOpacity,
+  Text,
+  Image,
+  Linking,
+  Platform,
+} from 'react-native';
 import {ADDRESS_URL} from '@env';
 import {useToast} from 'react-native-toast-notifications';
 import {CommonActions} from '@react-navigation/native';
 import Clipboard from '@react-native-clipboard/clipboard';
+import {useFocusEffect} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {
@@ -15,6 +23,7 @@ import styles from './style';
 
 function SettingScreen({navigation, route}) {
   const toast = useToast();
+  const [printerName, setPrinterName] = useState('');
 
   const removeValue = async () => {
     try {
@@ -27,6 +36,27 @@ function SettingScreen({navigation, route}) {
       );
     } catch (e) {
       // remove error
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      getData();
+    }, []),
+  );
+
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('@printer');
+      if (value !== null) {
+        // value previously stored
+        console.log('ada', value);
+        setPrinterName(value);
+      } else {
+        console.log('null', value);
+      }
+    } catch (e) {
+      // error reading value
     }
   };
 
@@ -67,7 +97,7 @@ function SettingScreen({navigation, route}) {
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={() => navigation.navigate('PrinterSettings')}
+          onPress={() => navigation.navigate('PrinterSettings', printerName)}
           style={{
             flexDirection: 'row',
             alignItems: 'center',

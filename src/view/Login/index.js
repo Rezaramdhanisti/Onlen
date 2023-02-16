@@ -121,6 +121,7 @@ function LoginScreen({navigation}) {
               }}
               blurOnSubmit={false}
               returnKeyType="next"
+              keyboardType="email-address"
               onSubmitEditing={() => {
                 this.password.focus();
               }}
