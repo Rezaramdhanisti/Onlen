@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, {useState, useEffect, useCallback, useRef} from 'react';
 import {
   ActivityIndicator,
   DeviceEventEmitter,
@@ -9,10 +9,18 @@ import {
   Text,
   ToastAndroid,
   View,
+  RefreshControl,
+  TouchableOpacity,
+  Image,
+  Switch,
 } from 'react-native';
-import {BluetoothManager} from 'react-native-bluetooth-escpos-printer';
+import {BluetoothManager} from 'tp-react-native-bluetooth-printer';
 import ItemList from './ItemList';
 import SamplePrint from './SamplePrint';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 
 import styles from './style';
 
@@ -23,18 +31,56 @@ function PrinterSettingScreen({navigation}) {
   const [loading, setLoading] = useState(true);
   const [name, setName] = useState('');
   const [boundAddress, setBoundAddress] = useState('');
+  const [isActiveBluetooth, setisActiveBluetooth] = useState(false);
 
   useEffect(() => {
-    BluetoothManager.isBluetoothEnabled().then(
-      enabled => {
-        setBleOpend(Boolean(enabled));
-        setLoading(false);
+    _pullToRefresh();
+  }, []);
+
+  const _activateBluetooth = useCallback(() => {
+    BluetoothManager.enableBluetooth().then(
+      r => {
+        var paired = [];
+        if (r && r.length > 0) {
+          for (var i = 0; i < r.length; i++) {
+            try {
+              paired.push(JSON.parse(r[i])); // NEED TO PARSE THE DEVICE INFORMATION
+            } catch (e) {
+              //ignore
+            }
+          }
+        }
+        console.log(JSON.stringify(paired));
+        _checkBluetooth();
+        scan();
       },
       err => {
-        err;
+        alert('Mohon aktifkan bluetooth ');
       },
     );
+  }, []);
 
+  const _disableBluetooth = useCallback(() => {
+    BluetoothManager.disableBluetooth().then(
+      () => {
+        console.log('sakses');
+        setTimeout(() => {
+          _checkBluetooth();
+          scan();
+        }, 500);
+      },
+      err => {
+        alert(err);
+      },
+    );
+  }, []);
+
+  const _pullToRefresh = useCallback(() => {
+    _checkBluetooth();
+    scan();
+  }, []);
+
+  useEffect(() => {
     if (Platform.OS === 'ios') {
       let bluetoothManagerEmitter = new NativeEventEmitter(BluetoothManager);
       bluetoothManagerEmitter.addListener(
@@ -142,7 +188,7 @@ function PrinterSettingScreen({navigation}) {
   );
 
   const connect = row => {
-    setLoading(true);
+    // setLoading(true);
     BluetoothManager.connect(row.address).then(
       s => {
         setLoading(false);
@@ -157,8 +203,8 @@ function PrinterSettingScreen({navigation}) {
   };
 
   const unPair = address => {
-    setLoading(true);
-    BluetoothManager.unpaire(address).then(
+    // setLoading(true);
+    BluetoothManager.unpair(address).then(
       s => {
         setLoading(false);
         setBoundAddress('');
@@ -172,7 +218,6 @@ function PrinterSettingScreen({navigation}) {
   };
 
   const scanDevices = useCallback(() => {
-    setLoading(true);
     BluetoothManager.scanDevices().then(
       s => {
         // const pairedDevices = s.paired;
@@ -196,13 +241,24 @@ function PrinterSettingScreen({navigation}) {
     );
   }, [foundDs]);
 
+  const _checkBluetooth = useCallback(() => {
+    BluetoothManager.isBluetoothEnabled().then(
+      enabled => {
+        setBleOpend(Boolean(enabled));
+      },
+      err => {
+        err;
+      },
+    );
+  }, []);
+
   const scan = useCallback(() => {
     try {
       async function blueTooth() {
         const permissions = {
-          title: 'HSD bluetooth meminta izin untuk mengakses bluetooth',
+          title: 'Onlen App meminta izin untuk mengakses bluetooth',
           message:
-            'HSD bluetooth memerlukan akses ke bluetooth untuk proses koneksi ke bluetooth printer',
+            'Onlen App memerlukan akses ke bluetooth untuk proses koneksi ke bluetooth printer',
           buttonNeutral: 'Lain Waktu',
           buttonNegative: 'Tidak',
           buttonPositive: 'Boleh',
@@ -231,15 +287,79 @@ function PrinterSettingScreen({navigation}) {
   }, [scanDevices]);
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.bluetoothStatusContainer}>
-        <Text style={styles.bluetoothStatus(bleOpend ? '#47BF34' : '#A8A9AA')}>
-          Bluetooth {bleOpend ? 'Aktif' : 'Non Aktif'}
-        </Text>
+    <ScrollView
+      style={styles.container}
+      refreshControl={
+        <RefreshControl
+          onRefresh={_pullToRefresh}
+          refreshing={loading}
+          onPress={() => _activateBluetooth()}
+        />
+      }>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+        }}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={{width: 40}}>
+          <Image
+            style={{
+              width: 16,
+              height: 16,
+            }}
+            source={require('../../../assets/back.png')}
+          />
+        </TouchableOpacity>
+
+        <View>
+          <Text style={styles.textHeader}>Pengaturan Printer</Text>
+        </View>
       </View>
       {!bleOpend && (
         <Text style={styles.bluetoothInfo}>Mohon aktifkan bluetooth anda</Text>
       )}
+      <View style={{height: hp(2)}} />
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}>
+        <View style={{flexDirection: 'row'}}>
+          <Text style={styles.textToggle}>Status bluetooth</Text>
+          <Text style={styles.textToggleDesc}>
+            {' '}
+            ({bleOpend ? 'aktif' : 'tidak aktif'})
+          </Text>
+        </View>
+      </View>
+      <Text style={styles.textSubtitle2}>Pelanggan makan ditempat</Text>
+
+      <TouchableOpacity
+        style={styles.bluetoothStatusContainer}
+        onPress={() => _activateBluetooth()}>
+        <Text style={styles.bluetoothStatus(bleOpend ? '#47BF34' : '#47BF34')}>
+          Klik disini untuk aktifkan bluetooth
+        </Text>
+      </TouchableOpacity>
+      {/* <TouchableOpacity
+        style={styles.bluetoothStatusContainer}
+        onPress={() => _activateBluetooth()}>
+        <Text style={styles.bluetoothStatus(bleOpend ? '#47BF34' : '#A8A9AA')}>
+          Bluetooth {bleOpend ? 'Aktif' : 'Non Aktif'}
+        </Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.bluetoothStatusContainer}
+        onPress={() => _disableBluetooth()}>
+        <Text style={styles.bluetoothStatus(bleOpend ? '#47BF34' : '#A8A9AA')}>
+          Bluetooth {bleOpend ? 'Aktif' : 'Non Aktif'}
+        </Text>
+      </TouchableOpacity> */}
+
       <Text style={styles.sectionTitle}>
         Printer yang terhubung ke aplikasi:
       </Text>
@@ -258,7 +378,7 @@ function PrinterSettingScreen({navigation}) {
       <Text style={styles.sectionTitle}>
         Bluetooth yang terhubung ke HP ini:
       </Text>
-      {loading ? <ActivityIndicator animating={true} /> : null}
+      {/* {loading ? <ActivityIndicator animating={true} /> : null} */}
       <View style={styles.containerList}>
         {pairedDevices.map((item, index) => {
           return (
@@ -274,7 +394,9 @@ function PrinterSettingScreen({navigation}) {
           );
         })}
       </View>
+      {/* {boundAddress.length > 0 &&  */}
       <SamplePrint />
+      {/* } */}
       <View style={{height: 100}} />
     </ScrollView>
   );

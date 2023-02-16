@@ -1,13 +1,13 @@
 import React from 'react';
 import {Button, StyleSheet, Text, View} from 'react-native';
-import {BluetoothEscposPrinter} from 'react-native-bluetooth-escpos-printer';
+import {BluetoothEscposPrinter} from 'tp-react-native-bluetooth-printer';
 import {hsdLogo} from './dummy-logo';
 
 const SamplePrint = () => {
   return (
     <View>
-      <Text>Sample Print Instruction</Text>
-      <View style={styles.btn}>
+      {/* <Text>Sample Print Instruction</Text> */}
+      {/* <View style={styles.btn}>
         <Button
           onPress={async () => {
             await BluetoothEscposPrinter.printBarCode(
@@ -22,22 +22,22 @@ const SamplePrint = () => {
           }}
           title="Print BarCode"
         />
-      </View>
-      <View style={styles.btn}>
-        <Button
-          onPress={async () => {
-            await BluetoothEscposPrinter.printQRCode(
-              'https://hsd.co.id',
-              280,
-              BluetoothEscposPrinter.ERROR_CORRECTION.L,
-            ); //.then(()=>{alert('done')},(err)=>{alert(err)});
-            await BluetoothEscposPrinter.printText('\r\n\r\n\r\n', {});
-          }}
-          title="Print QRCode"
-        />
-      </View>
+      </View> */}
+      <Button
+        color={'#00BCD4'}
+        onPress={async () => {
+          await BluetoothEscposPrinter.printQRCode(
+            'https://onlen.id',
+            340,
+            BluetoothEscposPrinter.ERROR_CORRECTION.H,
+            30,
+          ); //.then(()=>{alert('done')},(err)=>{alert(err)});
+          await BluetoothEscposPrinter.printText('\r\n\r\n\r\n', {});
+        }}
+        title="Tes Print"
+      />
 
-      <View style={styles.btn}>
+      {/* <View style={styles.btn}>
         <Button
           onPress={async () => {
             await BluetoothEscposPrinter.printerUnderLine(2);
@@ -53,9 +53,9 @@ const SamplePrint = () => {
           }}
           title="Print UnderLine"
         />
-      </View>
+      </View> */}
 
-      <View style={styles.btn}>
+      {/* <View style={styles.btn}>
         <Button
           title="Print Struk Belanja"
           onPress={async () => {
@@ -205,6 +205,7 @@ const SamplePrint = () => {
                 'DP0837849839',
                 280,
                 BluetoothEscposPrinter.ERROR_CORRECTION.L,
+                40,
               );
               await BluetoothEscposPrinter.printerAlign(
                 BluetoothEscposPrinter.ALIGN.CENTER,
@@ -236,7 +237,7 @@ const SamplePrint = () => {
             }
           }}
         />
-      </View>
+      </View> */}
     </View>
   );
 };
@@ -246,5 +247,6 @@ export default SamplePrint;
 const styles = StyleSheet.create({
   btn: {
     marginBottom: 8,
+    backgroundColor: '#00BCD4',
   },
 });

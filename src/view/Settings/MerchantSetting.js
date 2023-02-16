@@ -259,6 +259,7 @@ function MerchantSettingScreen({navigation}) {
           placeholderTextColor="#9FA2B4"
           onChangeText={value => setMerchantName(value)}
           value={merchantName}
+          editable={false}
         />
         <View
           style={{

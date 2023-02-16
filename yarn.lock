@@ -5776,11 +5776,6 @@ react-native-animatable@1.3.3:
   dependencies:
     prop-types "^15.7.2"
 
-react-native-bluetooth-escpos-printer@^0.0.5:
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/react-native-bluetooth-escpos-printer/-/react-native-bluetooth-escpos-printer-0.0.5.tgz#45a31d37c213f95f2cc590cebcb48e0574ce1b45"
-  integrity sha512-a+GTlz8dctb48wkoJ8woE7gV24NCOoA13J95A+RFEKhjONEWf3/dP5pIqrrlO5fsf/2QYDeMfU3P8bIVQoEqig==
-
 react-native-codegen@^0.0.13:
   version "0.0.13"
   resolved "https://registry.npmjs.org/react-native-codegen/-/react-native-codegen-0.0.13.tgz"
@@ -6802,6 +6797,11 @@ tough-cookie@^4.0.0:
     psl "^1.1.33"
     punycode "^2.1.1"
     universalify "^0.1.2"
+
+tp-react-native-bluetooth-printer@^1.3.5:
+  version "1.3.5"
+  resolved "https://registry.yarnpkg.com/tp-react-native-bluetooth-printer/-/tp-react-native-bluetooth-printer-1.3.5.tgz#5459b6a1ba1aad794fdc123d87354d70331c1062"
+  integrity sha512-oPECyF+o6aWQDghGAb8msKZMnWON0I2Kvto+dIj2sOnkzMbhnqRWWB80LlzQWFz9bATqf2OWZR0pWyBoLX0ORg==
 
 tr46@^2.1.0:
   version "2.1.0"

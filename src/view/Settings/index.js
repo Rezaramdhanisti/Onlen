@@ -65,6 +65,25 @@ function SettingScreen({navigation, route}) {
           />
           <Text style={styles.textSales}>Pengaturan Toko</Text>
         </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={() => navigation.navigate('PrinterSettings')}
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginTop: hp(2),
+          }}>
+          <Image
+            style={{
+              width: 16,
+              height: 16,
+              marginRight: 10,
+            }}
+            source={require('../../../assets/printer.png')}
+          />
+          <Text style={styles.textSales}>Pengaturan Printer</Text>
+        </TouchableOpacity>
+
         <View style={{height: hp(4)}}></View>
         <Text style={styles.textTitleWithEmail}>Pegawai</Text>
         <TouchableOpacity

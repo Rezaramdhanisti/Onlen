@@ -13,7 +13,7 @@ const ItemList = ({
     <View style={styles.container}>
       <View>
         <Text style={styles.label}>{label || 'UNKNOWN'}</Text>
-        <Text>{value}</Text>
+        <Text style={styles.label}>{value}</Text>
       </View>
       {connected && <Text style={styles.connected}>Terhubung</Text>}
       {!connected && (
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 4,
   },
-  label: {fontWeight: 'bold'},
+  label: {fontWeight: 'bold', color: '#565454'},
   connected: {fontWeight: 'bold', color: '#00BCD4'},
   button: color => ({
     backgroundColor: color,
