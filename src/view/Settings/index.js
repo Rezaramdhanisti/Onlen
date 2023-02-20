@@ -41,37 +41,38 @@ function SettingScreen({navigation, route}) {
     }
   };
 
-  _requestLocationPermission = async () => {
-    if (Platform.Version > 28) {
-      try {
-        const granted = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        );
-        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-          navigation.navigate('PrinterSettings', printerName);
-        } else {
-          console.log('Permission Denied.');
-          // setModalPermission(true);
-        }
-      } catch (err) {
-        console.warn(err);
-      }
-    } else {
-      try {
-        const granted = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
-        );
-        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-          navigation.navigate('PrinterSettings', printerName);
-        } else {
-          console.log('Permission Denied.');
-          // setModalPermission(true);
-        }
-      } catch (err) {
-        console.warn(err);
-      }
-    }
-  };
+  // _requestLocationPermission = async () => {
+  //   if (Platform.Version > 28) {
+  //     try {
+  //       const granted = await PermissionsAndroid.request(
+  //         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+  //       );
+  //       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+  //         navigation.navigate('PrinterSettings', printerName);
+  //       } else {
+  //         console.log('Permission Denied.');
+  //         // setModalPermission(true);
+  //       }
+  //     } catch (err) {
+  //       console.warn(err);
+  //     }
+  //   } else {
+  //     try {
+  //       const granted = await PermissionsAndroid.request(
+  //         PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
+  //       );
+  //       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+  //         navigation.navigate('PrinterSettings', printerName);
+  //       } else {
+  //         console.log('Permission Denied.');
+  //         // setModalPermission(true);
+  //       }
+  //     } catch (err) {
+  //       console.warn(err);
+  //     }
+  //   }
+  // };
+
   useFocusEffect(
     useCallback(() => {
       getData();
@@ -91,11 +92,6 @@ function SettingScreen({navigation, route}) {
     } catch (e) {
       // error reading value
     }
-  };
-
-  const copyToClipboard = () => {
-    Clipboard.setString(`${ADDRESS_URL}${route.params.merchantName}`);
-    toast.show('Tersalin', {type: 'success'});
   };
 
   const visibilityModalPermission = () => {
@@ -132,7 +128,7 @@ function SettingScreen({navigation, route}) {
           />
           <Text style={styles.textSales}>Pengaturan Toko</Text>
         </TouchableOpacity>
-
+        {/*         
         <TouchableOpacity
           onPress={_requestLocationPermission}
           style={{
@@ -149,7 +145,7 @@ function SettingScreen({navigation, route}) {
             source={require('../../../assets/printer.png')}
           />
           <Text style={styles.textSales}>Pengaturan Printer</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         <View style={{height: hp(4)}}></View>
         <Text style={styles.textTitleWithEmail}>Pegawai</Text>

@@ -24,6 +24,7 @@ import styles from './style';
 function HomeScreenV2({navigation}) {
   const toast = useToast();
   const [dataProfile, setDataProfile] = useState({});
+  const [loading, setLoading] = useState(false);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -73,6 +74,27 @@ function HomeScreenV2({navigation}) {
       });
   };
 
+  const _pullToRefresh = async () => {
+    const token = await AsyncStorage.getItem('@token');
+    setLoading(true);
+    axios
+      .get(`${API_URL}/dashboard/profiles`, {
+        headers: {
+          Authorization: 'Bearer ' + token,
+        },
+      })
+      .then(res => {
+        setDataProfile(res.data.data);
+      })
+      .catch(e => {
+        console.log('eeee', e);
+        toast.show(e?.response?.data.message, {type: 'danger'});
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
   const alertPremium = () =>
     Alert.alert('Perhatian', 'Hanya admin yang dapat mengakses fitur ini', [
       {text: 'OK', onPress: () => console.log('OK Pressed')},
@@ -118,7 +140,9 @@ function HomeScreenV2({navigation}) {
     <ScrollView
       style={styles.shell}
       showsVerticalScrollIndicator={false}
-      refreshControl={<RefreshControl onRefresh={getDetailProfile} />}>
+      refreshControl={
+        <RefreshControl onRefresh={_pullToRefresh} refreshing={loading} />
+      }>
       <Text style={styles.textTitleWithEmail}>Beranda</Text>
       <Text style={styles.textWelcome}>
         Selamat datang di Onlen, {dataProfile?.name}
