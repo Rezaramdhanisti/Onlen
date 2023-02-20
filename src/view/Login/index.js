@@ -20,7 +20,6 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import OneSignal from 'react-native-onesignal';
-import RNFetchBlob from 'rn-fetch-blob';
 
 import styles from './style';
 
@@ -49,25 +48,6 @@ function LoginScreen({navigation}) {
   );
 
   const onSubmitLogin = async () => {
-    // RNFetchBlob.fetch(
-    //   'GET',
-    //   'https://cdn0-production-images-kly.akamaized.net/-BfXre0FOTaArDFSyDi9chL7b6U=/1200x1200/smart/filters:quality(75):strip_icc():format(jpeg)/kly-media-production/medias/3161542/original/043729400_1593000862-Ilustrasi_Gajah.jpg',
-    // )
-    //   .then(res => {
-    //     let status = res.info().status;
-
-    //     if (status == 200) {
-    //       // the conversion is done in native code
-    //       let base64Str = res.base64();
-    //       console.log('base64', base64Str);
-    //     } else {
-    //       // handle other status codes
-    //     }
-    //   })
-    //   // Something went wrong:
-    //   .catch((errorMessage, statusCode) => {
-    //     // error handling
-    //   });
     const tokenNotification = await OneSignal.getDeviceState();
     setLoading(true);
     const data = {
@@ -145,6 +125,7 @@ function LoginScreen({navigation}) {
               underlineColorAndroid="transparent"
               placeholder="Password"
               placeholderTextColor="#9FA2B4"
+              returnKeyType="go"
               ref={input => {
                 this.password = input;
               }}

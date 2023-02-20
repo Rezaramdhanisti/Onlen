@@ -407,7 +407,10 @@ function MerchantSettingScreen({navigation}) {
           </View>
         )}
       </TouchableOpacity>
-      <Modal isVisible={modalSuccess} onBackdropPress={visibilityModalSuccess}>
+      <Modal
+        isVisible={modalSuccess}
+        onBackdropPress={visibilityModalSuccess}
+        style={{justifyContent: 'flex-end', margin: 0}}>
         <View style={styles.modalSuccess}>
           <Text style={styles.textTitle}>Berhasil!</Text>
 

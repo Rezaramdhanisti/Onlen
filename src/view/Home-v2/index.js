@@ -16,6 +16,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useToast} from 'react-native-toast-notifications';
 import {useFocusEffect} from '@react-navigation/native';
 import Clipboard from '@react-native-clipboard/clipboard';
+import Modal from 'react-native-modal';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 
 import OneSignal from 'react-native-onesignal';
 
@@ -25,6 +30,7 @@ function HomeScreenV2({navigation}) {
   const toast = useToast();
   const [dataProfile, setDataProfile] = useState({});
   const [loading, setLoading] = useState(false);
+  const [modalProduct, setModalProduct] = useState(false);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -46,7 +52,6 @@ function HomeScreenV2({navigation}) {
       }),
     [navigation],
   );
-
   //Method for handling notifications opened
   OneSignal.setNotificationOpenedHandler(notification => {
     console.log('OneSignal: notification opened:', notification);
@@ -55,7 +60,27 @@ function HomeScreenV2({navigation}) {
 
   useEffect(() => {
     getDetailProfile();
+    getFirstInstall();
   }, []);
+
+  const getFirstInstall = async () => {
+    try {
+      const value = await AsyncStorage.getItem('@firstinstall');
+      if (value === null) {
+        // value previously stored
+        setModalProduct(true);
+        storeData('true');
+      }
+    } catch (e) {}
+  };
+
+  const storeData = async value => {
+    try {
+      await AsyncStorage.setItem('@firstinstall', value);
+    } catch (e) {
+      // saving error
+    }
+  };
 
   const getDetailProfile = async () => {
     const token = await AsyncStorage.getItem('@token');
@@ -95,45 +120,14 @@ function HomeScreenV2({navigation}) {
       });
   };
 
-  const alertPremium = () =>
-    Alert.alert('Perhatian', 'Hanya admin yang dapat mengakses fitur ini', [
-      {text: 'OK', onPress: () => console.log('OK Pressed')},
-    ]);
-
-  const alertPremium2 = () =>
-    Alert.alert('Perhatian', 'Aktifkan premium untuk mengakses fitur ini', [
-      {text: 'OK', onPress: () => console.log('OK Pressed')},
-    ]);
-
-  const goToPeople = () => {
-    if (dataProfile?.roleName !== 'administrator') {
-      return alertPremium();
-    }
-  };
-  const goToSetting = () => {
-    navigation.navigate('Settings', dataProfile);
-  };
-  const goToPrinter = () => {
-    if (dataProfile?.roleName !== 'administrator') {
-      return alertPremium();
-    }
-    navigation.navigate('PrinterSettings');
-  };
-  const goToOrder = () => {
-    // if (!dataProfile?.isPremium) {
-    //   return alertPremium2();
-    // }
-    navigation.navigate('Order');
-  };
-  const goToReport = () => {
-    if (!dataProfile?.isPremium) {
-      return alertPremium2();
-    }
-  };
-
   const copyToClipboard = () => {
     Clipboard.setString(`${ADDRESS_URL}${dataProfile.merchantName}`);
     toast.show('Tersalin', {type: 'success'});
+  };
+
+  const visibilityModalProduct = () => {
+    setModalProduct(!modalProduct);
+    navigation.navigate('Produk');
   };
 
   return (
@@ -312,6 +306,33 @@ function HomeScreenV2({navigation}) {
 
       <View style={styles.borderText2} />
       <View style={{height: 100}} />
+
+      <Modal
+        isVisible={modalProduct}
+        onBackdropPress={visibilityModalProduct}
+        style={{justifyContent: 'flex-end', margin: 0}}>
+        <View style={styles.modalConfirm}>
+          <Text style={styles.textTitleModal}>Tambahkan produk Anda</Text>
+          <Text style={styles.textSales}>
+            Untuk bisa memulai toko, ayo tambahkan produknya dulu.
+          </Text>
+
+          <TouchableOpacity
+            onPress={() => visibilityModalProduct()}
+            style={{
+              backgroundColor: '#ff3366',
+              height: hp(5),
+              width: '50%',
+              alignSelf: 'center',
+              borderRadius: 16,
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: 24,
+            }}>
+            <Text style={{fontWeight: '500', color: 'white'}}>OK</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
     </ScrollView>
   );
 }

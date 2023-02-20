@@ -198,4 +198,17 @@ export default {
     marginTop: hp(0.5),
     textAlign: 'center',
   },
+  modalConfirm: {
+    backgroundColor: 'white',
+    borderRadius: 8,
+    padding: 16,
+  },
+  textTitleModal: {
+    fontSize: helpers.scaling.moderateScale(16),
+    color: '#565454',
+    letterSpacing: 0.34,
+    fontWeight: 'bold',
+    marginBottom: 12,
+    marginTop: 8,
+  },
 };
