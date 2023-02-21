@@ -82,6 +82,14 @@ function HomeScreenV2({navigation}) {
     }
   };
 
+  const storeDataProfile = async value => {
+    try {
+      await AsyncStorage.setItem('@profile', JSON.stringify(value));
+    } catch (e) {
+      // saving error
+    }
+  };
+
   const getDetailProfile = async () => {
     const token = await AsyncStorage.getItem('@token');
     axios
@@ -92,9 +100,9 @@ function HomeScreenV2({navigation}) {
       })
       .then(res => {
         setDataProfile(res.data.data);
+        storeDataProfile(res.data.data);
       })
       .catch(e => {
-        console.log('eeee', e);
         toast.show(e?.response?.data.message, {type: 'danger'});
       });
   };
@@ -110,9 +118,9 @@ function HomeScreenV2({navigation}) {
       })
       .then(res => {
         setDataProfile(res.data.data);
+        storeDataProfile(res.data.data);
       })
       .catch(e => {
-        console.log('eeee', e);
         toast.show(e?.response?.data.message, {type: 'danger'});
       })
       .finally(() => {
@@ -312,8 +320,16 @@ function HomeScreenV2({navigation}) {
         onBackdropPress={visibilityModalProduct}
         style={{justifyContent: 'flex-end', margin: 0}}>
         <View style={styles.modalConfirm}>
+          <Image
+            style={{
+              width: 220,
+              height: 220,
+            }}
+            resizeMode="contain"
+            source={require('../../../assets/Onboarding-2.png')}
+          />
           <Text style={styles.textTitleModal}>Tambahkan produk Anda</Text>
-          <Text style={styles.textSales}>
+          <Text style={styles.textSubtitleModal}>
             Untuk bisa memulai toko, ayo tambahkan produknya dulu.
           </Text>
 

@@ -34,11 +34,13 @@ function OrderTodayScreen({navigation}) {
   const [modalConfirm, setModalConfirm] = useState(false);
   const [isLoadingUpdate, setLoadingUpdate] = useState(false);
   const [tempOrderId, setTempOrderId] = useState('');
+  const [dataProfile, setDataProfile] = useState({});
+  const [modalFeature, setModalFeature] = useState(false);
 
   moment.locale('id');
   useFocusEffect(
     useCallback(() => {
-      getListOrder();
+      getDataProfile();
     }, []),
   );
 
@@ -71,6 +73,30 @@ function OrderTodayScreen({navigation}) {
   const visibilityModalConfirm = orderId => {
     setTempOrderId(orderId);
     setModalConfirm(!modalConfirm);
+  };
+
+  const visibilityModalFeature = () => {
+    setModalFeature(!modalFeature);
+    navigation.navigate('Home');
+  };
+
+  const getDataProfile = async () => {
+    try {
+      const value = await AsyncStorage.getItem('@profile');
+      if (value !== null) {
+        setDataProfile(JSON.parse(value));
+        // value previously stored
+        if (!JSON.parse(value).isPremium) {
+          setTimeout(() => {
+            setModalFeature(true);
+          }, 500);
+        } else {
+          getListOrder();
+        }
+      }
+    } catch (e) {
+      // error reading value
+    }
   };
 
   const updateOrder = async () => {
@@ -404,6 +430,41 @@ function OrderTodayScreen({navigation}) {
               <Text style={{fontWeight: '500', color: '#ff3366'}}>Batal</Text>
             </TouchableOpacity>
           </View>
+        </View>
+      </Modal>
+
+      <Modal
+        isVisible={modalFeature}
+        onBackdropPress={visibilityModalFeature}
+        style={{justifyContent: 'flex-end', margin: 0}}>
+        <View style={styles.modalFeature}>
+          <Image
+            style={{
+              width: 220,
+              height: 220,
+            }}
+            resizeMode="contain"
+            source={require('../../../assets/Onboarding-2.png')}
+          />
+          <Text style={styles.textTitleModal}>Akan Segera Hadir!</Text>
+          <Text style={styles.textSubtitleModal}>
+            Kami akan infokan saat fitur ini siap digunakan.
+          </Text>
+
+          <TouchableOpacity
+            onPress={() => visibilityModalFeature()}
+            style={{
+              backgroundColor: '#ff3366',
+              height: hp(5),
+              width: '50%',
+              alignSelf: 'center',
+              borderRadius: 16,
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: 24,
+            }}>
+            <Text style={{fontWeight: '500', color: 'white'}}>OK</Text>
+          </TouchableOpacity>
         </View>
       </Modal>
     </View>

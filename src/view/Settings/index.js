@@ -8,8 +8,6 @@ import {
   Platform,
   PermissionsAndroid,
 } from 'react-native';
-import {API_URL} from '@env';
-import axios from 'axios';
 import {useToast} from 'react-native-toast-notifications';
 import {CommonActions} from '@react-navigation/native';
 import {useFocusEffect} from '@react-navigation/native';
@@ -76,30 +74,26 @@ function SettingScreen({navigation, route}) {
   };
 
   useEffect(() => {
-    getDetailProfile();
+    getDataProfile();
   }, []);
-
-  const getDetailProfile = async () => {
-    const token = await AsyncStorage.getItem('@token');
-    axios
-      .get(`${API_URL}/dashboard/profiles`, {
-        headers: {
-          Authorization: 'Bearer ' + token,
-        },
-      })
-      .then(res => {
-        setDataProfile(res.data.data);
-      })
-      .catch(e => {
-        toast.show(e?.response?.data.message, {type: 'danger'});
-      });
-  };
 
   useFocusEffect(
     useCallback(() => {
       getData();
     }, []),
   );
+
+  const getDataProfile = async () => {
+    try {
+      const value = await AsyncStorage.getItem('@profile');
+      if (value !== null) {
+        // value previously stored
+        setDataProfile(JSON.parse(value));
+      }
+    } catch (e) {
+      // error reading value
+    }
+  };
 
   const getData = async () => {
     try {
@@ -148,7 +142,7 @@ function SettingScreen({navigation, route}) {
           <Text style={styles.textSales}>Pengaturan Toko</Text>
         </TouchableOpacity>
 
-        {dataProfile?.roleName !== 'administrator' && (
+        {dataProfile?.isPremium && (
           <TouchableOpacity
             onPress={_requestLocationPermission}
             style={{

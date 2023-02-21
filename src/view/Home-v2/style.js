@@ -201,6 +201,7 @@ export default {
   modalConfirm: {
     backgroundColor: 'white',
     borderRadius: 8,
+    alignItems: 'center',
     padding: 16,
   },
   textTitleModal: {
@@ -208,7 +209,14 @@ export default {
     color: '#565454',
     letterSpacing: 0.34,
     fontWeight: 'bold',
-    marginBottom: 12,
+    marginBottom: 8,
     marginTop: 8,
+  },
+  textSubtitleModal: {
+    fontSize: helpers.scaling.moderateScale(14),
+    color: '#565454',
+    letterSpacing: 0.34,
+    fontWeight: '400',
+    textAlign: 'center',
   },
 };
