@@ -152,14 +152,14 @@ function HomeScreenV2({navigation}) {
       <TouchableOpacity
         style={styles.containerCardToko}
         onPress={() => navigation.navigate('ShowMenu', dataProfile)}>
-        <Text style={styles.textTitleToko}>Toko kamu</Text>
+        <Text style={styles.textTitleToko}>Produk kamu</Text>
         <View
           style={{
             flexDirection: 'row',
           }}>
           <Text style={styles.textSubtitleShareMenuBold}>
             {ADDRESS_URL}
-            {dataProfile.merchantName}
+            {dataProfile.merchantName}/produk
           </Text>
           <TouchableOpacity
             onPress={() => {
@@ -211,7 +211,7 @@ function HomeScreenV2({navigation}) {
 
       <TouchableOpacity
         style={styles.containerFeature}
-        onPress={() => navigation.navigate('LandingPage')}>
+        onPress={() => navigation.navigate('LandingPage', dataProfile)}>
         <View style={styles.containerImageFeature}>
           <Image
             style={styles.imageFeature}
@@ -219,9 +219,9 @@ function HomeScreenV2({navigation}) {
           />
         </View>
         <View>
-          <Text style={styles.textTitle}>Web Page</Text>
+          <Text style={styles.textTitle}>Web page</Text>
           <Text style={styles.textSubtitle}>
-            Buat tampilan Web Page khusus untuk bisnis mu!
+            Buat tampilan Web page khusus untuk bisnis mu!
           </Text>
         </View>
       </TouchableOpacity>
@@ -250,8 +250,7 @@ function HomeScreenV2({navigation}) {
         <View>
           <Text style={styles.textTitle}>Bagaimana menambah produk?</Text>
           <Text style={styles.textSubtitle}>
-            Dapatkan panduan langkah demi langkah tentang cara terbaik
-            menyiapkan produk Anda.
+            Dapatkan panduan tentang cara terbaik menyiapkan produk Anda.
           </Text>
         </View>
       </TouchableOpacity>
@@ -268,8 +267,12 @@ function HomeScreenV2({navigation}) {
           />
         </View>
         <View style={{paddingRight: 20}}>
-          <Text style={styles.textTitle}>Bagaimana membuat Web Page?</Text>
-          <Text style={styles.textSubtitle}>Tutorial membuat Web page</Text>
+          <Text style={styles.textTitle}>
+            Apa itu Web page dan bagaimana membuatnya?
+          </Text>
+          <Text style={styles.textSubtitle}>
+            Panduan apa itu Web page & Tutorial membuat Web page
+          </Text>
         </View>
       </TouchableOpacity>
 

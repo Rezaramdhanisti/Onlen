@@ -40,7 +40,7 @@ function LandingDetailScreen({navigation, route}) {
     axios
       .post(
         `${API_URL}/dashboard/merchant-landing-page-metadata`,
-        {title: text, type: 'url', value: textLink},
+        {title: text, type: 'url', value: `https://${textLink}`},
         {
           headers: {
             Authorization: 'Bearer ' + token,
@@ -67,7 +67,7 @@ function LandingDetailScreen({navigation, route}) {
     axios
       .put(
         `${API_URL}/dashboard/merchant-landing-page-metadata/${route?.params?.linkId}`,
-        {title: text, type: 'url', value: textLink},
+        {title: text, type: 'url', value: `https://${textLink}`},
         {
           headers: {
             Authorization: 'Bearer ' + token,
@@ -171,7 +171,7 @@ function LandingDetailScreen({navigation, route}) {
           style={{marginTop: 10, color: '#565454'}}
           underlineColorAndroid="transparent"
           onChangeText={newText => setTextLink(newText)}
-          placeholder="Contoh: https://goo.gl/maps/EKKDeYCFhDLfj3ef7"
+          placeholder="Contoh: goo.gl/maps/EKKDeYCFhDLfj3ef7"
           placeholderTextColor="#9FA2B4"
           value={textLink}
         />

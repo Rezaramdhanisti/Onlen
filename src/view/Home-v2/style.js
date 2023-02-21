@@ -126,6 +126,7 @@ export default {
     marginTop: hp(0.5),
     letterSpacing: 0.34,
     fontWeight: '400',
+    maxWidth: 280,
   },
   borderText: {
     height: 1,

@@ -57,7 +57,7 @@ function ShowMenuScreen({navigation, route}) {
           />
         </View>
 
-        <Text style={styles.textTitleShareMenu}>Bagikan toko kamu yuk!</Text>
+        <Text style={styles.textTitleShareMenu}>Bagikan QR toko kamu yuk!</Text>
         <Text style={styles.textSubtitleShareMenu}>
           Kasih liat QR toko ini ke customer kamu, tanpa repot repot atau bisa
           kasih customer link ini.

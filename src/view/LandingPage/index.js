@@ -7,11 +7,12 @@ import {
   FlatList,
   ActivityIndicator,
 } from 'react-native';
-import {useFocusEffect} from '@react-navigation/native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {API_URL} from '@env';
+import {API_URL, ADDRESS_URL} from '@env';
 import {useToast} from 'react-native-toast-notifications';
+import Clipboard from '@react-native-clipboard/clipboard';
+import {useFocusEffect} from '@react-navigation/native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -19,7 +20,7 @@ import {
 
 import styles from './style';
 
-function LandingPageScreen({navigation}) {
+function LandingPageScreen({navigation, route}) {
   const [dataLandingPage, setDataLandingPage] = useState([]);
   const toast = useToast();
   const [isLoading, setLoading] = useState(false);
@@ -41,7 +42,8 @@ function LandingPageScreen({navigation}) {
         },
       })
       .then(res => {
-        setDataLandingPage(res.data.data);
+        setDataLandingPage(res?.data?.data);
+        console.log('res.data.data', res.data.data);
       })
       .catch(e => {
         toast.show(e?.response?.data.message, {type: 'danger'});
@@ -49,6 +51,15 @@ function LandingPageScreen({navigation}) {
       .finally(() => {
         setLoading(false);
       });
+  };
+
+  const copyToClipboard = () => {
+    if (dataLandingPage?.length > 0) {
+      Clipboard.setString(`${ADDRESS_URL}${route?.params?.merchantName}`);
+      toast.show('Tersalin', {type: 'success'});
+    } else {
+      toast.show('Tambah tautan terlebih dahulu', {type: 'danger'});
+    }
   };
 
   const renderItem = ({item}) => (
@@ -115,11 +126,11 @@ function LandingPageScreen({navigation}) {
         }}>
         <Image
           style={{
-            width: 120,
-            height: 120,
+            width: 220,
+            height: 220,
             resizeMode: 'contain',
           }}
-          source={require('../../../assets/default-menu.png')}
+          source={require('../../../assets/Onboarding-2.png')}
         />
       </View>
       <Text style={styles.textNoData}>Tautan kosong</Text>
@@ -146,20 +157,36 @@ function LandingPageScreen({navigation}) {
           />
         </TouchableOpacity>
 
-        <Text style={styles.textHeader}>Pengaturan Dasbor</Text>
+        <Text style={styles.textHeader}>Pengaturan Webpage</Text>
       </View>
 
       <View style={styles.containerWithEmail}>
-        <Text style={styles.textTitleWithEmail}>Tautan kamu</Text>
-
-        <View
-          style={{
-            height: 1,
-            backgroundColor: '#E8EBEB',
-            marginTop: 14,
-            marginBottom: 4,
-          }}
-        />
+        <View style={styles.containerCardToko}>
+          <Text style={styles.textTitleToko}>Webpage kamu</Text>
+          <View
+            style={{
+              flexDirection: 'row',
+            }}>
+            <Text style={styles.textSubtitleShareMenuBold}>
+              {ADDRESS_URL}
+              {route?.params?.merchantName}
+            </Text>
+          </View>
+          <TouchableOpacity
+            style={{
+              position: 'absolute',
+              right: 14,
+            }}
+            onPress={() => copyToClipboard()}>
+            <Image
+              style={{
+                width: 26,
+                height: 26,
+              }}
+              source={require('../../../assets/copy.png')}
+            />
+          </TouchableOpacity>
+        </View>
 
         {isLoading ? (
           <View
