@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useState, useEffect} from 'react';
 import {
   View,
   TouchableOpacity,
@@ -8,10 +8,10 @@ import {
   Platform,
   PermissionsAndroid,
 } from 'react-native';
-import {ADDRESS_URL} from '@env';
+import {API_URL} from '@env';
+import axios from 'axios';
 import {useToast} from 'react-native-toast-notifications';
 import {CommonActions} from '@react-navigation/native';
-import Clipboard from '@react-native-clipboard/clipboard';
 import {useFocusEffect} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Modal from 'react-native-modal';
@@ -27,6 +27,8 @@ function SettingScreen({navigation, route}) {
   const [printerName, setPrinterName] = useState('');
   const [modalPermission, setModalPermission] = useState(false);
 
+  const [dataProfile, setDataProfile] = useState({});
+
   const removeValue = async () => {
     try {
       await AsyncStorage.removeItem('@token');
@@ -41,37 +43,57 @@ function SettingScreen({navigation, route}) {
     }
   };
 
-  // _requestLocationPermission = async () => {
-  //   if (Platform.Version > 28) {
-  //     try {
-  //       const granted = await PermissionsAndroid.request(
-  //         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-  //       );
-  //       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-  //         navigation.navigate('PrinterSettings', printerName);
-  //       } else {
-  //         console.log('Permission Denied.');
-  //         // setModalPermission(true);
-  //       }
-  //     } catch (err) {
-  //       console.warn(err);
-  //     }
-  //   } else {
-  //     try {
-  //       const granted = await PermissionsAndroid.request(
-  //         PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
-  //       );
-  //       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-  //         navigation.navigate('PrinterSettings', printerName);
-  //       } else {
-  //         console.log('Permission Denied.');
-  //         // setModalPermission(true);
-  //       }
-  //     } catch (err) {
-  //       console.warn(err);
-  //     }
-  //   }
-  // };
+  _requestLocationPermission = async () => {
+    if (Platform.Version > 28) {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        );
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          navigation.navigate('PrinterSettings', printerName);
+        } else {
+          console.log('Permission Denied.');
+          // setModalPermission(true);
+        }
+      } catch (err) {
+        console.warn(err);
+      }
+    } else {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
+        );
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          navigation.navigate('PrinterSettings', printerName);
+        } else {
+          console.log('Permission Denied.');
+          // setModalPermission(true);
+        }
+      } catch (err) {
+        console.warn(err);
+      }
+    }
+  };
+
+  useEffect(() => {
+    getDetailProfile();
+  }, []);
+
+  const getDetailProfile = async () => {
+    const token = await AsyncStorage.getItem('@token');
+    axios
+      .get(`${API_URL}/dashboard/profiles`, {
+        headers: {
+          Authorization: 'Bearer ' + token,
+        },
+      })
+      .then(res => {
+        setDataProfile(res.data.data);
+      })
+      .catch(e => {
+        toast.show(e?.response?.data.message, {type: 'danger'});
+      });
+  };
 
   useFocusEffect(
     useCallback(() => {
@@ -84,10 +106,7 @@ function SettingScreen({navigation, route}) {
       const value = await AsyncStorage.getItem('@printer');
       if (value !== null) {
         // value previously stored
-        console.log('ada', value);
         setPrinterName(value);
-      } else {
-        console.log('null', value);
       }
     } catch (e) {
       // error reading value
@@ -128,25 +147,26 @@ function SettingScreen({navigation, route}) {
           />
           <Text style={styles.textSales}>Pengaturan Toko</Text>
         </TouchableOpacity>
-        {/*         
-        <TouchableOpacity
-          onPress={_requestLocationPermission}
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            marginTop: hp(2),
-          }}>
-          <Image
-            style={{
-              width: 16,
-              height: 16,
-              marginRight: 10,
-            }}
-            source={require('../../../assets/printer.png')}
-          />
-          <Text style={styles.textSales}>Pengaturan Printer</Text>
-        </TouchableOpacity> */}
 
+        {dataProfile?.roleName !== 'administrator' && (
+          <TouchableOpacity
+            onPress={_requestLocationPermission}
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginTop: hp(2),
+            }}>
+            <Image
+              style={{
+                width: 16,
+                height: 16,
+                marginRight: 10,
+              }}
+              source={require('../../../assets/printer.png')}
+            />
+            <Text style={styles.textSales}>Pengaturan Printer</Text>
+          </TouchableOpacity>
+        )}
         <View style={{height: hp(4)}}></View>
         <Text style={styles.textTitleWithEmail}>Pegawai</Text>
         <TouchableOpacity
