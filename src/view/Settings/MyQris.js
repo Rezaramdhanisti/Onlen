@@ -42,7 +42,7 @@ function MyQrisScreen({navigation}) {
         },
       })
       .then(res => {
-        // setImageQRIS(res?.data?.data?.QRISImageURL);
+        setImageQRIS(res?.data?.data?.QRISImageURL);
       })
       .catch(e => {
         toast.show(e?.response?.data.message, {type: 'danger'});
