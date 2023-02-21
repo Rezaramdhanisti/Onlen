@@ -42,7 +42,7 @@ function MyQrisScreen({navigation}) {
         },
       })
       .then(res => {
-        setImageQRIS(res?.data?.data?.QRISImageURL);
+        // setImageQRIS(res?.data?.data?.QRISImageURL);
       })
       .catch(e => {
         toast.show(e?.response?.data.message, {type: 'danger'});
@@ -214,13 +214,14 @@ function MyQrisScreen({navigation}) {
               <TouchableOpacity
                 onPress={() => pickImage()}
                 style={{
-                  width: wp(21),
-                  height: hp(10),
+                  width: wp(41),
+                  height: hp(20),
                   borderRadius: 8,
                   borderWidth: 1,
                   justifyContent: 'center',
-                  marginTop: hp(1.5),
+                  marginTop: hp(15),
                   borderColor: '#9FA2B4',
+                  alignSelf: 'center',
                 }}>
                 {isLoadingImage ? (
                   <ActivityIndicator size="small" color="#ff3366" />
