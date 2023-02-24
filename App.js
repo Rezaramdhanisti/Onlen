@@ -307,7 +307,7 @@ function App() {
             options={{headerShown: false}}
           />
           <Stack.Screen
-            name="Home"
+            name="HomeMenu"
             component={BottomTabs}
             options={{gestureEnabled: false, headerShown: false}}
           />

@@ -129,8 +129,8 @@ function HomeScreenV2({navigation}) {
   };
 
   const copyToClipboard = () => {
-    Clipboard.setString(`${ADDRESS_URL}${dataProfile.merchantName}`);
-    toast.show('Tersalin', {type: 'success'});
+    Clipboard.setString(`${ADDRESS_URL}${dataProfile.merchantName}/produk`);
+    // toast.show('Tersalin', {type: 'success'});
   };
 
   const visibilityModalProduct = () => {

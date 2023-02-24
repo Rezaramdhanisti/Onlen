@@ -65,7 +65,7 @@ function LoginScreen({navigation}) {
       .post(`${API_URL}/login`, {data: encryptText})
       .then(async res => {
         storeData(res.data.data.token);
-        navigation.navigate('Home');
+        navigation.navigate('HomeMenu');
         setLoading(false);
       })
       .catch(e => {

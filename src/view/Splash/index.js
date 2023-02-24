@@ -20,7 +20,7 @@ function SettingScreen({navigation}) {
       if (value !== null) {
         // value previously stored
         setTimeout(() => {
-          navigation.navigate('Home');
+          navigation.navigate('HomeMenu');
         }, 1000);
       } else {
         setTimeout(() => {
