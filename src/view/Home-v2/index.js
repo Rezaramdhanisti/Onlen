@@ -162,6 +162,7 @@ function HomeScreenV2({navigation}) {
             {dataProfile.merchantName}/produk
           </Text>
           <TouchableOpacity
+            style={{width: 50, height: 26}}
             onPress={() => {
               copyToClipboard();
             }}>
@@ -240,7 +241,9 @@ function HomeScreenV2({navigation}) {
 
       <TouchableOpacity
         style={styles.containerFeature}
-        onPress={() => Linking.openURL('https://youtube.com')}>
+        onPress={() =>
+          Linking.openURL('https://www.youtube.com/shorts/MTAwVxtdrEs')
+        }>
         <View style={styles.containerImageFeature}>
           <Image
             style={styles.imageFeature}
@@ -259,7 +262,9 @@ function HomeScreenV2({navigation}) {
 
       <TouchableOpacity
         style={styles.containerFeature}
-        onPress={() => Linking.openURL('https://youtube.com')}>
+        onPress={() =>
+          Linking.openURL('https://www.youtube.com/shorts/UyFkhaDOF2s')
+        }>
         <View style={styles.containerImageFeature}>
           <Image
             style={styles.imageFeature}
@@ -280,7 +285,9 @@ function HomeScreenV2({navigation}) {
 
       <TouchableOpacity
         style={styles.containerFeature}
-        onPress={() => Linking.openURL('https://youtube.com')}>
+        onPress={() =>
+          Linking.openURL('https://www.youtube.com/shorts/HzdZI3Z-rbw')
+        }>
         <View style={styles.containerImageFeature}>
           <Image
             style={styles.imageFeature}
