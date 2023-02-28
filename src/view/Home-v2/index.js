@@ -5,7 +5,7 @@ import {
   Text,
   Image,
   ScrollView,
-  Alert,
+  ActivityIndicator,
   RefreshControl,
   BackHandler,
   Linking,
@@ -31,6 +31,7 @@ function HomeScreenV2({navigation}) {
   const [dataProfile, setDataProfile] = useState({});
   const [loading, setLoading] = useState(false);
   const [modalProduct, setModalProduct] = useState(false);
+  const [loadingPrintMenu, setLoadingPrintMenu] = useState(false);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -128,6 +129,35 @@ function HomeScreenV2({navigation}) {
       });
   };
 
+  const getMenuProduct = async () => {
+    if (loadingPrintMenu) {
+      return;
+    }
+
+    const token = await AsyncStorage.getItem('@token');
+    setLoadingPrintMenu(true);
+    axios
+      .post(
+        `${API_URL}/dashboard/generate-barcode-menu`,
+        {},
+        {
+          headers: {
+            Authorization: 'Bearer ' + token,
+          },
+        },
+      )
+      .then(res => {
+        console.log('hehehe', res.data.data);
+      })
+      .catch(e => {
+        console.log('err', e?.response?.data.message);
+        toast.show(e?.response?.data.message, {type: 'danger'});
+      })
+      .finally(() => {
+        setLoadingPrintMenu(false);
+      });
+  };
+
   const copyToClipboard = () => {
     Clipboard.setString(`${ADDRESS_URL}${dataProfile.merchantName}/produk`);
     // toast.show('Tersalin', {type: 'success'});
@@ -149,39 +179,62 @@ function HomeScreenV2({navigation}) {
       <Text style={styles.textWelcome}>
         Selamat datang di Onlen, {dataProfile?.name}
       </Text>
-      <TouchableOpacity
-        style={styles.containerCardToko}
-        onPress={() => navigation.navigate('ShowMenu', dataProfile)}>
-        <Text style={styles.textTitleToko}>Produk kamu</Text>
-        <View
-          style={{
-            flexDirection: 'row',
-          }}>
-          <Text style={styles.textSubtitleShareMenuBold}>
-            {ADDRESS_URL}
-            {dataProfile.merchantName}/produk
-          </Text>
-          <TouchableOpacity
-            style={{width: 50, height: 26}}
-            onPress={() => {
-              copyToClipboard();
+      {dataProfile?.isPremium ? (
+        <TouchableOpacity
+          style={styles.containerCardPrint}
+          onPress={getMenuProduct}>
+          {loadingPrintMenu ? (
+            <ActivityIndicator size="small" color="white" />
+          ) : (
+            <>
+              <Text style={styles.textAddMenu}>Print Menu</Text>
+              <Image
+                style={{
+                  width: 20,
+                  height: 20,
+                  marginLeft: 10,
+                }}
+                source={require('../../../assets/printer-white.png')}
+              />
+            </>
+          )}
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity
+          style={styles.containerCardToko}
+          onPress={() => navigation.navigate('ShowMenu', dataProfile)}>
+          <Text style={styles.textTitleToko}>Produk kamu</Text>
+          <View
+            style={{
+              flexDirection: 'row',
             }}>
-            <Image
-              style={styles.imageCopy}
-              source={require('../../../assets/copy.png')}
-            />
-          </TouchableOpacity>
-        </View>
-        <Image
-          style={{
-            width: 16,
-            height: 16,
-            position: 'absolute',
-            right: 14,
-          }}
-          source={require('../../../assets/ic_right_arrow.png')}
-        />
-      </TouchableOpacity>
+            <Text style={styles.textSubtitleShareMenuBold}>
+              {ADDRESS_URL}
+              {dataProfile.merchantName}/produk
+            </Text>
+            <TouchableOpacity
+              style={{width: 50, height: 26}}
+              onPress={() => {
+                copyToClipboard();
+              }}>
+              <Image
+                style={styles.imageCopy}
+                source={require('../../../assets/copy.png')}
+              />
+            </TouchableOpacity>
+          </View>
+          <Image
+            style={{
+              width: 16,
+              height: 16,
+              position: 'absolute',
+              right: 14,
+            }}
+            source={require('../../../assets/ic_right_arrow.png')}
+          />
+        </TouchableOpacity>
+      )}
+
       <View>
         <Text style={styles.textTitle}>Jelajahi lebih banyak fitur</Text>
         <Text style={styles.textSubtitle}>

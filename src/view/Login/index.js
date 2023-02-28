@@ -61,6 +61,8 @@ function LoginScreen({navigation}) {
       JSON.stringify(data),
       ENCRYPT_KEY,
     ).toString();
+    console.log('encryptText', encryptText);
+
     axios
       .post(`${API_URL}/login`, {data: encryptText})
       .then(async res => {
