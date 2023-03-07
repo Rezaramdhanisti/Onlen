@@ -21,6 +21,7 @@ import {
 import Modal from 'react-native-modal';
 import moment from 'moment';
 import 'moment/locale/id';
+import {formatCurrency} from 'react-native-format-currency';
 
 import styles from './style';
 
@@ -34,6 +35,8 @@ function OrderProcessScreen({navigation}) {
   const [modalConfirm, setModalConfirm] = useState(false);
   const [isLoadingUpdate, setLoadingUpdate] = useState(false);
   const [tempOrderId, setTempOrderId] = useState('');
+  const [tempGroupId, setTempGroupId] = useState('');
+  const [tempOrderType, setTempOrderType] = useState('');
 
   moment.locale('id');
   useFocusEffect(
@@ -48,7 +51,7 @@ function OrderProcessScreen({navigation}) {
 
     axios
       .get(`${API_URL}/dashboard/orders?orderStatus=in-progress`, {
-        params: {limit: 100},
+        params: {limit: 100, groupByCode: 1},
         headers: {
           Authorization: 'Bearer ' + token,
         },
@@ -97,9 +100,11 @@ function OrderProcessScreen({navigation}) {
       });
   };
 
-  const getDetailOrder = async orderId => {
-    setModalDetail(!modalDetail);
+  const getDetailOrder = async (orderId, groupId, orderType) => {
     setLoadingDetail(true);
+    setTempGroupId(groupId);
+    setTempOrderType(orderType);
+    setModalDetail(!modalDetail);
     const token = await AsyncStorage.getItem('@token');
     axios
       .get(`${API_URL}/dashboard/orders/${orderId}`, {
@@ -109,6 +114,7 @@ function OrderProcessScreen({navigation}) {
       })
       .then(res => {
         setDataOrderDetail(res.data.data);
+        console.log('detail', res.data.data);
       })
       .catch(e => {
         toast.show(e?.response?.data.message, {type: 'danger'});
@@ -118,75 +124,124 @@ function OrderProcessScreen({navigation}) {
       });
   };
 
-  const renderItem = ({item}) => (
-    <View>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginTop: hp(1),
-        }}>
-        <View>
-          <Text style={styles.textSales}>{item?.customerName}</Text>
-          <View
-            style={{alignItems: 'center', flexDirection: 'row', marginTop: 4}}>
-            <Text style={{fontWeight: '500'}}>Order pada</Text>
-            <Text style={{marginLeft: 4}}>
-              {moment(item.createdAt).format('h:mm:ss a')}
-            </Text>
-          </View>
-          <Text style={{marginTop: 4, fontWeight: '500'}}>
-            {item.orderType === 'dine_in' ? 'Makan di tempat' : 'di bungkus'}
-          </Text>
-        </View>
+  const renderItemV2 = ({item}) => {
+    const [valueFormattedWithSymbol] = formatCurrency({
+      amount: Number(item.totalAmount),
+      code: 'IDR',
+    });
+
+    return (
+      <View>
         <TouchableOpacity
-          onPress={() => getDetailOrder(item.id)}
+          onPress={() =>
+            getDetailOrder(item?.id, item?.orderGroupCode, item?.orderType)
+          }
           style={{
-            width: 100,
-            height: 50,
-            justifyContent: 'flex-end',
-            alignItems: 'flex-end',
-            paddingBottom: hp(2),
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginTop: hp(1),
+            flex: 1,
           }}>
-          <Image
+          <TouchableOpacity
+            onPress={() =>
+              getDetailOrder(item?.id, item?.orderGroupCode, item?.orderType)
+            }>
+            <Text style={styles.textSales}>{item?.customerName}</Text>
+            <View
+              style={{
+                alignItems: 'center',
+                flexDirection: 'row',
+                marginTop: 4,
+              }}>
+              <Text style={{color: '#565454'}}>Nomor Transaksi</Text>
+              <Text
+                style={{marginLeft: 4, color: '#565454', fontWeight: '500'}}>
+                {item?.orderGroupCode}
+              </Text>
+            </View>
+            <View
+              style={{
+                alignItems: 'center',
+                flexDirection: 'row',
+                marginTop: 4,
+              }}>
+              <Text style={{color: '#565454'}}>Status</Text>
+              <Text
+                style={{marginLeft: 4, color: '#565454', fontWeight: '500'}}>
+                Sedang di proses
+              </Text>
+            </View>
+            <View
+              style={{
+                alignItems: 'center',
+                flexDirection: 'row',
+                marginTop: 4,
+              }}>
+              <Text style={{color: '#565454'}}>Order pada</Text>
+              <Text
+                style={{marginLeft: 4, color: '#565454', fontWeight: '500'}}>
+                {moment(item.createdAt).format('Do MMMM, h:mm a')}
+              </Text>
+            </View>
+
+            <Text style={{marginTop: 4, fontWeight: '500', color: '#565454'}}>
+              {item.orderType === 'dine_in' ? 'Makan di tempat' : 'di bungkus'}{' '}
+            </Text>
+            <Text style={{marginTop: 4, fontWeight: '500', color: '#565454'}}>
+              Total - {valueFormattedWithSymbol}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() =>
+              getDetailOrder(item?.id, item?.orderGroupCode, item?.orderType)
+            }
             style={{
-              width: 16,
-              height: 16,
-            }}
-            source={require('../../../assets/ic_right_arrow.png')}
-          />
+              width: 100,
+              height: 50,
+              position: 'absolute',
+              right: -80,
+              bottom: 0,
+            }}>
+            <Image
+              style={{
+                width: 16,
+                height: 16,
+              }}
+              source={require('../../../assets/ic_right_arrow.png')}
+            />
+          </TouchableOpacity>
         </TouchableOpacity>
-      </View>
-      <View
-        style={{
-          flexDirection: 'row',
-          marginTop: 14,
-          alignItems: 'center',
-        }}>
-        <TouchableOpacity
-          onPress={() => visibilityModalConfirm(item.id)}
+        <View
           style={{
-            backgroundColor: '#ff3366',
-            height: hp(4),
-            width: wp(20),
-            borderRadius: 16,
-            justifyContent: 'center',
+            flexDirection: 'row',
+            marginTop: 14,
             alignItems: 'center',
           }}>
-          <Text style={{fontWeight: '500', color: 'white'}}>Selesai</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => visibilityModalConfirm(item.id)}
+            style={{
+              backgroundColor: '#ff3366',
+              height: hp(4),
+              width: wp(20),
+              borderRadius: 16,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Text style={{fontWeight: '500', color: 'white'}}>Selesai</Text>
+          </TouchableOpacity>
+        </View>
+        <View
+          style={{
+            height: 1,
+            backgroundColor: '#E8EBEB',
+            marginTop: 14,
+            marginBottom: 4,
+          }}
+        />
       </View>
-      <View
-        style={{
-          height: 1,
-          backgroundColor: '#E8EBEB',
-          marginTop: 14,
-          marginBottom: 4,
-        }}
-      />
-    </View>
-  );
+    );
+  };
 
   const renderEmptyItem = () => (
     <View>
@@ -207,20 +262,39 @@ function OrderProcessScreen({navigation}) {
       <Text style={styles.textNoData}>Pesanan kosong</Text>
     </View>
   );
+  const convertToRupiah = text => {
+    const valueText = text ? text : '0';
+    return (
+      `${'Rp'}` +
+      valueText
+        .toString()
+        .replace(/\D/g, '')
+        .replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+    );
+  };
+  const renderItemDetail = item => {
+    return (
+      <View style={{alignItems: 'center', flexDirection: 'row', marginTop: 14}}>
+        <View style={{flex: 1}}>
+          <Text style={{fontWeight: '500', color: '#565454'}}>
+            {item?.item?.quantity}x {item?.item?.productName}
+          </Text>
+          <Text style={{color: '#565454'}}>
+            @ {convertToRupiah(item?.item?.price)}
+          </Text>
+          {item?.item?.notes && (
+            <Text style={{color: '#565454'}}>{item?.item?.notes}</Text>
+          )}
+        </View>
 
-  const renderItemDetail = item => (
-    <View style={{alignItems: 'center', flexDirection: 'row', marginTop: 14}}>
-      <View style={{flex: 1}}>
-        <Text style={{fontWeight: '500'}}>1x Nasi Kuning</Text>
-        <Text style={{color: '#A0A2A8'}}>@ 10.000</Text>
-        <Text style={{color: '#A0A2A8'}}>Pedas banget</Text>
+        <View style={{flexDirection: 'row', flex: 1}}>
+          <Text style={{marginLeft: 44, color: '#565454', fontWeight: 'bold'}}>
+            {convertToRupiah(item?.item?.totalPrice)}
+          </Text>
+        </View>
       </View>
-
-      <View style={{flexDirection: 'row', flex: 1}}>
-        <Text style={{marginLeft: 4}}>10.000</Text>
-      </View>
-    </View>
-  );
+    );
+  };
 
   return (
     <View style={styles.containerWithEmail}>
@@ -236,8 +310,8 @@ function OrderProcessScreen({navigation}) {
       ) : (
         <FlatList
           data={dataOrder}
-          renderItem={renderItem}
-          keyExtractor={item => item.id}
+          renderItem={renderItemV2}
+          keyExtractor={(item, index) => item.key}
           showsVerticalScrollIndicator={false}
           style={{marginTop: 10}}
           ListEmptyComponent={renderEmptyItem}
@@ -255,45 +329,70 @@ function OrderProcessScreen({navigation}) {
           ) : (
             <ScrollView showsVerticalScrollIndicator={false}>
               <Text style={styles.textSales}>
-                Detail Order {dataOrderDetail?.customerName}
+                Nomor Transaksi {tempGroupId}
               </Text>
 
-              <Text style={{fontWeight: '500', marginTop: 20}}>
+              <Text
+                style={{
+                  fontWeight: '500',
+                  marginTop: 20,
+                  color: '#565454',
+                  fontSize: 16,
+                }}>
                 Detail Customer
               </Text>
               <View
                 style={{
-                  alignItems: 'center',
-                  flexDirection: 'row',
                   marginTop: 14,
                 }}>
-                <Text style={{fontWeight: '500', flex: 1}}>Nama</Text>
-                <Text style={{marginLeft: 4, flex: 1}}>
+                <Text style={{fontWeight: '500', flex: 1, color: '#565454'}}>
+                  Nama Customer
+                </Text>
+                <Text style={{flex: 1, color: '#565454'}}>
                   {dataOrderDetail?.customerName}
                 </Text>
               </View>
               <View
                 style={{
-                  alignItems: 'center',
-                  flexDirection: 'row',
                   marginTop: 6,
                 }}>
-                <Text style={{fontWeight: '500', flex: 1}}>Order pada</Text>
-                <Text style={{marginLeft: 4, flex: 1}}>
-                  {dataOrderDetail?.createdAt}
+                <Text style={{fontWeight: '500', flex: 1, color: '#565454'}}>
+                  Order pada
+                </Text>
+                <Text style={{flex: 1, color: '#565454'}}>
+                  {moment(dataOrderDetail?.createdAt).format('Do MMMM, h:mm a')}
                 </Text>
               </View>
 
-              <Text style={{fontWeight: '500', marginTop: 30}}>Subtotal</Text>
+              <Text
+                style={{
+                  fontWeight: '500',
+                  marginTop: 30,
+                  color: '#565454',
+                  fontSize: 16,
+                }}>
+                Order -{' '}
+                {tempOrderType === 'dine_in' ? 'Makan di tempat' : 'di bungkus'}
+              </Text>
+              <FlatList
+                data={dataOrderDetail?.items}
+                renderItem={renderItemDetail}
+                scrollEnabled={false}
+                keyExtractor={(item, index) => item.key}
+                showsVerticalScrollIndicator={false}
+              />
+
               <View
                 style={{
                   alignItems: 'center',
                   flexDirection: 'row',
                   marginTop: 14,
                 }}>
-                <Text style={{fontWeight: '500', flex: 1}}>Pajak</Text>
-                <Text style={{marginLeft: 4, flex: 1}}>
-                  Rp {dataOrderDetail?.taxAmount}
+                <Text style={{fontWeight: '500', flex: 1, color: '#565454'}}>
+                  Pajak
+                </Text>
+                <Text style={{marginLeft: 88, flex: 1, color: '#565454'}}>
+                  {convertToRupiah(dataOrderDetail?.taxAmount)}
                 </Text>
               </View>
               <View
@@ -302,9 +401,11 @@ function OrderProcessScreen({navigation}) {
                   flexDirection: 'row',
                   marginTop: 6,
                 }}>
-                <Text style={{fontWeight: '500', flex: 1}}>Service</Text>
-                <Text style={{marginLeft: 4, flex: 1}}>
-                  Rp {dataOrderDetail?.serviceFee}
+                <Text style={{fontWeight: '500', flex: 1, color: '#565454'}}>
+                  Service
+                </Text>
+                <Text style={{marginLeft: 88, flex: 1, color: '#565454'}}>
+                  {convertToRupiah(dataOrderDetail?.serviceFee)}
                 </Text>
               </View>
               <View
@@ -313,20 +414,19 @@ function OrderProcessScreen({navigation}) {
                   flexDirection: 'row',
                   marginTop: 6,
                 }}>
-                <Text style={{fontWeight: '500', flex: 1}}>Total</Text>
-                <Text style={{marginLeft: 4, flex: 1}}>
-                  Rp {dataOrderDetail?.totalAmount}
+                <Text style={{fontWeight: '500', flex: 1, color: '#565454'}}>
+                  Total
+                </Text>
+                <Text
+                  style={{
+                    marginLeft: 88,
+                    flex: 1,
+                    color: '#565454',
+                    fontWeight: 'bold',
+                  }}>
+                  {convertToRupiah(dataOrderDetail?.totalAmount)}
                 </Text>
               </View>
-
-              <Text style={{fontWeight: '500', marginTop: 30}}>Order</Text>
-              <FlatList
-                data={dataOrderDetail?.items}
-                renderItem={renderItemDetail}
-                scrollEnabled={false}
-                keyExtractor={item => item.productId}
-                showsVerticalScrollIndicator={false}
-              />
             </ScrollView>
           )}
         </View>

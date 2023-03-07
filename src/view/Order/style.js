@@ -138,7 +138,7 @@ export default {
   },
   modalContainer: {
     backgroundColor: 'white',
-    height: hp(60),
+    height: hp(80),
     borderRadius: 8,
     padding: 16,
     marginLeft: wp(3),
