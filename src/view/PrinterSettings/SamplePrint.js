@@ -3,6 +3,34 @@ import {Button, StyleSheet, Text, View} from 'react-native';
 import {BluetoothEscposPrinter} from 'tp-react-native-bluetooth-printer';
 import {hsdLogo} from './dummy-logo';
 
+const printMenu = async url => {
+  try {
+    await BluetoothEscposPrinter.printColumn(
+      [32],
+      [BluetoothEscposPrinter.ALIGN.CENTER],
+      ['onlen.id'],
+      {},
+    );
+    await BluetoothEscposPrinter.printQRCode(
+      'onlen.id',
+      340,
+      BluetoothEscposPrinter.ERROR_CORRECTION.H,
+      0,
+    );
+    await BluetoothEscposPrinter.printColumn(
+      [32],
+      [BluetoothEscposPrinter.ALIGN.CENTER],
+      ['Scan menu di sini'],
+      {},
+    );
+    await BluetoothEscposPrinter.printText('\r\n\r\n\r\n', {});
+  } catch (e) {
+    alert(
+      'Pastikan printer sudah terhubung atau dalam keadaan aktif, coba putuskan lalu hubungkan',
+    );
+  }
+};
+
 const SamplePrint = () => {
   return (
     <View>
@@ -26,13 +54,7 @@ const SamplePrint = () => {
       <Button
         color={'#ff3e6c'}
         onPress={async () => {
-          await BluetoothEscposPrinter.printQRCode(
-            'https://onlen.id',
-            340,
-            BluetoothEscposPrinter.ERROR_CORRECTION.H,
-            30,
-          ); //.then(()=>{alert('done')},(err)=>{alert(err)});
-          await BluetoothEscposPrinter.printText('\r\n\r\n\r\n', {});
+          printMenu();
         }}
         title="Tes Print"
       />
