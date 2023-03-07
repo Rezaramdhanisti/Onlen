@@ -24,7 +24,7 @@ const SamplePrint = () => {
         />
       </View> */}
       <Button
-        color={'#00BCD4'}
+        color={'#ff3e6c'}
         onPress={async () => {
           await BluetoothEscposPrinter.printQRCode(
             'https://onlen.id',

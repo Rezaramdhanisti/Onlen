@@ -17,6 +17,7 @@ import {useToast} from 'react-native-toast-notifications';
 import {useFocusEffect} from '@react-navigation/native';
 import Clipboard from '@react-native-clipboard/clipboard';
 import Modal from 'react-native-modal';
+import {BluetoothEscposPrinter} from 'tp-react-native-bluetooth-printer';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -148,14 +149,44 @@ function HomeScreenV2({navigation}) {
       )
       .then(res => {
         console.log('hehehe', res.data.data);
+        printMenu(res.data.data.url);
       })
       .catch(e => {
         console.log('err', e?.response?.data.message);
         toast.show(e?.response?.data.message, {type: 'danger'});
-      })
-      .finally(() => {
-        setLoadingPrintMenu(false);
       });
+    // .finally(() => {
+    //   setLoadingPrintMenu(false);
+    // });
+  };
+
+  const printMenu = async url => {
+    try {
+      await BluetoothEscposPrinter.printColumn(
+        [32],
+        [BluetoothEscposPrinter.ALIGN.CENTER],
+        [url],
+        {},
+      );
+      await BluetoothEscposPrinter.printQRCode(
+        url,
+        340,
+        BluetoothEscposPrinter.ERROR_CORRECTION.H,
+        0,
+      );
+      await BluetoothEscposPrinter.printColumn(
+        [32],
+        [BluetoothEscposPrinter.ALIGN.CENTER],
+        ['Scan menu di sini'],
+        {},
+      );
+      await BluetoothEscposPrinter.printText('\r\n\r\n\r\n', {});
+
+      setLoadingPrintMenu(false);
+    } catch (e) {
+      alert(e.message || 'ERROR');
+      setLoadingPrintMenu(false);
+    }
   };
 
   const copyToClipboard = () => {

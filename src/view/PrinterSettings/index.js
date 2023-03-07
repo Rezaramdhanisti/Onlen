@@ -406,7 +406,7 @@ function PrinterSettingScreen({navigation, route}) {
               value={item.address}
               connected={item.address === boundAddress}
               actionText="Hubungkan"
-              color="#00BCD4"
+              color="#47BF34"
             />
           );
         })}

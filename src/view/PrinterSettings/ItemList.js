@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   label: {fontWeight: 'bold', color: '#565454'},
-  connected: {fontWeight: 'bold', color: '#00BCD4'},
+  connected: {fontWeight: 'bold', color: '#ff3e6c'},
   button: color => ({
     backgroundColor: color,
     paddingHorizontal: 10,
