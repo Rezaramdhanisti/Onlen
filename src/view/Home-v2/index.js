@@ -294,9 +294,7 @@ function HomeScreenV2({navigation}) {
 
       <TouchableOpacity
         style={styles.containerFeature}
-        onPress={() =>
-          Linking.openURL('https://www.youtube.com/shorts/MTAwVxtdrEs')
-        }>
+        onPress={() => Linking.openURL('https://youtu.be/lBJECI89xoQ')}>
         <View style={styles.containerImageFeature}>
           <Image
             style={styles.imageFeature}
@@ -315,9 +313,7 @@ function HomeScreenV2({navigation}) {
 
       <TouchableOpacity
         style={styles.containerFeature}
-        onPress={() =>
-          Linking.openURL('https://www.youtube.com/shorts/UyFkhaDOF2s')
-        }>
+        onPress={() => Linking.openURL('https://youtu.be/FuTo462IWCQ')}>
         <View style={styles.containerImageFeature}>
           <Image
             style={styles.imageFeature}
@@ -338,9 +334,7 @@ function HomeScreenV2({navigation}) {
 
       <TouchableOpacity
         style={styles.containerFeature}
-        onPress={() =>
-          Linking.openURL('https://www.youtube.com/shorts/HzdZI3Z-rbw')
-        }>
+        onPress={() => Linking.openURL('https://youtu.be/ZmVtZ9kOFhg')}>
         <View style={styles.containerImageFeature}>
           <Image
             style={styles.imageFeature}
