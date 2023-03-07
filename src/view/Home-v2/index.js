@@ -165,14 +165,14 @@ function HomeScreenV2({navigation}) {
       await BluetoothEscposPrinter.printColumn(
         [32],
         [BluetoothEscposPrinter.ALIGN.CENTER],
-        [url],
+        [dataProfile.merchantName],
         {},
       );
       await BluetoothEscposPrinter.printQRCode(
         url,
         340,
         BluetoothEscposPrinter.ERROR_CORRECTION.H,
-        0,
+        10,
       );
       await BluetoothEscposPrinter.printColumn(
         [32],
