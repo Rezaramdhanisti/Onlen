@@ -331,7 +331,7 @@ function OrderTodayScreen({navigation}) {
             @ {convertToRupiah(item?.item?.price)}
           </Text>
           {item?.item?.notes && (
-            <Text style={{color: '#565454'}}>{item?.item?.notes}</Text>
+            <Text style={{color: '#565454'}}>Catatan: {item?.item?.notes}</Text>
           )}
         </View>
 
