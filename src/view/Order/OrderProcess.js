@@ -22,6 +22,7 @@ import Modal from 'react-native-modal';
 import moment from 'moment';
 import 'moment/locale/id';
 import {formatCurrency} from 'react-native-format-currency';
+import {BluetoothEscposPrinter} from 'tp-react-native-bluetooth-printer';
 
 import styles from './style';
 
@@ -98,6 +99,107 @@ function OrderProcessScreen({navigation}) {
       .finally(() => {
         setLoadingUpdate(false);
       });
+  };
+
+  const printBill = async () => {
+    // dataOrderDetail.items.map(item =>
+    //   console.log('hehe', item.productName, item.quantity, item.price),
+    // );
+
+    try {
+      await BluetoothEscposPrinter.printerAlign(
+        BluetoothEscposPrinter.ALIGN.CENTER,
+      );
+
+      await BluetoothEscposPrinter.printerAlign(
+        BluetoothEscposPrinter.ALIGN.LEFT,
+      );
+      await BluetoothEscposPrinter.printText(
+        'Nama：Asepshow,reza,jurahi,hehe,gg,wadaw,nina,noni,gugus\n\r',
+        {},
+      );
+      await BluetoothEscposPrinter.printText(
+        'Jam Order：8 Maret, 2:49 Siang\n\r',
+        {},
+      );
+      await BluetoothEscposPrinter.printText(
+        '--------------------------------\n\r',
+        {},
+      );
+      let columnWidths = [12, 6, 6, 8];
+      await BluetoothEscposPrinter.printColumn(
+        columnWidths,
+        [
+          BluetoothEscposPrinter.ALIGN.LEFT,
+          BluetoothEscposPrinter.ALIGN.CENTER,
+          BluetoothEscposPrinter.ALIGN.CENTER,
+          BluetoothEscposPrinter.ALIGN.RIGHT,
+        ],
+        ['Pesanan', 'Qty', 'Harga', 'Total'],
+        {},
+      );
+      await BluetoothEscposPrinter.printText('\n\r', {});
+      await BluetoothEscposPrinter.printColumn(
+        columnWidths,
+        [
+          BluetoothEscposPrinter.ALIGN.LEFT,
+          BluetoothEscposPrinter.ALIGN.CENTER,
+          BluetoothEscposPrinter.ALIGN.CENTER,
+          BluetoothEscposPrinter.ALIGN.RIGHT,
+        ],
+        ['Nasi Goreng', '2', '32000', '64000'],
+        {},
+      );
+      await BluetoothEscposPrinter.printText('\n\r', {});
+      await BluetoothEscposPrinter.printColumn(
+        columnWidths,
+        [
+          BluetoothEscposPrinter.ALIGN.LEFT,
+          BluetoothEscposPrinter.ALIGN.CENTER,
+          BluetoothEscposPrinter.ALIGN.CENTER,
+          BluetoothEscposPrinter.ALIGN.RIGHT,
+        ],
+        ['Air putih', '1', '2000', '2000'],
+        {},
+      );
+      await BluetoothEscposPrinter.printText('\n\r', {});
+      await BluetoothEscposPrinter.printText(
+        '--------------------------------\n\r',
+        {},
+      );
+      await BluetoothEscposPrinter.printColumn(
+        [12, 8, 12],
+        [
+          BluetoothEscposPrinter.ALIGN.LEFT,
+          BluetoothEscposPrinter.ALIGN.CENTER,
+          BluetoothEscposPrinter.ALIGN.RIGHT,
+        ],
+        ['Total', '3', '10000'],
+        {},
+      );
+      // await BluetoothEscposPrinter.printColumn(
+      //   columnWidths,
+      //   [BluetoothEscposPrinter.ALIGN.LEFT, BluetoothEscposPrinter.ALIGN.RIGHT],
+      //   ['Service:', '3%'],
+      //   {},
+      // );
+      await BluetoothEscposPrinter.printText('\n\r', {});
+      await BluetoothEscposPrinter.printText('Service：3%\n\r', {});
+      await BluetoothEscposPrinter.printText('Pajak：4000.00\n\r', {});
+      await BluetoothEscposPrinter.printText(
+        '--------------------------------\n\r',
+        {},
+      );
+      await BluetoothEscposPrinter.printerAlign(
+        BluetoothEscposPrinter.ALIGN.CENTER,
+      );
+      await BluetoothEscposPrinter.printText('Terima kasih!\n\r\n\r\n\r', {});
+      await BluetoothEscposPrinter.printerAlign(
+        BluetoothEscposPrinter.ALIGN.LEFT,
+      );
+    } catch (e) {
+      alert(e.message || 'ERROR');
+    }
   };
 
   const getDetailOrder = async (orderId, groupId, orderType) => {
@@ -427,6 +529,18 @@ function OrderProcessScreen({navigation}) {
                   {convertToRupiah(dataOrderDetail?.totalAmount)}
                 </Text>
               </View>
+              <TouchableOpacity
+                onPress={() => printBill()}
+                style={{
+                  backgroundColor: '#ff3366',
+                  height: hp(4),
+                  width: wp(20),
+                  borderRadius: 16,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Text style={{fontWeight: '500', color: 'white'}}>Selesai</Text>
+              </TouchableOpacity>
             </ScrollView>
           )}
         </View>
