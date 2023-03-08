@@ -184,7 +184,7 @@ function HomeScreenV2({navigation}) {
 
       setLoadingPrintMenu(false);
     } catch (e) {
-      alert(e.message || 'ERROR');
+      alert('Pastikan printer sudah terhubung ya');
       setLoadingPrintMenu(false);
     }
   };

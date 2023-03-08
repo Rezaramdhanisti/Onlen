@@ -1,4 +1,4 @@
-import React, {useState, useCallback} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {
   View,
   TouchableOpacity,
@@ -25,26 +25,20 @@ import {formatCurrency} from 'react-native-format-currency';
 
 import styles from './style';
 
-function OrderTodayScreen({navigation}) {
+function OrderFinishScreen({navigation}) {
   const [dataOrder, setDataOrder] = useState([]);
   const [dataOrderDetail, setDataOrderDetail] = useState(null);
   const toast = useToast();
   const [isLoading, setLoading] = useState(false);
   const [isLoadingDetail, setLoadingDetail] = useState(true);
   const [modalDetail, setModalDetail] = useState(false);
-  const [modalConfirm, setModalConfirm] = useState(false);
-  const [isLoadingUpdate, setLoadingUpdate] = useState(false);
-  const [tempOrderId, setTempOrderId] = useState('');
-  const [dataProfile, setDataProfile] = useState({});
-  const [modalFeature, setModalFeature] = useState(false);
-  const [modalCancel, setModalCancel] = useState(false);
   const [tempGroupId, setTempGroupId] = useState('');
   const [tempOrderType, setTempOrderType] = useState('');
 
   moment.locale('id');
   useFocusEffect(
     useCallback(() => {
-      getDataProfile();
+      getListOrder();
     }, []),
   );
 
@@ -53,8 +47,8 @@ function OrderTodayScreen({navigation}) {
     const token = await AsyncStorage.getItem('@token');
 
     axios
-      .get(`${API_URL}/dashboard/orders?orderStatus=pending`, {
-        params: {limit: 100},
+      .get(`${API_URL}/dashboard/orders?orderStatus=canceled`, {
+        params: {limit: 100, groupByCode: 1},
         headers: {
           Authorization: 'Bearer ' + token,
         },
@@ -74,75 +68,12 @@ function OrderTodayScreen({navigation}) {
     setModalDetail(!modalDetail);
   };
 
-  const visibilityModalConfirm = orderId => {
-    setTempOrderId(orderId);
-    setModalConfirm(!modalConfirm);
-  };
-
-  const visibilityModalCancel = orderId => {
-    setTempOrderId(orderId);
-    setModalCancel(!modalCancel);
-  };
-
-  const visibilityModalFeature = () => {
-    setModalFeature(!modalFeature);
-    navigation.navigate('Home');
-  };
-
-  const getDataProfile = async () => {
-    try {
-      const value = await AsyncStorage.getItem('@profile');
-      if (value !== null) {
-        setDataProfile(JSON.parse(value));
-        // value previously stored
-        if (!JSON.parse(value).isPremium) {
-          setTimeout(() => {
-            setModalFeature(true);
-          }, 500);
-        } else {
-          getListOrder();
-        }
-      }
-    } catch (e) {
-      // error reading value
-    }
-  };
-
-  const updateOrder = async status => {
-    setLoadingUpdate(!isLoadingUpdate);
-    const token = await AsyncStorage.getItem('@token');
-    const dataPayload = {
-      orderStatus: status,
-    };
-    axios
-      .put(`${API_URL}/dashboard/orders/${tempOrderId}/status`, dataPayload, {
-        headers: {
-          Authorization: 'Bearer ' + token,
-        },
-      })
-      .then(() => {
-        getListOrder();
-        if (status === 'canceled') {
-          visibilityModalCancel();
-        } else {
-          visibilityModalConfirm();
-        }
-      })
-      .catch(e => {
-        toast.show(e?.response?.data.message, {type: 'danger'});
-      })
-      .finally(() => {
-        setLoadingUpdate(false);
-      });
-  };
-
   const getDetailOrder = async (orderId, groupId, orderType) => {
     setLoadingDetail(true);
     setTempGroupId(groupId);
     setTempOrderType(orderType);
     setModalDetail(!modalDetail);
     const token = await AsyncStorage.getItem('@token');
-
     axios
       .get(`${API_URL}/dashboard/orders/${orderId}`, {
         headers: {
@@ -158,17 +89,6 @@ function OrderTodayScreen({navigation}) {
       .finally(() => {
         setLoadingDetail(false);
       });
-  };
-
-  const convertToRupiah = text => {
-    const valueText = text ? text : '0';
-    return (
-      `${'Rp'}` +
-      valueText
-        .toString()
-        .replace(/\D/g, '')
-        .replace(/\B(?=(\d{3})+(?!\d))/g, '.')
-    );
   };
   const renderItem = ({item}) => {
     const [valueFormattedWithSymbol] = formatCurrency({
@@ -214,7 +134,7 @@ function OrderTodayScreen({navigation}) {
               <Text style={{color: '#565454'}}>Status</Text>
               <Text
                 style={{marginLeft: 4, color: '#565454', fontWeight: '500'}}>
-                Pesanan Baru
+                Selesai
               </Text>
             </View>
             <View
@@ -243,9 +163,9 @@ function OrderTodayScreen({navigation}) {
             style={{
               width: 100,
               height: 50,
-              justifyContent: 'flex-end',
-              alignItems: 'flex-end',
-              paddingBottom: hp(2),
+              position: 'absolute',
+              right: -80,
+              bottom: 0,
             }}>
             <Image
               style={{
@@ -256,38 +176,6 @@ function OrderTodayScreen({navigation}) {
             />
           </TouchableOpacity>
         </TouchableOpacity>
-        <View
-          style={{
-            flexDirection: 'row',
-            marginTop: 14,
-            alignItems: 'center',
-          }}>
-          <TouchableOpacity
-            onPress={() => visibilityModalConfirm(item.id)}
-            style={{
-              backgroundColor: '#ff3366',
-              height: hp(4),
-              width: wp(20),
-              borderRadius: 16,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <Text style={{fontWeight: '500', color: 'white'}}>Terima</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => visibilityModalCancel(item.id)}
-            style={{
-              backgroundColor: '#FFDBD4',
-              height: hp(4),
-              width: wp(20),
-              borderRadius: 16,
-              marginLeft: 10,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <Text style={{fontWeight: '500', color: '#ff3366'}}>Tolak</Text>
-          </TouchableOpacity>
-        </View>
         <View
           style={{
             height: 1,
@@ -343,6 +231,16 @@ function OrderTodayScreen({navigation}) {
       </View>
     );
   };
+  const convertToRupiah = text => {
+    const valueText = text ? text : '0';
+    return (
+      `${'Rp'}` +
+      valueText
+        .toString()
+        .replace(/\D/g, '')
+        .replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+    );
+  };
 
   return (
     <View style={styles.containerWithEmail}>
@@ -359,7 +257,7 @@ function OrderTodayScreen({navigation}) {
         <FlatList
           data={dataOrder}
           renderItem={renderItem}
-          keyExtractor={(item, index) => item.key}
+          keyExtractor={item => item.id}
           showsVerticalScrollIndicator={false}
           style={{marginTop: 10}}
           ListEmptyComponent={renderEmptyItem}
@@ -479,129 +377,8 @@ function OrderTodayScreen({navigation}) {
           )}
         </View>
       </Modal>
-
-      <Modal isVisible={modalConfirm} onBackdropPress={visibilityModalConfirm}>
-        <View style={styles.modalConfirm}>
-          <Text style={styles.textSales}>Proses orderan ini?</Text>
-
-          <View
-            style={{
-              flexDirection: 'row',
-              marginTop: 24,
-              alignItems: 'center',
-            }}>
-            <TouchableOpacity
-              onPress={() => updateOrder('in-progress')}
-              style={{
-                backgroundColor: '#ff3366',
-                height: hp(4),
-                width: wp(20),
-                borderRadius: 16,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              {isLoadingUpdate ? (
-                <ActivityIndicator size="small" color="white" />
-              ) : (
-                <Text style={{fontWeight: '500', color: 'white'}}>Proses</Text>
-              )}
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => visibilityModalConfirm()}
-              style={{
-                backgroundColor: '#FFDBD4',
-                height: hp(4),
-                width: wp(20),
-                borderRadius: 16,
-                marginLeft: 10,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Text style={{fontWeight: '500', color: '#ff3366'}}>Batal</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-
-      <Modal isVisible={modalCancel} onBackdropPress={visibilityModalCancel}>
-        <View style={styles.modalConfirm}>
-          <Text style={styles.textSales}>Tolak orderan ini?</Text>
-
-          <View
-            style={{
-              flexDirection: 'row',
-              marginTop: 24,
-              alignItems: 'center',
-            }}>
-            <TouchableOpacity
-              onPress={() => updateOrder('canceled')}
-              style={{
-                backgroundColor: '#ff3366',
-                height: hp(4),
-                width: wp(20),
-                borderRadius: 16,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              {isLoadingUpdate ? (
-                <ActivityIndicator size="small" color="white" />
-              ) : (
-                <Text style={{fontWeight: '500', color: 'white'}}>Tolak</Text>
-              )}
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => visibilityModalCancel()}
-              style={{
-                backgroundColor: '#FFDBD4',
-                height: hp(4),
-                width: wp(20),
-                borderRadius: 16,
-                marginLeft: 10,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Text style={{fontWeight: '500', color: '#ff3366'}}>Batal</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-
-      <Modal
-        isVisible={modalFeature}
-        onBackdropPress={visibilityModalFeature}
-        style={{justifyContent: 'flex-end', margin: 0}}>
-        <View style={styles.modalFeature}>
-          <Image
-            style={{
-              width: 220,
-              height: 220,
-            }}
-            resizeMode="contain"
-            source={require('../../../assets/Onboarding-2.png')}
-          />
-          <Text style={styles.textTitleModal}>Akan Segera Hadir!</Text>
-          <Text style={styles.textSubtitleModal}>
-            Kami akan infokan saat fitur ini siap digunakan.
-          </Text>
-
-          <TouchableOpacity
-            onPress={() => visibilityModalFeature()}
-            style={{
-              backgroundColor: '#ff3366',
-              height: hp(5),
-              width: '50%',
-              alignSelf: 'center',
-              borderRadius: 16,
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginTop: 24,
-            }}>
-            <Text style={{fontWeight: '500', color: 'white'}}>OK</Text>
-          </TouchableOpacity>
-        </View>
-      </Modal>
     </View>
   );
 }
 
-export default OrderTodayScreen;
+export default OrderFinishScreen;

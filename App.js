@@ -31,6 +31,7 @@ import AddEmployeeScreen from './src/view/Employee/AddEmployee';
 import OrderTodayScreen from './src/view/Order/OrderToday';
 import OrderProcessScreen from './src/view/Order/OrderProcess';
 import OrderFinishScreen from './src/view/Order/OrderFinish';
+import OrderCancelScreen from './src/view/Order/OrderCancel';
 import MyQrisScreen from './src/view/Settings/MyQris';
 import PrinterSettingsScreen from './src/view/PrinterSettings';
 
@@ -283,6 +284,7 @@ function MyTabs() {
       <Tab.Screen name="Baru" component={OrderTodayScreen} />
       <Tab.Screen name="Proses" component={OrderProcessScreen} />
       <Tab.Screen name="Selesai" component={OrderFinishScreen} />
+      <Tab.Screen name="Ditolak" component={OrderCancelScreen} />
     </Tab.Navigator>
   );
 }
