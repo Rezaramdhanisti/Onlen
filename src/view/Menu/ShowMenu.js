@@ -88,7 +88,7 @@ function ShowMenuScreen({navigation, route}) {
         <TouchableOpacity
           style={{
             height: hp(6),
-            backgroundColor: '#ff3366',
+            backgroundColor: '#589f6e',
             borderRadius: 50,
             justifyContent: 'center',
             marginTop: hp(6),
@@ -97,8 +97,21 @@ function ShowMenuScreen({navigation, route}) {
           onPress={() => {
             shareToWhatsapp();
           }}>
-          <View>
-            <Text style={styles.textAddMenu}>Bagikan Sekarang</Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Image
+              style={{
+                width: 24,
+                height: 24,
+                marginRight: 4,
+              }}
+              source={require('../../../assets/whatsapp.png')}
+            />
+            <Text style={styles.textAddMenu}>Bagikan ke Whatsapp</Text>
           </View>
         </TouchableOpacity>
       </View>
