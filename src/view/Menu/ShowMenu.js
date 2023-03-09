@@ -4,6 +4,7 @@ import {ADDRESS_URL} from '@env';
 import {useToast} from 'react-native-toast-notifications';
 import Clipboard from '@react-native-clipboard/clipboard';
 import QRCode from 'react-native-qrcode-svg';
+import Share from 'react-native-share';
 
 import {
   widthPercentageToDP as wp,
@@ -16,8 +17,26 @@ function ShowMenuScreen({navigation, route}) {
   const toast = useToast();
 
   const copyToClipboard = () => {
-    Clipboard.setString(`${ADDRESS_URL}${route.params.merchantName}`);
+    Clipboard.setString(`${ADDRESS_URL}${dataProfile.merchantName}/produk`);
     toast.show('Tersalin', {type: 'success'});
+  };
+
+  const shareToWhatsapp = () => {
+    const shareOptions = {
+      title: 'Share via',
+      message:
+        'Halo kastemer! silahkan buka link dibawah ini untuk melihat menu dan order ya!',
+      url: `${ADDRESS_URL}${route.params.merchantName}/produk`,
+      social: Share.Social.WHATSAPP,
+    };
+
+    Share.shareSingle(shareOptions)
+      .then(res => {
+        console.log(res);
+      })
+      .catch(err => {
+        err && console.log(err);
+      });
   };
 
   return (
@@ -76,7 +95,7 @@ function ShowMenuScreen({navigation, route}) {
             width: wp(88),
           }}
           onPress={() => {
-            copyToClipboard();
+            shareToWhatsapp();
           }}>
           <View>
             <Text style={styles.textAddMenu}>Bagikan Sekarang</Text>
