@@ -249,4 +249,11 @@ export default {
     fontWeight: 'bold',
     textAlign: 'center',
   },
+  modalFeature: {
+    backgroundColor: 'white',
+    borderRadius: 8,
+    padding: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 };

@@ -38,6 +38,7 @@ function OrderProcessScreen({navigation}) {
   const [tempOrderId, setTempOrderId] = useState('');
   const [tempGroupId, setTempGroupId] = useState('');
   const [tempOrderType, setTempOrderType] = useState('');
+  const [modalErrorPrinter, setModalErrorPrinter] = useState(false);
 
   moment.locale('id');
   useFocusEffect(
@@ -101,11 +102,49 @@ function OrderProcessScreen({navigation}) {
       });
   };
 
-  const printBill = async () => {
-    // dataOrderDetail.items.map(item =>
-    //   console.log('hehe', item.productName, item.quantity, item.price),
-    // );
+  function sumArray(array) {
+    let sum = 0;
 
+    array.forEach(item => {
+      sum += item.quantity;
+    });
+
+    return sum;
+  }
+
+  const printBillItem = async (productName, quantity, price, totalPrice) => {
+    let columnWidths = [13, 6, 13];
+    try {
+      BluetoothEscposPrinter.printColumn(
+        columnWidths,
+        [
+          BluetoothEscposPrinter.ALIGN.LEFT,
+          BluetoothEscposPrinter.ALIGN.CENTER,
+          BluetoothEscposPrinter.ALIGN.RIGHT,
+        ],
+        [
+          productName.toString(),
+          quantity.toString(),
+          `@ ${convertToRupiah(price)}`,
+        ],
+        {},
+      );
+      BluetoothEscposPrinter.printColumn(
+        [6, 6, 6, 14],
+        [
+          BluetoothEscposPrinter.ALIGN.LEFT,
+          BluetoothEscposPrinter.ALIGN.CENTER,
+          BluetoothEscposPrinter.ALIGN.CENTER,
+          BluetoothEscposPrinter.ALIGN.RIGHT,
+        ],
+        ['', '', '', convertToRupiah(totalPrice)],
+        {},
+      );
+    } catch (error) {
+      alert(error.message || 'ERROR');
+    }
+  };
+  const printBill = async () => {
     try {
       await BluetoothEscposPrinter.printerAlign(
         BluetoothEscposPrinter.ALIGN.CENTER,
@@ -115,81 +154,87 @@ function OrderProcessScreen({navigation}) {
         BluetoothEscposPrinter.ALIGN.LEFT,
       );
       await BluetoothEscposPrinter.printText(
-        'Nama：Asepshow,reza,jurahi,hehe,gg,wadaw,nina,noni,gugus\n\r',
+        `Nama: ${dataOrderDetail.customerName}\n\r`,
         {},
       );
       await BluetoothEscposPrinter.printText(
-        'Jam Order：8 Maret, 2:49 Siang\n\r',
+        `Jam Order: ${moment(dataOrderDetail?.createdAt).format(
+          'Do MMMM, h:mm a',
+        )}\n\r`,
         {},
       );
       await BluetoothEscposPrinter.printText(
         '--------------------------------\n\r',
         {},
       );
-      let columnWidths = [12, 6, 6, 8];
+      let columnWidths = [13, 7, 12];
       await BluetoothEscposPrinter.printColumn(
         columnWidths,
         [
           BluetoothEscposPrinter.ALIGN.LEFT,
           BluetoothEscposPrinter.ALIGN.CENTER,
-          BluetoothEscposPrinter.ALIGN.CENTER,
           BluetoothEscposPrinter.ALIGN.RIGHT,
         ],
-        ['Pesanan', 'Qty', 'Harga', 'Total'],
+        ['Pesanan', 'Jumlah', 'Harga'],
         {},
       );
+
       await BluetoothEscposPrinter.printText('\n\r', {});
-      await BluetoothEscposPrinter.printColumn(
-        columnWidths,
-        [
-          BluetoothEscposPrinter.ALIGN.LEFT,
-          BluetoothEscposPrinter.ALIGN.CENTER,
-          BluetoothEscposPrinter.ALIGN.CENTER,
-          BluetoothEscposPrinter.ALIGN.RIGHT,
-        ],
-        ['Nasi Goreng', '2', '32000', '64000'],
-        {},
-      );
-      await BluetoothEscposPrinter.printText('\n\r', {});
-      await BluetoothEscposPrinter.printColumn(
-        columnWidths,
-        [
-          BluetoothEscposPrinter.ALIGN.LEFT,
-          BluetoothEscposPrinter.ALIGN.CENTER,
-          BluetoothEscposPrinter.ALIGN.CENTER,
-          BluetoothEscposPrinter.ALIGN.RIGHT,
-        ],
-        ['Air putih', '1', '2000', '2000'],
-        {},
+      dataOrderDetail.items.map(item =>
+        printBillItem(
+          item.productName,
+          item.quantity,
+          item.price,
+          item.totalPrice,
+        ),
       );
       await BluetoothEscposPrinter.printText('\n\r', {});
       await BluetoothEscposPrinter.printText(
         '--------------------------------\n\r',
         {},
       );
+      BluetoothEscposPrinter.printColumn(
+        [10, 4, 4, 14],
+        [
+          BluetoothEscposPrinter.ALIGN.LEFT,
+          BluetoothEscposPrinter.ALIGN.CENTER,
+          BluetoothEscposPrinter.ALIGN.CENTER,
+          BluetoothEscposPrinter.ALIGN.RIGHT,
+        ],
+        ['Service', '', '', convertToRupiah(dataOrderDetail.serviceFee)],
+        {},
+      );
+      BluetoothEscposPrinter.printColumn(
+        [10, 4, 4, 14],
+        [
+          BluetoothEscposPrinter.ALIGN.LEFT,
+          BluetoothEscposPrinter.ALIGN.CENTER,
+          BluetoothEscposPrinter.ALIGN.CENTER,
+          BluetoothEscposPrinter.ALIGN.RIGHT,
+        ],
+        ['Pajak', '', '', convertToRupiah(dataOrderDetail.taxAmount)],
+        {},
+      );
+
+      await BluetoothEscposPrinter.printText(
+        '--------------------------------\n\r',
+        {},
+      );
       await BluetoothEscposPrinter.printColumn(
-        [12, 8, 12],
+        [13, 7, 12],
         [
           BluetoothEscposPrinter.ALIGN.LEFT,
           BluetoothEscposPrinter.ALIGN.CENTER,
           BluetoothEscposPrinter.ALIGN.RIGHT,
         ],
-        ['Total', '3', '10000'],
+        [
+          'Total',
+          sumArray(dataOrderDetail.items).toString(),
+          convertToRupiah(dataOrderDetail.totalAmount),
+        ],
         {},
       );
-      // await BluetoothEscposPrinter.printColumn(
-      //   columnWidths,
-      //   [BluetoothEscposPrinter.ALIGN.LEFT, BluetoothEscposPrinter.ALIGN.RIGHT],
-      //   ['Service:', '3%'],
-      //   {},
-      // );
       await BluetoothEscposPrinter.printText('\n\r', {});
-      await BluetoothEscposPrinter.printText('Service：3%\n\r', {});
-      await BluetoothEscposPrinter.printText('Pajak：4000.00\n\r', {});
-      await BluetoothEscposPrinter.printText(
-        '--------------------------------\n\r',
-        {},
-      );
       await BluetoothEscposPrinter.printerAlign(
         BluetoothEscposPrinter.ALIGN.CENTER,
       );
@@ -198,8 +243,14 @@ function OrderProcessScreen({navigation}) {
         BluetoothEscposPrinter.ALIGN.LEFT,
       );
     } catch (e) {
-      alert(e.message || 'ERROR');
+      setModalErrorPrinter(!modalErrorPrinter);
     }
+  };
+
+  const visibilityModalErrorPrinter = () => {
+    setModalErrorPrinter(!modalErrorPrinter);
+    setModalDetail(!modalDetail);
+    navigation.navigate('Pengaturan');
   };
 
   const getDetailOrder = async (orderId, groupId, orderType) => {
@@ -534,12 +585,16 @@ function OrderProcessScreen({navigation}) {
                 style={{
                   backgroundColor: '#ff3366',
                   height: hp(4),
-                  width: wp(20),
+                  width: wp(28),
                   borderRadius: 16,
                   justifyContent: 'center',
                   alignItems: 'center',
+                  alignSelf: 'center',
+                  marginTop: 22,
                 }}>
-                <Text style={{fontWeight: '500', color: 'white'}}>Selesai</Text>
+                <Text style={{fontWeight: '500', color: 'white'}}>
+                  Cetak struk
+                </Text>
               </TouchableOpacity>
             </ScrollView>
           )}
@@ -586,6 +641,41 @@ function OrderProcessScreen({navigation}) {
               <Text style={{fontWeight: '500', color: '#ff3366'}}>Batal</Text>
             </TouchableOpacity>
           </View>
+        </View>
+      </Modal>
+
+      <Modal
+        isVisible={modalErrorPrinter}
+        onBackdropPress={visibilityModalErrorPrinter}
+        style={{justifyContent: 'flex-end', margin: 0}}>
+        <View style={styles.modalFeature}>
+          <Image
+            style={{
+              width: 220,
+              height: 220,
+            }}
+            resizeMode="contain"
+            source={require('../../../assets/error-default.png')}
+          />
+          <Text style={styles.textTitleModal}>Belum terhubung!</Text>
+          <Text style={styles.textSubtitleModal}>
+            Pastikan sudah ada hubungan dengan printer ya
+          </Text>
+
+          <TouchableOpacity
+            onPress={() => visibilityModalErrorPrinter()}
+            style={{
+              backgroundColor: '#ff3366',
+              height: hp(5),
+              width: '50%',
+              alignSelf: 'center',
+              borderRadius: 16,
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: 24,
+            }}>
+            <Text style={{fontWeight: '500', color: 'white'}}>OK</Text>
+          </TouchableOpacity>
         </View>
       </Modal>
     </View>

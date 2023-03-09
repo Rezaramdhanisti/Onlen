@@ -354,13 +354,13 @@ function PrinterSettingScreen({navigation, route}) {
       </View>
       <Text style={styles.textSubtitle2}>Pelanggan makan ditempat</Text>
 
-      <TouchableOpacity
+      {/* <TouchableOpacity
         style={styles.bluetoothStatusContainer}
         onPress={() => _activateBluetooth()}>
         <Text style={styles.bluetoothStatus(bleOpend ? '#47BF34' : '#47BF34')}>
           Klik disini untuk aktifkan bluetooth
         </Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
       {/* <TouchableOpacity
         style={styles.bluetoothStatusContainer}
         onPress={() => _activateBluetooth()}>

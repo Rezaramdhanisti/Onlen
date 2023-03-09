@@ -22,6 +22,7 @@ import Modal from 'react-native-modal';
 import moment from 'moment';
 import 'moment/locale/id';
 import {formatCurrency} from 'react-native-format-currency';
+import {BluetoothEscposPrinter} from 'tp-react-native-bluetooth-printer';
 
 import styles from './style';
 
@@ -40,6 +41,7 @@ function OrderTodayScreen({navigation}) {
   const [modalCancel, setModalCancel] = useState(false);
   const [tempGroupId, setTempGroupId] = useState('');
   const [tempOrderType, setTempOrderType] = useState('');
+  const [modalErrorPrinter, setModalErrorPrinter] = useState(false);
 
   moment.locale('id');
   useFocusEffect(
@@ -150,6 +152,7 @@ function OrderTodayScreen({navigation}) {
         },
       })
       .then(res => {
+        console.log('detailOrder', res.data.data);
         setDataOrderDetail(res.data.data);
       })
       .catch(e => {
@@ -170,6 +173,13 @@ function OrderTodayScreen({navigation}) {
         .replace(/\B(?=(\d{3})+(?!\d))/g, '.')
     );
   };
+
+  const visibilityModalErrorPrinter = () => {
+    setModalErrorPrinter(!modalErrorPrinter);
+    setModalDetail(!modalDetail);
+    navigation.navigate('Pengaturan');
+  };
+
   const renderItem = ({item}) => {
     const [valueFormattedWithSymbol] = formatCurrency({
       amount: Number(item.totalAmount),
@@ -298,6 +308,151 @@ function OrderTodayScreen({navigation}) {
         />
       </View>
     );
+  };
+
+  function sumArray(array) {
+    let sum = 0;
+
+    array.forEach(item => {
+      sum += item.quantity;
+    });
+
+    return sum;
+  }
+
+  const printBillItem = async (productName, quantity, price, totalPrice) => {
+    let columnWidths = [13, 6, 13];
+    try {
+      BluetoothEscposPrinter.printColumn(
+        columnWidths,
+        [
+          BluetoothEscposPrinter.ALIGN.LEFT,
+          BluetoothEscposPrinter.ALIGN.CENTER,
+          BluetoothEscposPrinter.ALIGN.RIGHT,
+        ],
+        [
+          productName.toString(),
+          quantity.toString(),
+          `@ ${convertToRupiah(price)}`,
+        ],
+        {},
+      );
+      BluetoothEscposPrinter.printColumn(
+        [6, 6, 6, 14],
+        [
+          BluetoothEscposPrinter.ALIGN.LEFT,
+          BluetoothEscposPrinter.ALIGN.CENTER,
+          BluetoothEscposPrinter.ALIGN.CENTER,
+          BluetoothEscposPrinter.ALIGN.RIGHT,
+        ],
+        ['', '', '', convertToRupiah(totalPrice)],
+        {},
+      );
+    } catch (error) {
+      alert(error.message || 'ERROR');
+    }
+  };
+  const printBill = async () => {
+    try {
+      await BluetoothEscposPrinter.printerAlign(
+        BluetoothEscposPrinter.ALIGN.CENTER,
+      );
+
+      await BluetoothEscposPrinter.printerAlign(
+        BluetoothEscposPrinter.ALIGN.LEFT,
+      );
+      await BluetoothEscposPrinter.printText(
+        `Nama: ${dataOrderDetail.customerName}\n\r`,
+        {},
+      );
+      await BluetoothEscposPrinter.printText(
+        `Jam Order: ${moment(dataOrderDetail?.createdAt).format(
+          'Do MMMM, h:mm a',
+        )}\n\r`,
+        {},
+      );
+      await BluetoothEscposPrinter.printText(
+        '--------------------------------\n\r',
+        {},
+      );
+      let columnWidths = [13, 7, 12];
+      await BluetoothEscposPrinter.printColumn(
+        columnWidths,
+        [
+          BluetoothEscposPrinter.ALIGN.LEFT,
+          BluetoothEscposPrinter.ALIGN.CENTER,
+          BluetoothEscposPrinter.ALIGN.RIGHT,
+        ],
+        ['Pesanan', 'Jumlah', 'Harga'],
+        {},
+      );
+
+      await BluetoothEscposPrinter.printText('\n\r', {});
+      dataOrderDetail.items.map(item =>
+        printBillItem(
+          item.productName,
+          item.quantity,
+          item.price,
+          item.totalPrice,
+        ),
+      );
+      await BluetoothEscposPrinter.printText('\n\r', {});
+      await BluetoothEscposPrinter.printText(
+        '--------------------------------\n\r',
+        {},
+      );
+      BluetoothEscposPrinter.printColumn(
+        [10, 4, 4, 14],
+        [
+          BluetoothEscposPrinter.ALIGN.LEFT,
+          BluetoothEscposPrinter.ALIGN.CENTER,
+          BluetoothEscposPrinter.ALIGN.CENTER,
+          BluetoothEscposPrinter.ALIGN.RIGHT,
+        ],
+        ['Service', '', '', convertToRupiah(dataOrderDetail.serviceFee)],
+        {},
+      );
+      BluetoothEscposPrinter.printColumn(
+        [10, 4, 4, 14],
+        [
+          BluetoothEscposPrinter.ALIGN.LEFT,
+          BluetoothEscposPrinter.ALIGN.CENTER,
+          BluetoothEscposPrinter.ALIGN.CENTER,
+          BluetoothEscposPrinter.ALIGN.RIGHT,
+        ],
+        ['Pajak', '', '', convertToRupiah(dataOrderDetail.taxAmount)],
+        {},
+      );
+
+      await BluetoothEscposPrinter.printText(
+        '--------------------------------\n\r',
+        {},
+      );
+      await BluetoothEscposPrinter.printColumn(
+        [13, 7, 12],
+        [
+          BluetoothEscposPrinter.ALIGN.LEFT,
+          BluetoothEscposPrinter.ALIGN.CENTER,
+          BluetoothEscposPrinter.ALIGN.RIGHT,
+        ],
+        [
+          'Total',
+          sumArray(dataOrderDetail.items).toString(),
+          convertToRupiah(dataOrderDetail.totalAmount),
+        ],
+        {},
+      );
+      await BluetoothEscposPrinter.printText('\n\r', {});
+      await BluetoothEscposPrinter.printerAlign(
+        BluetoothEscposPrinter.ALIGN.CENTER,
+      );
+      await BluetoothEscposPrinter.printText('Terima kasih!\n\r\n\r\n\r', {});
+      await BluetoothEscposPrinter.printerAlign(
+        BluetoothEscposPrinter.ALIGN.LEFT,
+      );
+    } catch (e) {
+      setModalErrorPrinter(!modalErrorPrinter);
+    }
   };
 
   const renderEmptyItem = () => (
@@ -475,6 +630,22 @@ function OrderTodayScreen({navigation}) {
                   {convertToRupiah(dataOrderDetail?.totalAmount)}
                 </Text>
               </View>
+              <TouchableOpacity
+                onPress={() => printBill()}
+                style={{
+                  backgroundColor: '#ff3366',
+                  height: hp(4),
+                  width: wp(28),
+                  borderRadius: 16,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  alignSelf: 'center',
+                  marginTop: 22,
+                }}>
+                <Text style={{fontWeight: '500', color: 'white'}}>
+                  Cetak struk
+                </Text>
+              </TouchableOpacity>
             </ScrollView>
           )}
         </View>
@@ -577,7 +748,7 @@ function OrderTodayScreen({navigation}) {
               height: 220,
             }}
             resizeMode="contain"
-            source={require('../../../assets/Onboarding-2.png')}
+            source={require('../../../assets/error-default.png')}
           />
           <Text style={styles.textTitleModal}>Akan Segera Hadir!</Text>
           <Text style={styles.textSubtitleModal}>
@@ -586,6 +757,41 @@ function OrderTodayScreen({navigation}) {
 
           <TouchableOpacity
             onPress={() => visibilityModalFeature()}
+            style={{
+              backgroundColor: '#ff3366',
+              height: hp(5),
+              width: '50%',
+              alignSelf: 'center',
+              borderRadius: 16,
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: 24,
+            }}>
+            <Text style={{fontWeight: '500', color: 'white'}}>OK</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+
+      <Modal
+        isVisible={modalErrorPrinter}
+        onBackdropPress={visibilityModalErrorPrinter}
+        style={{justifyContent: 'flex-end', margin: 0}}>
+        <View style={styles.modalFeature}>
+          <Image
+            style={{
+              width: 220,
+              height: 220,
+            }}
+            resizeMode="contain"
+            source={require('../../../assets/error-default.png')}
+          />
+          <Text style={styles.textTitleModal}>Belum terhubung!</Text>
+          <Text style={styles.textSubtitleModal}>
+            Pastikan sudah ada hubungan dengan printer ya
+          </Text>
+
+          <TouchableOpacity
+            onPress={() => visibilityModalErrorPrinter()}
             style={{
               backgroundColor: '#ff3366',
               height: hp(5),

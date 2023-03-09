@@ -32,6 +32,7 @@ function HomeScreenV2({navigation}) {
   const [dataProfile, setDataProfile] = useState({});
   const [loading, setLoading] = useState(false);
   const [modalProduct, setModalProduct] = useState(false);
+  const [modalErrorPrinter, setModalErrorPrinter] = useState(false);
   const [loadingPrintMenu, setLoadingPrintMenu] = useState(false);
 
   useFocusEffect(
@@ -184,14 +185,13 @@ function HomeScreenV2({navigation}) {
 
       setLoadingPrintMenu(false);
     } catch (e) {
-      alert('Pastikan printer sudah terhubung ya');
       setLoadingPrintMenu(false);
+      setModalErrorPrinter(!modalErrorPrinter);
     }
   };
 
   const copyToClipboard = () => {
     Clipboard.setString(`${ADDRESS_URL}${dataProfile.merchantName}/produk`);
-    // toast.show('Tersalin', {type: 'success'});
   };
 
   const visibilityModalProduct = () => {
@@ -199,6 +199,10 @@ function HomeScreenV2({navigation}) {
     navigation.navigate('Produk');
   };
 
+  const visibilityModalErrorPrinter = () => {
+    setModalErrorPrinter(!modalErrorPrinter);
+    navigation.navigate('Pengaturan');
+  };
   return (
     <ScrollView
       style={styles.shell}
@@ -423,6 +427,41 @@ function HomeScreenV2({navigation}) {
 
           <TouchableOpacity
             onPress={() => visibilityModalProduct()}
+            style={{
+              backgroundColor: '#ff3366',
+              height: hp(5),
+              width: '50%',
+              alignSelf: 'center',
+              borderRadius: 16,
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: 24,
+            }}>
+            <Text style={{fontWeight: '500', color: 'white'}}>OK</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+
+      <Modal
+        isVisible={modalErrorPrinter}
+        onBackdropPress={visibilityModalErrorPrinter}
+        style={{justifyContent: 'flex-end', margin: 0}}>
+        <View style={styles.modalFeature}>
+          <Image
+            style={{
+              width: 220,
+              height: 220,
+            }}
+            resizeMode="contain"
+            source={require('../../../assets/error-default.png')}
+          />
+          <Text style={styles.textTitleModal}>Belum terhubung!</Text>
+          <Text style={styles.textSubtitleModal}>
+            Pastikan sudah ada hubungan dengan printer ya
+          </Text>
+
+          <TouchableOpacity
+            onPress={() => visibilityModalErrorPrinter()}
             style={{
               backgroundColor: '#ff3366',
               height: hp(5),

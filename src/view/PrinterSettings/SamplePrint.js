@@ -264,6 +264,229 @@ const SamplePrint = () => {
   );
 };
 
+// const printBillItem = async (productName, quantity, price, totalPrice) => {
+//   let columnWidths = [13, 6, 13];
+//   try {
+//     BluetoothEscposPrinter.printColumn(
+//       columnWidths,
+//       [
+//         BluetoothEscposPrinter.ALIGN.LEFT,
+//         BluetoothEscposPrinter.ALIGN.CENTER,
+//         BluetoothEscposPrinter.ALIGN.RIGHT,
+//       ],
+//       [
+//         productName.toString(),
+//         quantity.toString(),
+//         `@ ${convertToRupiah(price)}`,
+//       ],
+//       {},
+//     );
+//     BluetoothEscposPrinter.printColumn(
+//       [6, 6, 6, 14],
+//       [
+//         BluetoothEscposPrinter.ALIGN.LEFT,
+//         BluetoothEscposPrinter.ALIGN.CENTER,
+//         BluetoothEscposPrinter.ALIGN.CENTER,
+//         BluetoothEscposPrinter.ALIGN.RIGHT,
+//       ],
+//       ['', '', '', convertToRupiah(totalPrice)],
+//       {},
+//     );
+//   } catch (error) {
+//     alert(error.message || 'ERROR');
+//   }
+// };
+// const printBill = async () => {
+//   try {
+//     await BluetoothEscposPrinter.printerAlign(
+//       BluetoothEscposPrinter.ALIGN.CENTER,
+//     );
+
+//     await BluetoothEscposPrinter.printerAlign(
+//       BluetoothEscposPrinter.ALIGN.LEFT,
+//     );
+//     await BluetoothEscposPrinter.printText(
+//       'Nama：Asepshow,reza,jurahi,hehe,gg,wadaw,nina,noni,gugus\n\r',
+//       {},
+//     );
+//     await BluetoothEscposPrinter.printText(
+//       'Jam Order：8 Maret, 2:49 Siang\n\r',
+//       {},
+//     );
+//     await BluetoothEscposPrinter.printText(
+//       '--------------------------------\n\r',
+//       {},
+//     );
+//     let columnWidths = [13, 7, 12];
+//     await BluetoothEscposPrinter.printColumn(
+//       columnWidths,
+//       [
+//         BluetoothEscposPrinter.ALIGN.LEFT,
+//         BluetoothEscposPrinter.ALIGN.CENTER,
+//         BluetoothEscposPrinter.ALIGN.RIGHT,
+//       ],
+//       ['Pesanan', 'Jumlah', 'Harga'],
+//       {},
+//     );
+
+//     await BluetoothEscposPrinter.printText('\n\r', {});
+//     dataOrderDetail.items.map(item =>
+//       printBillItem(
+//         item.productName,
+//         item.quantity,
+//         item.price,
+//         item.totalPrice,
+//       ),
+//     );
+//     await BluetoothEscposPrinter.printText('\n\r', {});
+//     await BluetoothEscposPrinter.printText(
+//       '--------------------------------\n\r',
+//       {},
+//     );
+//     BluetoothEscposPrinter.printColumn(
+//       [10, 4, 4, 14],
+//       [
+//         BluetoothEscposPrinter.ALIGN.LEFT,
+//         BluetoothEscposPrinter.ALIGN.CENTER,
+//         BluetoothEscposPrinter.ALIGN.CENTER,
+//         BluetoothEscposPrinter.ALIGN.RIGHT,
+//       ],
+//       ['Service', '', '', convertToRupiah(dataOrderDetail.serviceFee)],
+//       {},
+//     );
+//     BluetoothEscposPrinter.printColumn(
+//       [10, 4, 4, 14],
+//       [
+//         BluetoothEscposPrinter.ALIGN.LEFT,
+//         BluetoothEscposPrinter.ALIGN.CENTER,
+//         BluetoothEscposPrinter.ALIGN.CENTER,
+//         BluetoothEscposPrinter.ALIGN.RIGHT,
+//       ],
+//       ['Pajak', '', '', convertToRupiah(dataOrderDetail.taxAmount)],
+//       {},
+//     );
+
+//     await BluetoothEscposPrinter.printText(
+//       '--------------------------------\n\r',
+//       {},
+//     );
+//     await BluetoothEscposPrinter.printColumn(
+//       [13, 7, 12],
+//       [
+//         BluetoothEscposPrinter.ALIGN.LEFT,
+//         BluetoothEscposPrinter.ALIGN.CENTER,
+//         BluetoothEscposPrinter.ALIGN.RIGHT,
+//       ],
+//       [
+//         'Total',
+//         sumArray(dataOrderDetail.items).toString(),
+//         convertToRupiah(dataOrderDetail.totalAmount),
+//       ],
+//       {},
+//     );
+//     await BluetoothEscposPrinter.printText('\n\r', {});
+//     await BluetoothEscposPrinter.printerAlign(
+//       BluetoothEscposPrinter.ALIGN.CENTER,
+//     );
+//     await BluetoothEscposPrinter.printText('Terima kasih!\n\r\n\r\n\r', {});
+//     await BluetoothEscposPrinter.printerAlign(
+//       BluetoothEscposPrinter.ALIGN.LEFT,
+//     );
+//   } catch (e) {
+//     setModalErrorPrinter(!modalErrorPrinter);
+//   }
+// try {
+//   await BluetoothEscposPrinter.printerAlign(
+//     BluetoothEscposPrinter.ALIGN.CENTER,
+//   );
+
+//   await BluetoothEscposPrinter.printerAlign(
+//     BluetoothEscposPrinter.ALIGN.LEFT,
+//   );
+//   await BluetoothEscposPrinter.printText(
+//     'Nama：Asepshow,reza,jurahi,hehe,gg,wadaw,nina,noni,gugus\n\r',
+//     {},
+//   );
+//   await BluetoothEscposPrinter.printText(
+//     'Jam Order：8 Maret, 2:49 Siang\n\r',
+//     {},
+//   );
+//   await BluetoothEscposPrinter.printText(
+//     '--------------------------------\n\r',
+//     {},
+//   );
+//   let columnWidths = [12, 6, 6, 8];
+//   await BluetoothEscposPrinter.printColumn(
+//     columnWidths,
+//     [
+//       BluetoothEscposPrinter.ALIGN.LEFT,
+//       BluetoothEscposPrinter.ALIGN.CENTER,
+//       BluetoothEscposPrinter.ALIGN.CENTER,
+//       BluetoothEscposPrinter.ALIGN.RIGHT,
+//     ],
+//     ['Pesanan', 'Qty', 'Harga', 'Total'],
+//     {},
+//   );
+//   await BluetoothEscposPrinter.printText('\n\r', {});
+//   await BluetoothEscposPrinter.printColumn(
+//     columnWidths,
+//     [
+//       BluetoothEscposPrinter.ALIGN.LEFT,
+//       BluetoothEscposPrinter.ALIGN.CENTER,
+//       BluetoothEscposPrinter.ALIGN.CENTER,
+//       BluetoothEscposPrinter.ALIGN.RIGHT,
+//     ],
+//     ['Nasi Goreng', '2', '32000', '64000'],
+//     {},
+//   );
+//   await BluetoothEscposPrinter.printText('\n\r', {});
+//   await BluetoothEscposPrinter.printColumn(
+//     columnWidths,
+//     [
+//       BluetoothEscposPrinter.ALIGN.LEFT,
+//       BluetoothEscposPrinter.ALIGN.CENTER,
+//       BluetoothEscposPrinter.ALIGN.CENTER,
+//       BluetoothEscposPrinter.ALIGN.RIGHT,
+//     ],
+//     ['Air putih', '1', '2000', '2000'],
+//     {},
+//   );
+//   await BluetoothEscposPrinter.printText('\n\r', {});
+//   await BluetoothEscposPrinter.printText(
+//     '--------------------------------\n\r',
+//     {},
+//   );
+
+//   await BluetoothEscposPrinter.printText('\n\r', {});
+//   await BluetoothEscposPrinter.printText('Service：3%\n\r', {});
+//   await BluetoothEscposPrinter.printText('\n\r', {});
+//   await BluetoothEscposPrinter.printText('Pajak：4000.00\n\r', {});
+//   await BluetoothEscposPrinter.printText(
+//     '--------------------------------\n\r',
+//     {},
+//   );
+//   await BluetoothEscposPrinter.printColumn(
+//     [12, 6, 14],
+//     [
+//       BluetoothEscposPrinter.ALIGN.LEFT,
+//       BluetoothEscposPrinter.ALIGN.CENTER,
+//       BluetoothEscposPrinter.ALIGN.RIGHT,
+//     ],
+//     ['Total', '3', '1000000'],
+//     {},
+//   );
+//   await BluetoothEscposPrinter.printText('\n\r', {});
+//   await BluetoothEscposPrinter.printerAlign(
+//     BluetoothEscposPrinter.ALIGN.CENTER,
+//   );
+//   await BluetoothEscposPrinter.printText('Terima kasih!\n\r\n\r\n\r', {});
+//   await BluetoothEscposPrinter.printerAlign(
+//     BluetoothEscposPrinter.ALIGN.LEFT,
+//   );
+// } catch (e) {
+//   alert(e.message || 'ERROR');
+// }
+// };
 export default SamplePrint;
 
 const styles = StyleSheet.create({
