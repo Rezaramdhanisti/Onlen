@@ -321,9 +321,9 @@ function OrderTodayScreen({navigation}) {
   }
 
   const printBillItem = async (productName, quantity, price, totalPrice) => {
-    let columnWidths = [13, 6, 13];
+    let columnWidths = [14, 5, 13];
     try {
-      BluetoothEscposPrinter.printColumn(
+      await BluetoothEscposPrinter.printColumn(
         columnWidths,
         [
           BluetoothEscposPrinter.ALIGN.LEFT,
@@ -333,25 +333,15 @@ function OrderTodayScreen({navigation}) {
         [
           productName.toString(),
           quantity.toString(),
-          `@ ${convertToRupiah(price)}`,
+          convertToRupiah(totalPrice),
         ],
-        {},
-      );
-      BluetoothEscposPrinter.printColumn(
-        [6, 6, 6, 14],
-        [
-          BluetoothEscposPrinter.ALIGN.LEFT,
-          BluetoothEscposPrinter.ALIGN.CENTER,
-          BluetoothEscposPrinter.ALIGN.CENTER,
-          BluetoothEscposPrinter.ALIGN.RIGHT,
-        ],
-        ['', '', '', convertToRupiah(totalPrice)],
         {},
       );
     } catch (error) {
       alert(error.message || 'ERROR');
     }
   };
+
   const printBill = async () => {
     try {
       await BluetoothEscposPrinter.printerAlign(

@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
   RefreshControl,
   BackHandler,
+  StatusBar,
   Linking,
 } from 'react-native';
 import axios from 'axios';
@@ -210,6 +211,7 @@ function HomeScreenV2({navigation}) {
       refreshControl={
         <RefreshControl onRefresh={_pullToRefresh} refreshing={loading} />
       }>
+      <StatusBar backgroundColor={'white'} barStyle="dark-content" />
       <Text style={styles.textTitleWithEmail}>Beranda</Text>
       <Text style={styles.textWelcome}>
         Selamat datang di Onlen, {dataProfile?.name}
