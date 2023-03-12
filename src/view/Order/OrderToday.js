@@ -524,7 +524,23 @@ function OrderTodayScreen({navigation}) {
               <Text style={styles.textSales}>
                 Nomor Transaksi {tempGroupId}
               </Text>
-
+              <TouchableOpacity
+                onPress={() => visibilityModalDetail()}
+                style={{
+                  right: wp(2),
+                  position: 'absolute',
+                  marginTop: 0,
+                }}>
+                <Image
+                  style={{
+                    width: wp(5),
+                    height: hp(3),
+                    alignSelf: 'flex-end',
+                    tintColor: '#565454',
+                  }}
+                  source={require('../../../assets/ic_close.png')}
+                />
+              </TouchableOpacity>
               <Text
                 style={{
                   fontWeight: '500',
