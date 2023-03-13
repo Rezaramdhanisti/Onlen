@@ -20,7 +20,6 @@ export default {
   },
   containerDetailMenu: {
     flex: 1,
-    height: height,
     paddingHorizontal: wp(5),
     paddingTop: hp('2%'),
   },

@@ -17,6 +17,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import Modal from 'react-native-modal';
 
 import styles from './style';
 
@@ -24,6 +25,7 @@ function MenuScreen({navigation}) {
   const [dataCategory, setDataCategory] = useState([]);
   const toast = useToast();
   const [isLoading, setLoading] = useState(false);
+  const [modalBlockerFeature, setModalBlockerFeature] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
@@ -46,7 +48,12 @@ function MenuScreen({navigation}) {
         setDataCategory(res.data.data);
       })
       .catch(e => {
-        toast.show(e?.response?.data.message, {type: 'danger'});
+        console.log('eee', e.response.data);
+        if (e?.response?.data?.message === 'Forbidden') {
+          setModalBlockerFeature(!modalBlockerFeature);
+        } else {
+          toast.show(e?.response?.data?.message, {type: 'danger'});
+        }
       })
       .finally(() => {
         setLoading(false);
@@ -54,13 +61,14 @@ function MenuScreen({navigation}) {
   };
 
   const renderItem = ({item}) => (
-    <TouchableOpacity    onPress={() =>
-      navigation.navigate('ListMenu', {
-        categoryName: item?.name,
-        categoryId: item?.id,
-        allDataCategory: dataCategory,
-      })
-    }>
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate('ListMenu', {
+          categoryName: item?.name,
+          categoryId: item?.id,
+          allDataCategory: dataCategory,
+        })
+      }>
       <View
         style={{
           flexDirection: 'row',
@@ -146,6 +154,11 @@ function MenuScreen({navigation}) {
     </View>
   );
 
+  const visibilityModalBlockerFeature = () => {
+    setModalBlockerFeature(!modalBlockerFeature);
+    navigation.navigate('Home');
+  };
+
   return (
     <View style={styles.shell}>
       <View
@@ -154,7 +167,6 @@ function MenuScreen({navigation}) {
           paddingHorizontal: wp(5),
           alignItems: 'center',
         }}>
-
         <Text style={styles.textHeader}>Produk</Text>
       </View>
 
@@ -186,7 +198,7 @@ function MenuScreen({navigation}) {
             keyExtractor={item => item.id}
             showsVerticalScrollIndicator={false}
             ListEmptyComponent={renderEmptyItem}
-            contentContainerStyle={{ paddingBottom: 120 }}
+            contentContainerStyle={{paddingBottom: 120}}
           />
         )}
         {/* <View style={{height: hp(5)}}></View> */}
@@ -205,6 +217,40 @@ function MenuScreen({navigation}) {
           <Text style={styles.textAddMenu}>Tambah Kategori</Text>
         </TouchableOpacity>
       </View>
+      <Modal
+        isVisible={modalBlockerFeature}
+        onBackdropPress={visibilityModalBlockerFeature}
+        style={{justifyContent: 'flex-end', margin: 0}}>
+        <View style={styles.modalFeature}>
+          <Image
+            style={{
+              width: 220,
+              height: 220,
+            }}
+            resizeMode="contain"
+            source={require('../../../assets/error-default.png')}
+          />
+          <Text style={styles.textTitleModal}>Belum terhubung!</Text>
+          <Text style={styles.textSubtitleModal}>
+            Pastikan sudah ada hubungan dengan printer ya
+          </Text>
+
+          <TouchableOpacity
+            onPress={() => visibilityModalBlockerFeature()}
+            style={{
+              backgroundColor: '#ff3366',
+              height: hp(5),
+              width: '50%',
+              alignSelf: 'center',
+              borderRadius: 16,
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: 24,
+            }}>
+            <Text style={{fontWeight: '500', color: 'white'}}>OK</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
     </View>
   );
 }

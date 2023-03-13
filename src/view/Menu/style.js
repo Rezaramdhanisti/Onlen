@@ -225,12 +225,34 @@ export default {
     color: '#565454',
     letterSpacing: 0.34,
     fontWeight: '400',
-  },  modalConfirm: {
+  },
+  modalConfirm: {
     backgroundColor: 'white',
     height: hp(14),
     borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 16,
+  },
+  modalFeature: {
+    backgroundColor: 'white',
+    borderRadius: 8,
+    padding: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  textTitleModal: {
+    fontSize: helpers.scaling.moderateScale(16),
+    color: '#565454',
+    letterSpacing: 0.34,
+    fontWeight: 'bold',
+    marginBottom: 12,
+    marginTop: 8,
+  },
+  textSubtitleModal: {
+    fontSize: helpers.scaling.moderateScale(14),
+    color: '#565454',
+    letterSpacing: 0.34,
+    fontWeight: '400',
   },
 };

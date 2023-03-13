@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {
   View,
   TouchableOpacity,
@@ -10,52 +10,64 @@ import {
   BackHandler,
   StatusBar,
   Linking,
+  Alert,
+  ToastAndroid,
 } from 'react-native';
 import axios from 'axios';
 import {API_URL, ADDRESS_URL} from '@env';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useToast} from 'react-native-toast-notifications';
-import {useFocusEffect} from '@react-navigation/native';
+import {useNavigationState} from '@react-navigation/native';
 import Clipboard from '@react-native-clipboard/clipboard';
 import Modal from 'react-native-modal';
+import {useBackHandler, useMinimizeApp} from '@hooks';
 import {BluetoothEscposPrinter} from 'tp-react-native-bluetooth-printer';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
+import {useFocusEffect} from '@react-navigation/native';
 import OneSignal from 'react-native-onesignal';
 
 import styles from './style';
 
-function HomeScreenV2({navigation}) {
+function HomeScreenV2({navigation, onBeforeCloseApp}) {
   const toast = useToast();
   const [dataProfile, setDataProfile] = useState({});
   const [loading, setLoading] = useState(false);
   const [modalProduct, setModalProduct] = useState(false);
   const [modalErrorPrinter, setModalErrorPrinter] = useState(false);
   const [loadingPrintMenu, setLoadingPrintMenu] = useState(false);
+  const navIndex = useNavigationState(s => s.index);
+  const [backPressedCount, setBackPressedCount] = useState(0);
 
   useFocusEffect(
-    React.useCallback(() => {
-      const onBackPress = () => {
+    useCallback(() => {
+      const sub = BackHandler.addEventListener('hardwareBackPress', () => {
+        if (onBeforeCloseApp) {
+          onBeforeCloseApp(() => setBackPressedCount(2));
+        } else {
+          setBackPressedCount(pre => {
+            if (pre === 0) {
+              ToastAndroid.show('Tekan sekali lagi untuk keluar', 1000);
+              setTimeout(() => setBackPressedCount(0), 1000);
+            }
+            return pre + 1;
+          });
+        }
         return true;
-      };
-
-      BackHandler.addEventListener('hardwareBackPress', onBackPress);
-
-      return () =>
-        BackHandler.removeEventListener('hardwareBackPress', onBackPress);
-    }, []),
+      });
+      return sub.remove;
+    }, [onBeforeCloseApp]),
   );
 
-  useEffect(
-    () =>
-      navigation.addListener('beforeRemove', e => {
-        return;
-      }),
-    [navigation],
-  );
+  useEffect(() => {
+    if (backPressedCount === 2) {
+      BackHandler.exitApp();
+    }
+  }, [backPressedCount]);
+
   //Method for handling notifications opened
   OneSignal.setNotificationOpenedHandler(notification => {
     console.log('OneSignal: notification opened:', notification);

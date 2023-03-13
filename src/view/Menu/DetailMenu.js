@@ -36,7 +36,11 @@ function DetailMenuScreen({navigation, route}) {
   const toggleSwitchDelete = () => setIsDelete(previousState => !previousState);
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(
-    route.params.dataMenu ? route.params.dataMenu?.category?.id : null,
+    route.params.dataMenu
+      ? route.params.dataMenu?.category?.id
+      : route.params.categoryId
+      ? route.params.categoryId
+      : null,
   );
   const [items, setItems] = useState(route.params.allDataCategory);
   const toast = useToast();
@@ -207,22 +211,17 @@ function DetailMenuScreen({navigation, route}) {
       });
   };
 
-
   const deleteMenu = async () => {
-  
     setLoading(true);
     const token = await AsyncStorage.getItem('@token');
     axios
-      .delete(
-        `${API_URL}/dashboard/menus/${route.params.dataMenu?.id}`,
-        {
-          headers: {
-            Authorization: 'Bearer ' + token,
-          },
+      .delete(`${API_URL}/dashboard/menus/${route.params.dataMenu?.id}`, {
+        headers: {
+          Authorization: 'Bearer ' + token,
         },
-      )
+      })
       .then(() => {
-        navigation.goBack()
+        navigation.goBack();
       })
       .catch(e => {
         toast.show(e?.response?.data.message, {type: 'danger'});
@@ -235,7 +234,7 @@ function DetailMenuScreen({navigation, route}) {
   const visibilityModalDelete = () => {
     setModalDelete(!modalDelete);
   };
-  
+
   return (
     <View style={styles.shell}>
       <View
@@ -261,10 +260,10 @@ function DetailMenuScreen({navigation, route}) {
         </View>
         <TouchableOpacity
           onPress={visibilityModalDelete}
-          style={{width: 40, position:'absolute', right: 14}}>
+          style={{width: 40, position: 'absolute', right: 14}}>
           <Image
             style={{
-              tintColor:'black',
+              tintColor: 'black',
               width: 24,
               height: 24,
             }}
@@ -470,33 +469,33 @@ function DetailMenuScreen({navigation, route}) {
         <Text style={styles.textSubtitle2}>Hapus menu</Text> */}
 
         <TouchableOpacity
-        style={{
-          height: hp(5),
-          backgroundColor: '#ff3366',
-          borderRadius: 4,
-          justifyContent: 'center',
-          position: 'absolute',
-          bottom: hp(6),
-          left: wp(24),
-          right: wp(24),
-        }}
-        onPress={() => {
-          route.params.dataMenu ? updateMenu() : createMenu();
-        }}>
-        {isLoading ? (
-          <ActivityIndicator size="small" color="white" />
-        ) : (
-          <View>
-            <Text style={styles.textAddMenu}>
-              {route.params.dataMenu ? 'Update Menu' : 'Buat Menu'}
-            </Text>
-          </View>
-        )}
-      </TouchableOpacity>
+          style={{
+            height: hp(5),
+            backgroundColor: '#ff3366',
+            borderRadius: 4,
+            justifyContent: 'center',
+            position: 'absolute',
+            bottom: hp(6),
+            left: wp(24),
+            right: wp(24),
+          }}
+          onPress={() => {
+            route.params.dataMenu ? updateMenu() : createMenu();
+          }}>
+          {isLoading ? (
+            <ActivityIndicator size="small" color="white" />
+          ) : (
+            <View>
+              <Text style={styles.textAddMenu}>
+                {route.params.dataMenu ? 'Update Menu' : 'Buat Menu'}
+              </Text>
+            </View>
+          )}
+        </TouchableOpacity>
 
-      <View style={{height: hp(15)}} />
+        <View style={{height: hp(15)}} />
       </ScrollView>
-      
+
       <Modal isVisible={modalSuccess} onBackdropPress={visibilityModalSuccess}>
         <View style={styles.modalSuccess}>
           <Text style={styles.textTitle}>Berhasil!</Text>

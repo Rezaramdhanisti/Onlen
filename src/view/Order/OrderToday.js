@@ -97,7 +97,10 @@ function OrderTodayScreen({navigation}) {
       if (value !== null) {
         setDataProfile(JSON.parse(value));
         // value previously stored
-        if (!JSON.parse(value).isPremium) {
+        if (
+          !JSON.parse(value).isPremium ||
+          JSON.parse(value).roleName === 'cashier'
+        ) {
           setTimeout(() => {
             setModalFeature(true);
           }, 500);

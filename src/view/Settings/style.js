@@ -323,4 +323,25 @@ export default {
     textAlign: 'center',
     marginTop: 14,
   },
+  modalFeature: {
+    backgroundColor: 'white',
+    borderRadius: 8,
+    padding: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  textTitleModal: {
+    fontSize: helpers.scaling.moderateScale(16),
+    color: '#565454',
+    letterSpacing: 0.34,
+    fontWeight: 'bold',
+    marginBottom: 12,
+    marginTop: 8,
+  },
+  textSubtitleModal: {
+    fontSize: helpers.scaling.moderateScale(14),
+    color: '#565454',
+    letterSpacing: 0.34,
+    fontWeight: '400',
+  },
 };

@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
   ScrollView,
   Alert,
+  Switch,
 } from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -22,17 +23,23 @@ import {API_URL} from '@env';
 import styles from './style';
 
 function AddEmployeeScreen({navigation, route}) {
-  const [text, setText] = useState(
-    route.params ? route?.params?.EmployeeName : '',
-  );
+  const [text, setText] = useState(route.params ? route?.params?.name : '');
   const toast = useToast();
   const [isLoading, setLoading] = useState(false);
   const [dataRoles, setDataRoles] = useState([]);
-  const [idRoles, setIdRoles] = useState('');
-
-  const [textEmail, setTextEmail] = useState('');
+  const [idRoles, setIdRoles] = useState(
+    route.params ? route?.params?.roleId : '',
+  );
+  const [textEmail, setTextEmail] = useState(
+    route.params ? route?.params?.email : '',
+  );
   const [textPassword, setTextPassword] = useState('');
+  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+  const [isEnabled, setIsEnabled] = useState(
+    route?.params?.status === 'active' ? true : false,
+  );
 
+  console.log('route', route.params.id);
   useEffect(() => {
     getListRoles();
   }, []);
@@ -85,7 +92,37 @@ function AddEmployeeScreen({navigation, route}) {
         },
       })
       .then(() => {
-        Alert.alert('Sukses', 'Karyawan berhasil ditambahkan!', [
+        Alert.alert('Sukses', 'Akun berhasil ditambahkan!', [
+          {text: 'OK', onPress: () => navigation.goBack()},
+        ]);
+      })
+      .catch(e => {
+        toast.show(e?.response?.data.message, {type: 'danger'});
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  const updateEmployee = async () => {
+    const dataPayload = {
+      name: text,
+      email: textEmail,
+      roleId: idRoles,
+      status: isEnabled ? 'active' : 'inactive',
+    };
+
+    console.log('dataPayload', dataPayload);
+    setLoading(true);
+    const token = await AsyncStorage.getItem('@token');
+    axios
+      .put(`${API_URL}/dashboard/accounts/${route?.params?.id}`, dataPayload, {
+        headers: {
+          Authorization: 'Bearer ' + token,
+        },
+      })
+      .then(() => {
+        Alert.alert('Sukses', 'Akun berhasil diupdate!', [
           {text: 'OK', onPress: () => navigation.goBack()},
         ]);
       })
@@ -199,9 +236,10 @@ function AddEmployeeScreen({navigation, route}) {
           Ini akan menjadi akun dan detail masuk mereka
         </Text>
         <TextInput
-          style={{marginTop: 18}}
+          style={{marginTop: 18, color: '#565454'}}
           underlineColorAndroid="transparent"
           onChangeText={newText => setText(newText)}
+          value={text}
           placeholder="Nama"
           placeholderTextColor="#9FA2B4"
         />
@@ -214,9 +252,10 @@ function AddEmployeeScreen({navigation, route}) {
           }}
         />
         <TextInput
-          style={{marginTop: 18}}
+          style={{marginTop: 18, color: '#565454'}}
           underlineColorAndroid="transparent"
           onChangeText={newText => setTextEmail(newText)}
+          value={textEmail}
           placeholder="Email"
           placeholderTextColor="#9FA2B4"
         />
@@ -230,7 +269,7 @@ function AddEmployeeScreen({navigation, route}) {
         />
         <TextInput
           secureTextEntry
-          style={{marginTop: 18}}
+          style={{marginTop: 18, color: '#565454'}}
           underlineColorAndroid="transparent"
           onChangeText={newText => setTextPassword(newText)}
           placeholder="Password"
@@ -244,27 +283,46 @@ function AddEmployeeScreen({navigation, route}) {
             marginBottom: 4,
           }}
         />
-      </ScrollView>
-      <TouchableOpacity
-        style={{
-          height: hp(5),
-          backgroundColor: '#ff3366',
-          borderRadius: 4,
-          justifyContent: 'center',
-          position: 'absolute',
-          bottom: hp(10),
-          left: wp(24),
-          right: wp(24),
-        }}
-        onPress={() => createEmployee()}>
-        {isLoading ? (
-          <ActivityIndicator size="small" color="white" />
-        ) : (
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}>
           <View>
-            <Text style={styles.textAddMenu}>Simpan</Text>
+            <Text style={styles.textToggle}>Status akun</Text>
+            <Text style={styles.textSubtitle2}>
+              Aktifkan atau nonaktifkan akun
+            </Text>
           </View>
-        )}
-      </TouchableOpacity>
+          <Switch
+            trackColor={{false: '#B3B2B3', true: '#FFEBF0'}}
+            thumbColor={isEnabled ? '#ff3366' : '#EDEDED'}
+            ios_backgroundColor="#B3B2B3"
+            onValueChange={toggleSwitch}
+            value={isEnabled}
+          />
+        </View>
+        <TouchableOpacity
+          style={{
+            height: hp(5),
+            width: wp(42),
+            alignSelf: 'center',
+            backgroundColor: '#ff3366',
+            borderRadius: 4,
+            justifyContent: 'center',
+            marginTop: hp(5),
+          }}
+          onPress={() => (route?.params ? updateEmployee() : createEmployee())}>
+          {isLoading ? (
+            <ActivityIndicator size="small" color="white" />
+          ) : (
+            <View>
+              <Text style={styles.textAddMenu}>Simpan</Text>
+            </View>
+          )}
+        </TouchableOpacity>
+      </ScrollView>
     </View>
   );
 }

@@ -20,12 +20,12 @@ import {
 
 import styles from './style';
 
-function SettingScreen({navigation, route}) {
+function SettingScreen({navigation}) {
   const toast = useToast();
   const [printerName, setPrinterName] = useState('');
   const [modalPermission, setModalPermission] = useState(false);
-
   const [dataProfile, setDataProfile] = useState({});
+  const [modalBlockerFeature, setModalBlockerFeature] = useState(false);
 
   const removeValue = async () => {
     try {
@@ -111,6 +111,26 @@ function SettingScreen({navigation, route}) {
     setModalPermission(!modalPermission);
   };
 
+  const visibilityModalBlockerFeature = () => {
+    setModalBlockerFeature(!modalBlockerFeature);
+  };
+
+  const navigateSetting = () => {
+    if (dataProfile?.roleName === 'cashier') {
+      setModalBlockerFeature(!modalBlockerFeature);
+    } else {
+      navigation.navigate('MerchantSetting');
+    }
+  };
+
+  const navigateEmployee = () => {
+    if (dataProfile?.roleName === 'cashier') {
+      setModalBlockerFeature(!modalBlockerFeature);
+    } else {
+      navigation.navigate('Employee');
+    }
+  };
+
   return (
     <View style={styles.shell}>
       <View
@@ -125,7 +145,7 @@ function SettingScreen({navigation, route}) {
       <View style={styles.containerWithEmail}>
         <Text style={styles.textTitleWithEmail}>Informasi Toko</Text>
         <TouchableOpacity
-          onPress={() => navigation.navigate('MerchantSetting')}
+          onPress={navigateSetting}
           style={{
             flexDirection: 'row',
             alignItems: 'center',
@@ -164,7 +184,7 @@ function SettingScreen({navigation, route}) {
         <View style={{height: hp(4)}}></View>
         <Text style={styles.textTitleWithEmail}>Pegawai</Text>
         <TouchableOpacity
-          onPress={() => navigation.navigate('Employee')}
+          onPress={navigateEmployee}
           style={{
             flexDirection: 'row',
             alignItems: 'center',
@@ -251,6 +271,41 @@ function SettingScreen({navigation, route}) {
               <Text style={{fontWeight: '500', color: 'white'}}>Ok</Text>
             </TouchableOpacity>
           </View>
+        </View>
+      </Modal>
+
+      <Modal
+        isVisible={modalBlockerFeature}
+        onBackdropPress={visibilityModalBlockerFeature}
+        style={{justifyContent: 'flex-end', margin: 0}}>
+        <View style={styles.modalFeature}>
+          <Image
+            style={{
+              width: 220,
+              height: 220,
+            }}
+            resizeMode="contain"
+            source={require('../../../assets/error-default.png')}
+          />
+          <Text style={styles.textTitleModal}>Belum terhubung!</Text>
+          <Text style={styles.textSubtitleModal}>
+            Pastikan sudah ada hubungan dengan printer ya
+          </Text>
+
+          <TouchableOpacity
+            onPress={() => visibilityModalBlockerFeature()}
+            style={{
+              backgroundColor: '#ff3366',
+              height: hp(5),
+              width: '50%',
+              alignSelf: 'center',
+              borderRadius: 16,
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: 24,
+            }}>
+            <Text style={{fontWeight: '500', color: 'white'}}>OK</Text>
+          </TouchableOpacity>
         </View>
       </Modal>
     </View>

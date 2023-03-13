@@ -186,7 +186,11 @@ function ListMenuScreen({navigation, route}) {
             right: wp(24),
           }}
           onPress={() =>
-            navigation.navigate('DetailMenu', {allDataCategory, dataMenu: null})
+            navigation.navigate('DetailMenu', {
+              allDataCategory,
+              dataMenu: null,
+              categoryId,
+            })
           }>
           <Text style={styles.textAddMenu}>Tambah Menu</Text>
         </TouchableOpacity>
