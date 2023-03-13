@@ -166,6 +166,7 @@ export default {
     color: '#565454',
     letterSpacing: 0.34,
     fontWeight: 'bold',
+    fontSize: 18,
   },
   imageCopy: {
     width: 18,
@@ -173,6 +174,7 @@ export default {
     marginTop: hp(0.7),
     resizeMode: 'contain',
     marginLeft: 6,
+    tintColor: '#565454',
   },
   containerCardToko: {
     shadowColor: '#000',
@@ -185,10 +187,11 @@ export default {
     elevation: 2,
     marginHorizontal: 2,
     borderRadius: 12,
-    backgroundColor: 'white',
+    backgroundColor: '#FFDBD4',
     marginTop: 16,
     justifyContent: 'center',
-    padding: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 22,
     marginBottom: 8,
   },
   containerCardPrint: {
@@ -219,6 +222,7 @@ export default {
     letterSpacing: 0.34,
     marginTop: hp(0.5),
     textAlign: 'center',
+    fontSize: 15,
   },
   modalConfirm: {
     backgroundColor: 'white',

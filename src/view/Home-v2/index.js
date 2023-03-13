@@ -252,7 +252,7 @@ function HomeScreenV2({navigation, onBeforeCloseApp}) {
         <TouchableOpacity
           style={styles.containerCardToko}
           onPress={() => navigation.navigate('ShowMenu', dataProfile)}>
-          <Text style={styles.textTitleToko}>Produk kamu</Text>
+          <Text style={styles.textTitleToko}>Ayo bagikan produk kamu</Text>
           <View
             style={{
               flexDirection: 'row',
@@ -261,26 +261,24 @@ function HomeScreenV2({navigation, onBeforeCloseApp}) {
               {ADDRESS_URL}
               {dataProfile.merchantName}/produk
             </Text>
-            <TouchableOpacity
-              style={{width: 50, height: 26}}
-              onPress={() => {
-                copyToClipboard();
-              }}>
-              <Image
-                style={styles.imageCopy}
-                source={require('../../../assets/copy.png')}
-              />
-            </TouchableOpacity>
           </View>
-          <Image
+          <TouchableOpacity
             style={{
-              width: 16,
-              height: 16,
               position: 'absolute',
-              right: 14,
+              right: 16,
             }}
-            source={require('../../../assets/ic_right_arrow.png')}
-          />
+            onPress={() => {
+              copyToClipboard();
+            }}>
+            <Image
+              style={{
+                width: 26,
+                height: 26,
+                tintColor: '#565454',
+              }}
+              source={require('../../../assets/copy.png')}
+            />
+          </TouchableOpacity>
         </TouchableOpacity>
       )}
 
