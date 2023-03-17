@@ -54,16 +54,28 @@ function RegisterScreen({navigation}) {
   };
 
   const onSubmitRegis = () => {
-    if (password !== passwordConfirm) {
+    if (businessName.length < 1) {
+      return toast.show('Nama bisnis tidak boleh kosong', {type: 'danger'});
+    } else if (email.length < 1) {
+      return toast.show('Email tidak boleh kosong', {type: 'danger'});
+    } else if (phoneNumber.length < 1) {
+      return toast.show('Nomor handphone tidak boleh kosong', {type: 'danger'});
+    } else if (password.length < 1) {
+      return toast.show('Password tidak boleh kosong', {type: 'danger'});
+    } else if (password !== passwordConfirm) {
       return toast.show('Pastikan password benar', {type: 'danger'});
     }
     setLoading(true);
+
+    const validateReferral = referralCode
+      ? Number(referralCode).toString()
+      : '';
     const data = {
       businessName,
       email,
       phoneNumber,
       password,
-      referralCode,
+      referralCode: validateReferral,
     };
 
     // Encrypt
