@@ -20,7 +20,7 @@ import {useToast} from 'react-native-toast-notifications';
 import {useNavigationState} from '@react-navigation/native';
 import Clipboard from '@react-native-clipboard/clipboard';
 import Modal from 'react-native-modal';
-import {useBackHandler, useMinimizeApp} from '@hooks';
+import Share from 'react-native-share';
 import {BluetoothEscposPrinter} from 'tp-react-native-bluetooth-printer';
 import {
   widthPercentageToDP as wp,
@@ -216,6 +216,24 @@ function HomeScreenV2({navigation, onBeforeCloseApp}) {
     setModalErrorPrinter(!modalErrorPrinter);
     navigation.navigate('Pengaturan');
   };
+
+  const shareProduct = () => {
+    const shareOptions = {
+      title: 'Share via',
+      message:
+        'Halo kastemer! silahkan buka link dibawah ini untuk melihat produk dan order ya!',
+      url: `${ADDRESS_URL}${dataProfile.merchantName}/produk`,
+    };
+
+    Share.open(shareOptions)
+      .then(res => {
+        console.log(res);
+      })
+      .catch(err => {
+        err && console.log(err);
+      });
+  };
+
   return (
     <ScrollView
       style={styles.shell}
@@ -251,7 +269,7 @@ function HomeScreenV2({navigation, onBeforeCloseApp}) {
       ) : (
         <TouchableOpacity
           style={styles.containerCardToko}
-          onPress={() => navigation.navigate('ShowMenu', dataProfile)}>
+          onPress={() => shareProduct()}>
           <Text style={styles.textTitleToko}>Ayo bagikan produk kamu</Text>
           <View
             style={{
@@ -268,15 +286,15 @@ function HomeScreenV2({navigation, onBeforeCloseApp}) {
               right: 16,
             }}
             onPress={() => {
-              copyToClipboard();
+              shareProduct();
             }}>
             <Image
               style={{
-                width: 26,
-                height: 26,
+                width: 24,
+                height: 24,
                 tintColor: '#565454',
               }}
-              source={require('../../../assets/copy.png')}
+              source={require('../../../assets/share.png')}
             />
           </TouchableOpacity>
         </TouchableOpacity>

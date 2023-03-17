@@ -27,10 +27,16 @@ function ShowMenuScreen({navigation, route}) {
       message:
         'Halo kastemer! silahkan buka link dibawah ini untuk melihat menu dan order ya!',
       url: `${ADDRESS_URL}${route.params.merchantName}/produk`,
-      social: Share.Social.WHATSAPP,
     };
 
-    Share.shareSingle(shareOptions)
+    // Share.shareSingle(shareOptions)
+    //   .then(res => {
+    //     console.log(res);
+    //   })
+    //   .catch(err => {
+    //     err && console.log(err);
+    //   });
+    Share.open(shareOptions)
       .then(res => {
         console.log(res);
       })
