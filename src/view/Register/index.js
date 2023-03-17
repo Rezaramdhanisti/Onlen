@@ -33,6 +33,7 @@ function RegisterScreen({navigation}) {
   const [showError, setShowError] = useState(false);
   const toast = useToast();
   const [modalSuccess, setModalSuccess] = useState(false);
+  const [referralCode, setreferralCode] = useState('');
 
   const securePassword = () => {
     setSecure(!isSecure);
@@ -62,6 +63,7 @@ function RegisterScreen({navigation}) {
       email,
       phoneNumber,
       password,
+      referralCode,
     };
 
     // Encrypt
@@ -77,6 +79,7 @@ function RegisterScreen({navigation}) {
         visibilityModalSuccess();
       })
       .catch(e => {
+        console.log('eee', e);
         setLoading(false);
         toast.show(e?.response?.data.message, {type: 'danger'});
       });
@@ -261,7 +264,9 @@ function RegisterScreen({navigation}) {
                 this.confirmPassword = input;
               }}
               blurOnSubmit={false}
-              onSubmitEditing={onSubmitRegis}
+              onSubmitEditing={() => {
+                this.referralCode.focus();
+              }}
             />
             <TouchableOpacity onPress={() => securePasswordConfirm()}>
               <Image
@@ -274,7 +279,7 @@ function RegisterScreen({navigation}) {
               />
             </TouchableOpacity>
           </View>
-          
+
           <View
             style={{
               marginTop: 2,
@@ -283,7 +288,7 @@ function RegisterScreen({navigation}) {
             }}
           />
 
-<View style={{marginTop: 30, flexDirection: 'row'}}>
+          <View style={{marginTop: 30, flexDirection: 'row'}}>
             <Image
               style={{width: 24, height: 24, marginTop: 10, marginLeft: 4}}
               source={require('../../../assets/affiliate.png')}
@@ -296,14 +301,12 @@ function RegisterScreen({navigation}) {
               returnKeyType="next"
               keyboardType="number-pad"
               onChangeText={text => {
-                setPhoneNumber(text);
+                setreferralCode(text);
               }}
               ref={input => {
-                this.phoneNumber = input;
+                this.referralCode = input;
               }}
-              onSubmitEditing={() => {
-                this.password.focus();
-              }}
+              onSubmitEditing={onSubmitRegis}
             />
           </View>
           <View
