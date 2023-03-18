@@ -18,7 +18,6 @@ import {API_URL, ADDRESS_URL} from '@env';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useToast} from 'react-native-toast-notifications';
 import {useNavigationState} from '@react-navigation/native';
-import Clipboard from '@react-native-clipboard/clipboard';
 import Modal from 'react-native-modal';
 import Share from 'react-native-share';
 import {BluetoothEscposPrinter} from 'tp-react-native-bluetooth-printer';
@@ -39,8 +38,8 @@ function HomeScreenV2({navigation, onBeforeCloseApp}) {
   const [modalProduct, setModalProduct] = useState(false);
   const [modalErrorPrinter, setModalErrorPrinter] = useState(false);
   const [loadingPrintMenu, setLoadingPrintMenu] = useState(false);
-  const navIndex = useNavigationState(s => s.index);
   const [backPressedCount, setBackPressedCount] = useState(0);
+  const [dataMerchant, seDataMerchant] = useState({});
 
   useFocusEffect(
     useCallback(() => {
@@ -70,13 +69,13 @@ function HomeScreenV2({navigation, onBeforeCloseApp}) {
 
   //Method for handling notifications opened
   OneSignal.setNotificationOpenedHandler(notification => {
-    console.log('OneSignal: notification opened:', notification);
     navigation.navigate('Order');
   });
 
   useEffect(() => {
     getDetailProfile();
     getFirstInstall();
+    getDetailMerchant();
   }, []);
 
   const getFirstInstall = async () => {
@@ -126,6 +125,7 @@ function HomeScreenV2({navigation, onBeforeCloseApp}) {
   const _pullToRefresh = async () => {
     const token = await AsyncStorage.getItem('@token');
     setLoading(true);
+    getDetailMerchant();
     axios
       .get(`${API_URL}/dashboard/profiles`, {
         headers: {
@@ -162,16 +162,11 @@ function HomeScreenV2({navigation, onBeforeCloseApp}) {
         },
       )
       .then(res => {
-        console.log('hehehe', res.data.data);
         printMenu(res.data.data.url);
       })
       .catch(e => {
-        console.log('err', e?.response?.data.message);
         toast.show(e?.response?.data.message, {type: 'danger'});
       });
-    // .finally(() => {
-    //   setLoadingPrintMenu(false);
-    // });
   };
 
   const printMenu = async url => {
@@ -203,10 +198,6 @@ function HomeScreenV2({navigation, onBeforeCloseApp}) {
     }
   };
 
-  const copyToClipboard = () => {
-    Clipboard.setString(`${ADDRESS_URL}${dataProfile.merchantName}/produk`);
-  };
-
   const visibilityModalProduct = () => {
     setModalProduct(!modalProduct);
     navigation.navigate('Produk');
@@ -216,13 +207,12 @@ function HomeScreenV2({navigation, onBeforeCloseApp}) {
     setModalErrorPrinter(!modalErrorPrinter);
     navigation.navigate('Pengaturan');
   };
-
   const shareProduct = () => {
     const shareOptions = {
       title: 'Share via',
       message:
         'Halo kastemer! silahkan buka link dibawah ini untuk melihat produk dan order ya!',
-      url: `${ADDRESS_URL}${dataProfile.merchantName}/produk`,
+      url: `${ADDRESS_URL}${dataMerchant.slug}/produk`,
     };
 
     Share.open(shareOptions)
@@ -231,6 +221,28 @@ function HomeScreenV2({navigation, onBeforeCloseApp}) {
       })
       .catch(err => {
         err && console.log(err);
+      });
+  };
+
+  const getDetailMerchant = async () => {
+    setLoading(true);
+    const token = await AsyncStorage.getItem('@token');
+
+    axios
+      .get(`${API_URL}/dashboard/merchants`, {
+        headers: {
+          Authorization: 'Bearer ' + token,
+        },
+      })
+      .then(res => {
+        const {data} = res.data;
+        seDataMerchant(data);
+      })
+      .catch(e => {
+        toast.show(e?.response?.data.message, {type: 'danger'});
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -277,7 +289,7 @@ function HomeScreenV2({navigation, onBeforeCloseApp}) {
             }}>
             <Text style={styles.textSubtitleShareMenuBold}>
               {ADDRESS_URL}
-              {dataProfile.merchantName}/produk
+              {dataMerchant.slug}/produk
             </Text>
           </View>
           <TouchableOpacity
