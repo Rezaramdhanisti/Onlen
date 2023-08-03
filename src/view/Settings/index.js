@@ -205,7 +205,7 @@ function SettingScreen({navigation}) {
         <Text style={styles.textTitleWithEmail}>Bantuan</Text>
         <TouchableOpacity
           onPress={() =>
-            Linking.openURL('https://wa.me/6281380550020?text=Halo')
+            Linking.openURL('https://wa.me/6285158699516?text=Halo')
           }
           style={{
             flexDirection: 'row',

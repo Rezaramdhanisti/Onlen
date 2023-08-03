@@ -430,7 +430,7 @@ function HomeScreenV2({navigation, onBeforeCloseApp}) {
       <TouchableOpacity
         style={styles.containerFeature}
         onPress={() =>
-          Linking.openURL('https://wa.me/6281380550020?text=Halo')
+          Linking.openURL('https://wa.me/6285158699516?text=Halo')
         }>
         <View style={styles.containerImageFeature}>
           <Image

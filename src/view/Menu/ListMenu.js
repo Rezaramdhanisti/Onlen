@@ -117,7 +117,7 @@ function ListMenuScreen({navigation, route}) {
           source={require('../../../assets/default-menu.png')}
         />
       </View>
-      <Text style={styles.textNoData}>Menu kosong</Text>
+      <Text style={styles.textNoData}>Produk kosong</Text>
     </View>
   );
 
@@ -145,7 +145,7 @@ function ListMenuScreen({navigation, route}) {
       </View>
 
       <View style={styles.containerWithEmail}>
-        <Text style={styles.textTitleWithEmail}>Daftar Menu</Text>
+        <Text style={styles.textTitleWithEmail}>Daftar Produk</Text>
 
         <View
           style={{
@@ -192,7 +192,7 @@ function ListMenuScreen({navigation, route}) {
               categoryId,
             })
           }>
-          <Text style={styles.textAddMenu}>Tambah Menu</Text>
+          <Text style={styles.textAddMenu}>Tambah Produk</Text>
         </TouchableOpacity>
       </View>
     </View>

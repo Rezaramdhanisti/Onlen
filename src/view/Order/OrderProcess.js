@@ -59,6 +59,7 @@ function OrderProcessScreen({navigation}) {
         },
       })
       .then(res => {
+        console.log('process', res.data.data);
         setDataOrder(res.data.data);
       })
       .catch(e => {

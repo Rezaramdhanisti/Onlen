@@ -54,6 +54,7 @@ function OrderFinishScreen({navigation}) {
         },
       })
       .then(res => {
+        console.log('xxx', res.data.data);
         setDataOrder(res.data.data);
       })
       .catch(e => {

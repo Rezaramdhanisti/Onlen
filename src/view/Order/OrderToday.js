@@ -46,7 +46,7 @@ function OrderTodayScreen({navigation}) {
   moment.locale('id');
   useFocusEffect(
     useCallback(() => {
-      getDataProfile();
+      getListOrder();
     }, []),
   );
 
@@ -62,6 +62,7 @@ function OrderTodayScreen({navigation}) {
         },
       })
       .then(res => {
+        console.log('yyy', res.data.data);
         setDataOrder(res.data.data);
       })
       .catch(e => {

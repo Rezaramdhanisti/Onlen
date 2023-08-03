@@ -256,7 +256,7 @@ function DetailMenuScreen({navigation, route}) {
         </TouchableOpacity>
 
         <View>
-          <Text style={styles.textHeader}>Buat menu</Text>
+          <Text style={styles.textHeader}>Buat produk</Text>
         </View>
         <TouchableOpacity
           onPress={visibilityModalDelete}
@@ -282,7 +282,7 @@ function DetailMenuScreen({navigation, route}) {
       <ScrollView
         style={styles.containerDetailMenu}
         showsVerticalScrollIndicator={false}>
-        <Text style={styles.textTitleWithEmail}>Detail menu</Text>
+        <Text style={styles.textTitleWithEmail}>Detail produk</Text>
         <Text style={styles.textSubtitle}>Foto</Text>
         <Text style={styles.textSubtitle2}>
           Upload foto yang menarik biar pelanggan makin tertarik.
@@ -426,7 +426,7 @@ function DetailMenuScreen({navigation, route}) {
           }}
         />
         <View style={{height: hp(2)}} />
-        <Text style={styles.textTitleWithEmail}>Variasi menu</Text>
+        <Text style={styles.textTitleWithEmail}>Variasi produk</Text>
 
         <View style={{height: hp(2)}} />
         <View
@@ -435,7 +435,7 @@ function DetailMenuScreen({navigation, route}) {
             alignItems: 'center',
             justifyContent: 'space-between',
           }}>
-          <Text style={styles.textToggle}>Matikan menu</Text>
+          <Text style={styles.textToggle}>Matikan produk</Text>
           <Switch
             trackColor={{false: '#B3B2B3', true: '#FFEBF0'}}
             thumbColor={isEnabled ? '#ff3366' : '#EDEDED'}
@@ -487,7 +487,7 @@ function DetailMenuScreen({navigation, route}) {
           ) : (
             <View>
               <Text style={styles.textAddMenu}>
-                {route.params.dataMenu ? 'Update Menu' : 'Buat Menu'}
+                {route.params.dataMenu ? 'Update Produk' : 'Buat Produk'}
               </Text>
             </View>
           )}
