@@ -39,7 +39,6 @@ function AddEmployeeScreen({navigation, route}) {
     route?.params?.status === 'active' ? true : false,
   );
 
-  console.log('route', route.params.id);
   useEffect(() => {
     getListRoles();
   }, []);

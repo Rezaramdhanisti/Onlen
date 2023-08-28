@@ -62,7 +62,6 @@ function OrderTodayScreen({navigation}) {
         },
       })
       .then(res => {
-        console.log('yyy', res.data.data);
         setDataOrder(res.data.data);
       })
       .catch(e => {
@@ -127,6 +126,7 @@ function OrderTodayScreen({navigation}) {
         },
       })
       .then(() => {
+        console.log('dataPayload', dataPayload);
         getListOrder();
         if (status === 'canceled') {
           visibilityModalCancel();
